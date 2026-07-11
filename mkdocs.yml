@@ -1,0 +1,32 @@
+site_name: Reporter Assay Pipeline
+site_description: User guide and CLI reference for the Yu Lab reporter assay pipeline
+site_url: https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/
+repo_url: https://github.com/haiyuan-yu-lab/reporter-assay-pipeline-doc
+repo_name: haiyuan-yu-lab/reporter-assay-pipeline-doc
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.expand
+    - search.suggest
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Quickstart: quickstart.md
+  - CLI:
+      - Overview: cli/index.md
+      - Pipeline: cli/pipe.md
+      - QC: cli/qc.md
+      - Export: cli/export.md
+  - Artifact formats: formats.md
+  - FAQ: faq.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - tables
+  - toc:
+      permalink: true
