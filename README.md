@@ -1,11 +1,13 @@
 # Reporter Assay Pipeline — Documentation
 
 Public user-facing documentation for the
-[Reporter Assay Pipeline](https://github.com/haiyuan-yu-lab/reporter-assay-pipeline).
+[Reporter Assay Pipeline](https://github.com/haiyuan-yu-lab/reporter-assay-pipeline)
+**0.1.0b1** (beta).
 
 This repository is the source of truth for:
 
 - Quickstart and install guidance
+- Workflow overview and library layout
 - CLI reference (`yulab_reporter_pipe`, `yulab_reporter_qc`, `yulab_reporter_export`)
 - Intermediate/final artifact format descriptions
 - FAQ

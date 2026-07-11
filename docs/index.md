@@ -8,8 +8,11 @@ export artifacts.
 | --- | --- |
 | Code | [haiyuan-yu-lab/reporter-assay-pipeline](https://github.com/haiyuan-yu-lab/reporter-assay-pipeline) |
 | Install | [Quickstart](quickstart.md) |
+| Stages | [Workflow](workflow.md) |
 | Commands | [CLI overview](cli/index.md) |
+| Tables | [Artifact formats](formats.md) |
 
-!!! note "Alpha"
-    The current documented code version is **0.1.0a4**. Interfaces may change
-    before a stable release.
+!!! note "Beta"
+    The current documented code version is **0.1.0b1**. Interfaces may still
+    change before a stable release. For any installed build, command `--help`
+    is authoritative.

@@ -15,6 +15,7 @@ theme:
 nav:
   - Home: index.md
   - Quickstart: quickstart.md
+  - Workflow: workflow.md
   - CLI:
       - Overview: cli/index.md
       - Pipeline: cli/pipe.md
@@ -26,7 +27,11 @@ nav:
 markdown_extensions:
   - admonition
   - pymdownx.details
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - tables
   - toc:
       permalink: true
