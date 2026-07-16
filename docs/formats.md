@@ -23,10 +23,10 @@ Plain-text lists use one logical record per non-empty line.
 | **Suffix-fixed** | Leading ID columns vary; trailing columns are fixed | `pretran-merged-counts`, `crosswalk-map` |
 | **Presence-fixed** | Required column names are fixed; other columns are IDs | `orientation-resolved-pretran` |
 
-For **suffix-fixed** formats, tools discover ID columns from the file header
-(all columns before the fixed suffix). Do not assume fixed names such as `EID`
-and `PID` in every assay configuration. The current reporter-assay profile uses
-`EID` and `PID` for pre-transfection tables.
+For **suffix-fixed** formats, leading ID columns are declared via PreTran
+`--id-columns` and must match the file header exactly (names and order). Do not
+assume fixed names such as `EID` and `PID` in every assay configuration. The
+standard dual-ID reporter-assay profile uses `EID,PID`.
 
 ## Format registry
 
@@ -60,8 +60,9 @@ post-transfection layouts vary by branch.
 
 ### `orientation-resolved-pretran`
 
-Must include columns named `Element` and `UMI`, plus at least one ID column.
-Reporter-assay profile header: `EID`, `Element`, `PID`, `UMI`.
+Must include columns named `Element` and `UMI`, plus the ID columns declared
+via `--id-columns`. Dual-ID profile header order:
+`EID`, `PID`, `Element`, `UMI`. EID-only: `EID`, `Element`, `UMI`.
 
 ### `pretran-merged-counts`
 
@@ -85,8 +86,10 @@ header (used by QC `--id-column`).
 Fixed columns in order: `ObservedID`, `CanonicalID`, `Element`.
 
 Each file is one identifier domain. Domain is conveyed by **filename**, not
-column names — for example `pretran_step5_eid_cluster_reference.tsv.gz` vs
-`pretran_step5_pid_cluster_reference.tsv.gz`.
+column names — filenames use ExactID casing from `--id-columns` (for example
+`pretran_step5_EID_cluster_reference.tsv.gz` vs
+`pretran_step5_PID_cluster_reference.tsv.gz`). EID-only profiles emit only the
+EID cluster file.
 
 ### `posttran-matched-records`
 

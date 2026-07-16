@@ -14,7 +14,7 @@ From the public GitHub repository:
 pip install git+https://github.com/haiyuan-yu-lab/reporter-assay-pipeline.git
 ```
 
-Or from a local checkout of a `0.1.0b1` tag or matching commit:
+Or from a local checkout of a `0.1.0b2` tag or matching commit:
 
 ```bash
 pip install .
@@ -36,14 +36,18 @@ Prepare these before a full run:
 
 - Raw paired FASTQ files (`R1` / `R2`) for each pre-transfection and post-transfection library
 - Layout schema JSON files that describe how Step 2 parses barcode and anchor fields
-- Forward- and reverse-orientation tested-library reference FASTA files (see [Workflow](workflow.md)#forwardreverse-reference-pairing)
+- Forward- and/or reverse-orientation tested-library reference FASTA files
+  (dual-orientation assays need both; CW-only needs one — see
+  [Workflow](workflow.md)#forwardreverse-reference-pairing)
 - A negative-control annotation file (one element ID per non-empty line)
 
 Default intermediates and outputs are written under `<project_dir>/work/` unless you set `--project-dir` or `--output-dir`.
 
 ## Library layout
 
-The standard experiment layout expects `2 + 4 × N` libraries, where `N` is the number of post-transfection replicates per material and branch.
+The standard dual-orientation experiment layout expects `2 + 4 × N` libraries,
+where `N` is the number of post-transfection replicates per material and branch.
+CW-only / EID-only layouts omit `PreTran_CCW` and the pBC post-transfection set.
 
 | Group | Library prefixes | Count |
 | --- | --- | --- |

@@ -13,6 +13,6 @@ export artifacts.
 | Tables | [Artifact formats](formats.md) |
 
 !!! note "Beta"
-    The current documented code version is **0.1.0b1**. Interfaces may still
+    The current documented code version is **0.1.0b2**. Interfaces may still
     change before a stable release. For any installed build, command `--help`
     is authoritative.
