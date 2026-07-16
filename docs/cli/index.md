@@ -9,7 +9,7 @@ Installing the package exposes three commands:
 | [`yulab_reporter_export`](export.md) | ExogeneousSequences FASTA + stat `.npy` export |
 
 For any installed build, `COMMAND --help` and `COMMAND <subcommand> --help` are
-authoritative for flags and defaults. These pages document the **0.1.0b1**
+authoritative for flags and defaults. These pages document the **0.1.0b2**
 contract.
 
 See also [Workflow](../workflow.md) and [Artifact formats](../formats.md).

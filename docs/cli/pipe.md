@@ -11,7 +11,8 @@ yulab_reporter_pipe <subcommand> --help
 | --- | --- | --- |
 | `step1` … `step9` | one each | Individual stages |
 | `prep_lib` | 1 → 2 | Trim + delimited records |
-| `process_pretrans` | 3 → 4 → 5 | Pre-transfection processing + ID maps |
+| `process_pretrans` | 3 → 4 → 5 | Dual-orientation PreTran (CW + CCW) + ID maps |
+| `process_pretrans_cw_only` | 3 → 4 → 5 | CW-only PreTran + ID maps |
 | `process_posttrans` | 6 → 7 → 8 | One post-transfection replicate |
 | `call_activity` | 9 | Activity calling |
 
@@ -22,6 +23,11 @@ are retained. Pass `--no-delete-intermediate` to keep intermediates.
 
 Shared optional flags on grouped commands: `--project-dir` (default: cwd),
 `--output-dir` (defaults under `work/` as described in [Workflow](../workflow.md)).
+
+PreTran ID profile is **CLI-declared** via required `--id-columns` (for
+example `EID,PID` or `EID`). Step 5 emits one cluster-reference file per
+declared ID using ExactID filenames
+(`pretran_step5_EID_cluster_reference.tsv.gz`, etc.).
 
 ---
 
@@ -39,15 +45,32 @@ Step 2 inputs are wired from Step 1 cleaned reads.
 
 ### `process_pretrans` (step3 CW → step3 CCW → step4 → step5)
 
-**Required:** `--cw-prefix`, `--ccw-prefix`, `--cw-records`, `--ccw-records`, `--forward-reference`, `--reverse-reference`
+**Required:** `--id-columns`, `--cw-prefix`, `--ccw-prefix`, `--cw-records`, `--ccw-records`, `--forward-reference`, `--reverse-reference`
 
 **Optional:** `--project-dir`, `--output-dir`, `--max-edit-distance` (default `1`), `--min-pretran-umi-count` (default `1`), `--cluster-mode` (`connected` \| `unique`, default `connected`), `--cluster-max-edit-distance` (default `1`), `--idmap-min-dominant-count` (default `10`), `--idmap-min-dominant-ratio` (default `0.8`), `--delete-intermediate` / `--no-delete-intermediate`
 
-**Retained outputs (typical):**
+**Retained outputs (typical, dual-ID):**
 
 - `work/id_map_generation/pretran_step5_id_crosswalk.tsv.gz`
-- `work/id_map_generation/pretran_step5_eid_cluster_reference.tsv.gz`
-- `work/id_map_generation/pretran_step5_pid_cluster_reference.tsv.gz`
+- `work/id_map_generation/pretran_step5_EID_cluster_reference.tsv.gz`
+- `work/id_map_generation/pretran_step5_PID_cluster_reference.tsv.gz`
+- Step summaries
+
+### `process_pretrans_cw_only` (step3 CW → step4 → step5)
+
+CW-only PreTran path. Omits the CCW trio; Step 4 receives a single Step 3
+output via `--records`.
+
+**Required:** `--id-columns`, `--cw-prefix`, `--cw-records`, `--forward-reference`
+
+**Rejected:** `--ccw-prefix`, `--ccw-records`, `--reverse-reference`
+
+**Optional:** same Step 5 / project / intermediate flags as `process_pretrans`
+
+**Retained outputs (typical, EID-only):**
+
+- `work/id_map_generation/pretran_step5_id_crosswalk.tsv.gz`
+- `work/id_map_generation/pretran_step5_EID_cluster_reference.tsv.gz`
 - Step summaries
 
 ### `process_posttrans` (step6 → step7 → step8)
@@ -72,7 +95,7 @@ as the element reference.
 **Optional:** `--project-dir`, `--summary-path` (derived from `--output-path` when omitted), `--pseudocount` (default `1.0`), `--activity-threshold-z` (default `2.0`), `--delete-intermediate` / `--no-delete-intermediate` (no-op; no orchestrator intermediates)
 
 DNA and RNA lists must contain the same number of replicate tables. Run once per
-branch (eBC and pBC). Output format: [`activity-by-element`](../formats.md#activity-by-element).
+branch (eBC and pBC when both are present). Output format: [`activity-by-element`](../formats.md#activity-by-element).
 
 ---
 
@@ -108,14 +131,27 @@ done
 
 ### 2. Process pre-transfection
 
+Dual-orientation + dual-ID:
+
 ```bash
 yulab_reporter_pipe process_pretrans \
+  --id-columns EID,PID \
   --cw-prefix PreTran_CW \
   --ccw-prefix PreTran_CCW \
   --cw-records work/delimited/PreTran_CW_step2_records.tsv.gz \
   --ccw-records work/delimited/PreTran_CCW_step2_records.tsv.gz \
   --forward-reference "<ref_dir>/forward_elements.fa" \
   --reverse-reference "<ref_dir>/reverse_elements.fa"
+```
+
+CW-only / EID-only alternative:
+
+```bash
+yulab_reporter_pipe process_pretrans_cw_only \
+  --id-columns EID \
+  --cw-prefix PreTran_CW \
+  --cw-records work/delimited/PreTran_CW_step2_records.tsv.gz \
+  --forward-reference "<ref_dir>/forward_elements.fa"
 ```
 
 ### 3. Process post-transfection replicates
@@ -127,7 +163,7 @@ for material in DNA RNA; do
     yulab_reporter_pipe process_posttrans \
       --library-prefix "${prefix}" \
       --id-field EID \
-      --cluster-reference work/id_map_generation/pretran_step5_eid_cluster_reference.tsv.gz \
+      --cluster-reference work/id_map_generation/pretran_step5_EID_cluster_reference.tsv.gz \
       --input-id-col EID \
       --input-count-col MoleculeCount
   done
@@ -139,7 +175,7 @@ for material in DNA RNA; do
     yulab_reporter_pipe process_posttrans \
       --library-prefix "${prefix}" \
       --id-field PID1 \
-      --cluster-reference work/id_map_generation/pretran_step5_pid_cluster_reference.tsv.gz \
+      --cluster-reference work/id_map_generation/pretran_step5_PID_cluster_reference.tsv.gz \
       --input-id-col PID1 \
       --input-count-col MoleculeCount
   done
@@ -176,7 +212,8 @@ yulab_reporter_pipe call_activity \
 
 Use individual steps for debugging or resumable runs when intermediates already
 exist. All steps accept `--project-dir` (default cwd) and usually `--output-dir`
-(default under `work/`).
+(default under `work/`). Grouped-command `--help` is the richest surface for
+orchestrated flags; step modules also expose their own parsers.
 
 ### `step1`
 
@@ -206,22 +243,23 @@ exist. All steps accept `--project-dir` (default cwd) and usually `--output-dir`
 | --- | --- | --- |
 | `--library-prefix` | yes | — |
 | `--input-records` | yes | — |
-| `--forward-reference` | yes | — |
-| `--reverse-reference` | yes | — |
+| `--reference` | yes | Orientation-appropriate FASTA |
+| `--id-columns` | yes | e.g. `EID,PID` or `EID` |
 | `--max-edit-distance` | no | `1` |
 
 ### `step4`
 
 | Flag | Required | Default |
 | --- | --- | --- |
-| `--cw-records` | yes | — |
-| `--ccw-records` | yes | — |
+| `--records` | yes (repeatable, ≥1) | — |
+| `--id-columns` | yes | Must match Step 3 / Step 5 |
 
 ### `step5`
 
 | Flag | Required | Default |
 | --- | --- | --- |
 | `--pretran-counts` | yes | — |
+| `--id-columns` | yes | Declares cluster domains |
 | `--min-pretran-umi-count` | no | `1` |
 | `--cluster-mode` | no | `connected` |
 | `--cluster-max-edit-distance` | no | `1` |

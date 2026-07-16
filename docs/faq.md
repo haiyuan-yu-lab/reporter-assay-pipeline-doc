@@ -6,7 +6,7 @@
 
 ## Which version do these docs describe?
 
-**0.1.0b1** (beta). For any installed build, `COMMAND --help` is authoritative.
+**0.1.0b2** (beta). For any installed build, `COMMAND --help` is authoritative.
 
 ## Why did my intermediates disappear after a grouped command?
 
@@ -28,12 +28,23 @@ No. Step 1 / `prep_lib` invoke whichever `fastp` binary is on `PATH`.
 
 By **record order**, not by matching `Element` header strings. Both FASTA files
 must have the same number of records; record `i` in each file is the same
-physical element in opposite orientations. See [Workflow](workflow.md).
+physical element in opposite orientations. This applies to dual-orientation
+`process_pretrans` and `plot_orientation_scatter`. ExogeneousSequences export
+uses repeatable `--reference` in CLI order and does not require equal counts.
+See [Workflow](workflow.md).
+
+## Can I run CW-only / EID-only PreTran?
+
+Yes. Use `process_pretrans_cw_only` with `--id-columns EID` (and a single
+`--forward-reference`). Step 5 emits only the EID cluster reference. Skip the
+pBC branch for post-transfection / activity / export. See
+[Pipeline CLI](cli/pipe.md).
 
 ## Why do I need two `call_activity` runs?
 
 eBC and pBC are separate branches with different cluster references and
 activity tables (typically `EID-ActivityByElement` and `PID-ActivityByElement`).
+EID-only libraries only need the eBC run.
 
 ## How does `process_posttrans` find Step 2 records?
 
