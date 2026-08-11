@@ -130,9 +130,10 @@ yulab_reporter_pipe step7 \
   --project-dir "<project_dir>"
 ```
 
-Step 7 resolves the branch from the matched-records schema. It skips malformed
-rows and rows missing required values, then deduplicates molecules before
-counting:
+Step 7 resolves the branch from the matched-records schema. Exactly one
+supported layout must be present: a valid eBC layout (`EID`, `UMI`) or a valid
+pBC layout (`UMI1`, `PID1`, `PID2`, `UMI2`). It skips malformed rows and rows
+missing required values, then deduplicates molecules before counting:
 
 | Branch | Molecule key | Quantification key |
 | --- | --- | --- |
@@ -140,17 +141,18 @@ counting:
 | pBC | `(PID1, PID2, UMI1, UMI2)` | `(PID1, PID2)` |
 
 Duplicate molecule keys count once. Output rows are deterministic and counts
-are positive integers. A schema that is missing either supported layout or
-matches both layouts is a fatal, ambiguous-branch configuration error. A
-corrupt input, unwritable output, or zero retained molecules is also fatal;
-malformed rows alone are tolerated when valid molecules remain.
+are positive integers. A schema that resolves to neither supported layout or
+matches both layouts is a fatal, ambiguous-branch configuration error. A valid
+single eBC or pBC layout is accepted. A corrupt input, unwritable output, or
+zero retained molecules is also fatal; malformed rows alone are tolerated when
+valid molecules remain.
 
 Step 7 writes:
 
 | Artifact | Contract |
 | --- | --- |
 | `work/posttran_quantification/<prefix>_step7_quantification.tsv.gz` | eBC: `EID`, `MoleculeCount`; pBC: `PID1`, `PID2`, `MoleculeCount`. |
-| `work/posttran_quantification/<prefix>_step7_summary.json` | Includes `branch`, input/output paths, `input_record_count`, skip counts, `deduplicated_molecule_count`, `output_group_count`, `status`, and `failure_reason`. |
+| `work/posttran_quantification/<prefix>_step7_summary.json` | Includes `library_prefix`, `branch`, input/output paths, `input_record_count`, skip counts, `deduplicated_molecule_count`, `output_group_count`, `status`, and `failure_reason`. |
 
 Completion requires a non-empty output with the branch-specific header and a
 successful summary. Do not continue to Step 8 after a failed summary.
@@ -180,7 +182,7 @@ Step 8 writes:
 | Artifact | Contract |
 | --- | --- |
 | `work/posttran_element_mapping/<prefix>_step8_element_counts.tsv.gz` | Exactly `Element`, `MoleculeCount`, one deterministic row per Element. |
-| `work/posttran_element_mapping/<prefix>_step8_summary.json` | Includes input/reference paths, selectors, input and skip counts, `skipped_unmapped_id_count`, `mapped_record_count`, `output_element_count`, `status`, and `failure_reason`. |
+| `work/posttran_element_mapping/<prefix>_step8_summary.json` | Includes `library_prefix`, input/reference paths, selectors, input and skip counts, `skipped_unmapped_id_count`, `mapped_record_count`, `output_element_count`, `status`, and `failure_reason`. |
 
 Completion requires a non-empty element-count table, positive integer counts,
 and `status` `success`. These tables are the Step 9 DNA/RNA inputs.
@@ -211,7 +213,7 @@ jq '{status, failure_reason, input_record_count, mapped_record_count,
 | Step 6 summary is `failed` or matched output is empty | Fatal handoff failure | Fix the reported schema, reference, parsing, or output problem; rerun Step 6 before Step 7. |
 | Step 7 reports ambiguous schema | Unsupported eBC/pBC-compatible input | Remove the extra branch columns or produce a valid branch-specific Step 6 output; rerun Step 6/7. |
 | Step 7 has high deduplication or no groups | Valid duplicate collapse or fatal zero-output | Inspect molecule-key inputs and summary; continue only with `success` and groups > 0, otherwise repair and rerun Step 7. |
-| Step 8 has unmapped IDs | Tolerated mapping loss or wrong domain | Use the matching EID/EID or PID1/PID reference, inspect canonical IDs, and rerun Step 8 after correction. |
+| Step 8 has unmapped IDs | Tolerated mapping loss or wrong domain | Use `EID` with the EID cluster reference for eBC, or `PID1` with the PID cluster reference for pBC; inspect canonical IDs and rerun Step 8 after correction. |
 | Step 8 summary is `failed` or output is empty | Fatal mapping/output failure | Fix selectors, reference uniqueness, counts, or I/O; rerun Step 8 before Step 9. |
 | Grouped run stops after Step 6 or 7 | Resumable orchestration failure | Preserve intermediates with `--no-delete-intermediate`, read the failed summary, and rerun the first failed individual step using the commands above. |
 
