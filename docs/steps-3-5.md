@@ -40,12 +40,17 @@ Use one ordered `--id-columns` value throughout the run. The dual-ID profile
 uses `EID,PID`; an EID-only profile uses `EID`. The same value must match every
 Step 3/4/5 schema, including spelling and order.
 
-For a dual-orientation run, the forward FASTA and reverse FASTA are positional
-pairs: record *i* in each file represents the same physical element in opposite
-orientations. Step 3 itself receives one reference at a time and does not
-validate the pair. Use `PreTran_CW` with the forward reference and `PreTran_CCW`
-with the reverse reference. For CW-only operation, omit the CCW library and
-reverse reference entirely.
+For a dual-orientation run, the caller is responsible for supplying a valid
+forward/reverse FASTA pair: both files must have the same record count, and
+record *i* in each file must represent the same physical element in opposite
+orientations. Step 3 receives one orientation-specific reference at a time and
+does not validate this positional pairing. Perform the [reference FASTA
+checks](input-preparation.md#reference-fasta-checks) before running; the same
+equal-count/order invariant is enforced for orientation-scatter QC in
+[`plot_orientation_scatter`](cli/qc.md#plot_orientation_scatter). Use
+`PreTran_CW` with the forward reference and `PreTran_CCW` with the reverse
+reference. For CW-only operation, omit the CCW library and reverse reference
+entirely.
 
 ## Complete grouped command
 
@@ -133,11 +138,14 @@ yulab_reporter_pipe step3 \
 For each valid row, matching is attempted in this order: exact anchor, unique
 exact containment of the anchor in a reference sequence, then bounded
 edit-distance alignment when `--max-edit-distance` is greater than zero.
-Edit-distance candidates are compared at their minimum distance; a tie among
-distinct Elements is ambiguous. Exact or containment matches are also
-ambiguous when more than one distinct Element matches. Matching is against the
-single supplied orientation reference, so CW and CCW must not share a
-reference accidentally.
+The edit-distance fallback uses the released `edlib`-backed contract: the
+anchor is the query, the reference sequence is the target, and semi-global
+(`HW`) alignment may find the anchor over any target interval while allowing
+substitutions, insertions, and deletions up to the configured bound. Candidates
+are compared at their minimum observed distance; a tie among distinct Elements
+is ambiguous. Exact or containment matches are also ambiguous when more than
+one distinct Element matches. Matching is against the single supplied
+orientation reference, so CW and CCW must not share a reference accidentally.
 
 Missing `UMI`, any declared ID, or `ElementAnchorSeq`; unmatched anchors; and
 ambiguous matches are tolerated row-level skips and are counted. They do not
