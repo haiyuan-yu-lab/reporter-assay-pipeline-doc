@@ -42,6 +42,12 @@ Prepare these before a full run:
   [Workflow](workflow.md)#forwardreverse-reference-pairing)
 - A negative-control annotation file (one element ID per non-empty line)
 
+Use the [input-readiness checklist](input-preparation.md) to verify gzip
+validity, non-empty synchronized pairs, positional reference pairing, retained
+controls, and the selected CW-only or dual-branch profile. Build schemas using
+the [layout-schema reference](layout-schemas.md); do not copy private construct
+sequences into public examples.
+
 Default intermediates and outputs are written under `<project_dir>/work/` unless you set `--project-dir` or `--output-dir`.
 
 ## Library layout

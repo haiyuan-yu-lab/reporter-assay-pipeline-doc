@@ -27,6 +27,8 @@ nav:
       - Workflow: workflow.md
       - Artifact formats: formats.md
   - Run:
+      - Prepare inputs: input-preparation.md
+      - Layout schemas: layout-schemas.md
       - Pipeline CLI: cli/pipe.md
       - CLI overview: cli/index.md
   - Diagnose:

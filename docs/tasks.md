@@ -13,6 +13,10 @@ to do. All pages describe release **0.1.0b2**.
 ## Run
 
 - [Quickstart](quickstart.md) — install the pinned release and check inputs.
+- [Prepare inputs](input-preparation.md) — validate FASTQ pairs, references,
+  controls, branches, and replicate sets before execution.
+- [Layout schemas](layout-schemas.md) — construct and validate Step 2 JSON
+  schemas with symbolic examples.
 - [Pipeline CLI](cli/pipe.md) — run grouped commands or individual steps.
 - [CLI overview](cli/index.md) — choose among pipeline, QC, and export commands.
 
