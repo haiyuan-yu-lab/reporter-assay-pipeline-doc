@@ -10,6 +10,8 @@ branch handling.
 
 For the complete post-transfection procedure, branch handoffs, artifact
 contracts, and recovery guidance, see [Steps 6–8](../steps-6-8.md).
+For the activity formulas, summary schema, and Step 9 recovery matrix, see
+[Step 9: call activity](../steps-9.md).
 
 ```bash
 yulab_reporter_pipe --help

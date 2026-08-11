@@ -60,6 +60,8 @@ Typical Step 8 retained artifact per replicate:
 
 For the exact eBC and pBC commands, summaries, validation checks, and
 symptom-first recovery matrix, see [Steps 6–8](steps-6-8.md).
+For the exact activity calculation and Step 9 completion contract, see
+[Step 9: call activity](steps-9.md).
 
 ## PreTran profiles
 

@@ -32,6 +32,7 @@ nav:
       - Steps 1–2: steps-1-2.md
       - Steps 3–5: steps-3-5.md
       - Steps 6–8: steps-6-8.md
+      - Step 9: steps-9.md
       - Pipeline CLI: cli/pipe.md
       - CLI overview: cli/index.md
   - Diagnose:
@@ -43,6 +44,7 @@ nav:
       - QC CLI: cli/qc.md
       - Export CLI: cli/export.md
       - Artifact formats: formats.md
+      - Step 9 activity: steps-9.md
   - FAQ: faq.md
 
 markdown_extensions:
