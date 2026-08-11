@@ -57,8 +57,9 @@ Counting grain is one value per `Element`: sum `PreTranUMICount` across all
 crosswalk rows assigned to that element. `cdf` plots the sorted values against
 cumulative fraction; `cdf-count` uses cumulative element count; `hist` uses
 element count on the y-axis (the released renderer uses a log y-axis). All
-three use a linear x-axis with lower limit 0. These are descriptive depth
-distributions, not acceptance criteria.
+three use a linear x-axis with lower limit 0 and include a legend identifying
+the rendered CDF or histogram series. These are descriptive depth distributions,
+not acceptance criteria.
 
 ### `make_ID_per_elem_plot`
 
@@ -73,7 +74,9 @@ Counting grain is one value per `Element`: count distinct values in the selected
 leading ID column. `--id-column` is resolved against the loaded file header;
 it must not be `Element` or `PreTranUMICount`, and ID names are not a
 hard-coded global list. The CDF and histogram encodings are the same as the
-UMI-per-element command, with the x-axis representing distinct-ID count.
+UMI-per-element command, with the x-axis representing distinct-ID count; each
+CDF, cumulative-count, and histogram output includes a legend identifying the
+rendered series.
 
 ### `make_umi_per_id_plot`
 
@@ -91,7 +94,9 @@ their counts are summed; despite the historical name, this also works for a
 single-ID profile. `cdf` and `cdf-count` show cumulative fraction or observation
 count; `hist` shows observation count (log y-axis); `cdf-complement` shows
 `1 - CDF` against the UMI cutoff and defaults to an x maximum of 20 unless
-`--x-max` is supplied. All CDF x-axes start at 0.
+`--x-max` is supplied. Every CDF, complement-CDF, cumulative-count, and
+histogram output includes a legend identifying its rendered series. All CDF
+x-axes start at 0.
 
 ### Example
 
@@ -152,6 +157,10 @@ the corresponding scatter, with equal axes where feasible. If a
 `negative-control-list` is supplied, matching elements are rendered as a
 distinct series in lower-triangle panels. The plot is a concordance diagnostic;
 the command does not define a correlation threshold or gate.
+
+In a lower-triangle scatter panel, the legend identifies `Elements` and
+`Negative controls` whenever both series are rendered. If only one series has
+points, only that rendered series needs to appear in the legend.
 
 ```bash
 yulab_reporter_qc make_between_rep_activity_plot \
@@ -274,8 +283,18 @@ has no valid rows, an enum or numeric option is invalid, or an output cannot be
 written. Between-replicate QC additionally fails for mismatched DNA/RNA list
 lengths, fewer than two replicate pairs, or an empty shared `Element` space.
 Orientation scatter additionally validates unique, non-empty FASTA references
-with equal record counts, rejects activity elements in neither reference, and
-requires at least one `Both` pair when no table output was requested.
+with equal record counts, rejects duplicate `Element` rows in the
+`activity-by-element` input, rejects activity elements in neither reference,
+rejects a supplied negative-control file with no usable IDs, and requires at
+least one `Both` pair when no table output was requested.
+
+For duplicate activity rows, return to the Step 9 producer, validate that its
+`activity-by-element` output has one row per `Element`, and regenerate the
+artifact before rerunning QC. For an empty negative-control annotation, fix the
+list to contain at least one non-empty element ID (one ID per line), or omit
+`--negative-control-annotation` when highlighting is not needed. These are
+input-contract failures; QC does not guess which duplicate row or control ID
+to use.
 
 Recovery is to verify the producer stage and artifact format, inspect the
 stage summary and retained file paths, correct the invocation or input, and
