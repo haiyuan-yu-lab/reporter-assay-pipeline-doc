@@ -29,6 +29,7 @@ nav:
   - Run:
       - Prepare inputs: input-preparation.md
       - Layout schemas: layout-schemas.md
+      - Complete command paths: complete-command-paths.md
       - Steps 1–2: steps-1-2.md
       - Steps 3–5: steps-3-5.md
       - Steps 6–8: steps-6-8.md
