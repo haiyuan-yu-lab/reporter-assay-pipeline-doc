@@ -68,13 +68,19 @@ UMI counts are intermediate evidence; they are not themselves activity calls.
 
 ### EID (enhancer identifier)
 
-The identifier domain used by the eBC branch. An EID value is a barcode
-identifier associated with a tested element through PreTran evidence.
+The identifier domain used by the eBC branch. An EID is typically a 20-base-
+pair random DNA barcode positioned so that it is co-transcribed with its
+associated target gene. Its RNA abundance relative to its DNA abundance
+reports enhancer activity. PreTran evidence associates EID values with tested
+elements.
 
 ### PID (promoter identifier)
 
-The identifier domain used by the pBC branch. A PID value is a barcode
-identifier associated with a tested element through PreTran evidence.
+The identifier domain used by the pBC branch. A PID is typically a 20-base-
+pair random DNA barcode positioned downstream of a tested element so that it
+is co-transcribed with that element. Its RNA abundance relative to its DNA
+abundance reports promoter activity. PreTran evidence associates PID values
+with tested elements.
 
 ## Mapping and references
 

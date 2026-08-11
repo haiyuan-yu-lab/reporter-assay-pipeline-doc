@@ -48,14 +48,15 @@ The pipeline uses three library roles:
 
 1. **PreTran libraries** are sequenced before transfection. Their identifier
    and element observations establish which EID/PID values are associated with
-   which tested elements. PreTran DNA/RNA replicate labels are not activity
-   measurements; they are evidence for building the identifier map.
+   which tested elements. Dual-orientation PreTran inputs are represented as
+   CW/forward and CCW/reverse libraries; they provide evidence for building
+   the identifier map, not DNA/RNA activity replicates.
 2. **PostTran DNA libraries** measure the DNA-side abundance of identifiers
-   after transfection. They provide the denominator for the corresponding
-   activity ratio.
+   after transfection for an eBC or pBC branch. They provide the denominator
+   for the corresponding activity ratio.
 3. **PostTran RNA libraries** measure the RNA-side abundance of identifiers
-   after transfection. They provide the numerator for the corresponding
-   activity ratio.
+   after transfection for an eBC or pBC branch. They provide the numerator for
+   the corresponding activity ratio.
 
 DNA and RNA are separate replicate sets. A Step 9 invocation aligns DNA and
 RNA by replicate index and retains only elements present in every input
