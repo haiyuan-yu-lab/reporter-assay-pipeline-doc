@@ -29,6 +29,7 @@ nav:
   - Run:
       - Prepare inputs: input-preparation.md
       - Layout schemas: layout-schemas.md
+      - Steps 1–2: steps-1-2.md
       - Pipeline CLI: cli/pipe.md
       - CLI overview: cli/index.md
   - Diagnose:

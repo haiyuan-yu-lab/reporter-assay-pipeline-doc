@@ -78,6 +78,9 @@ summary must report `status: success`, and the output pair counts must remain
 synchronized. The next valid command is Step 2 (or the corresponding grouped
 PreTran/PostTran command) using those retained trimmed files.
 
+For complete individual commands, artifact contracts, and recovery guidance,
+see [Steps 1–2: prepare one library](steps-1-2.md).
+
 ## Layout schemas
 
 Every library passed to Step 2 needs a JSON layout schema. The schema must

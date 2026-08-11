@@ -133,6 +133,9 @@ wrapper, for example `prep_lib` with `--layout-schema`. After it succeeds,
 verify `*_step2_records.tsv.gz`, its header, and `*_step2_summary.json` before
 using the records in Step 3 or Step 6.
 
+See [Steps 1–2: prepare one library](steps-1-2.md) for the complete individual
+Step 1 → Step 2 handoff and symptom-first recovery matrix.
+
 ## Privacy boundary
 
 Keep real construct sequences, primer/anchor strings, sample names, and
