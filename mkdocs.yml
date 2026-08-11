@@ -22,6 +22,8 @@ nav:
   - Quickstart: quickstart.md
   - Tasks: tasks.md
   - Learn:
+      - Assay model: assay-model.md
+      - Canonical glossary: glossary.md
       - Workflow: workflow.md
       - Artifact formats: formats.md
   - Run:

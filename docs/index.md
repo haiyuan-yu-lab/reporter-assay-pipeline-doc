@@ -23,7 +23,10 @@ export artifacts.
 
 ## Choose a path
 
-- **Learn** — [Workflow](workflow.md) introduces the pipeline stages and
+- **Learn** — [Assay model](assay-model.md) explains what is measured and how
+  branches, identifiers, libraries, and orientations relate; the [canonical
+  glossary](glossary.md) defines the vocabulary. [Workflow](workflow.md)
+  introduces the pipeline stages and
   [artifact formats](formats.md) names the files exchanged between them.
 - **Run** — [Quickstart](quickstart.md) covers prerequisites and inputs; the
   [CLI overview](cli/index.md) and [Pipeline CLI](cli/pipe.md) cover commands.
