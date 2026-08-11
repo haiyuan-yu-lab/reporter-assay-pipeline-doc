@@ -17,6 +17,8 @@ to do. All pages describe release **0.1.0b2**.
   controls, branches, and replicate sets before execution.
 - [Layout schemas](layout-schemas.md) — construct and validate Step 2 JSON
   schemas with symbolic examples.
+- [Steps 3–5](steps-3-5.md) — match PreTran orientations, merge UMI counts,
+  and build crosswalk/cluster references.
 - [Pipeline CLI](cli/pipe.md) — run grouped commands or individual steps.
 - [CLI overview](cli/index.md) — choose among pipeline, QC, and export commands.
 
