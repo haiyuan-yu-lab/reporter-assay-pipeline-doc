@@ -10,18 +10,32 @@ theme:
     - navigation.sections
     - navigation.expand
     - search.suggest
+    - search.highlight
     - content.code.copy
+
+plugins:
+  - search:
+      lang: en
 
 nav:
   - Home: index.md
   - Quickstart: quickstart.md
-  - Workflow: workflow.md
-  - CLI:
-      - Overview: cli/index.md
-      - Pipeline: cli/pipe.md
-      - QC: cli/qc.md
-      - Export: cli/export.md
-  - Artifact formats: formats.md
+  - Tasks: tasks.md
+  - Learn:
+      - Workflow: workflow.md
+      - Artifact formats: formats.md
+  - Run:
+      - Pipeline CLI: cli/pipe.md
+      - CLI overview: cli/index.md
+  - Diagnose:
+      - FAQ: faq.md
+      - Known limitations: known-limitations.md
+  - Reference:
+      - CLI overview: cli/index.md
+      - Pipeline CLI: cli/pipe.md
+      - QC CLI: cli/qc.md
+      - Export CLI: cli/export.md
+      - Artifact formats: formats.md
   - FAQ: faq.md
 
 markdown_extensions:

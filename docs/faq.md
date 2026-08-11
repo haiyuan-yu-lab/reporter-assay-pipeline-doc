@@ -6,7 +6,9 @@
 
 ## Which version do these docs describe?
 
-**0.1.0b2** (beta). For any installed build, `COMMAND --help` is authoritative.
+**0.1.0b2** (beta). The public documentation describes the released
+behavioral contract. `COMMAND --help` describes the command surface of the
+installed local build; disagreements are defects.
 
 ## Why did my intermediates disappear after a grouped command?
 
@@ -58,6 +60,7 @@ equivalent file at that path).
 No. QC is inspection-only. It does not apply pass/fail thresholds and does not
 modify pipeline artifacts.
 
-## Will there be a documentation chatbot?
+## Where are the current release limitations?
 
-Planned. It will answer from this documentation corpus only (with citations).
+See [Known limitations](known-limitations.md) for incomplete or inconsistent
+behavior documented for 0.1.0b2.

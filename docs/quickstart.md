@@ -11,7 +11,7 @@
 From the public GitHub repository:
 
 ```bash
-pip install git+https://github.com/haiyuan-yu-lab/reporter-assay-pipeline.git
+pip install git+https://github.com/haiyuan-yu-lab/reporter-assay-pipeline.git@0.1.0b2
 ```
 
 Or from a local checkout of a `0.1.0b2` tag or matching commit:
@@ -20,7 +20,8 @@ Or from a local checkout of a `0.1.0b2` tag or matching commit:
 pip install .
 ```
 
-Install `fastp` separately before running Step 1 or `prep_lib`.
+Install `fastp` separately before running Step 1 or `prep_lib`. The pinned
+package release and this site together describe the current public contract.
 
 ## Verify
 

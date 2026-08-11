@@ -14,7 +14,8 @@ This repository is the source of truth for:
 - Intermediate/final artifact format descriptions
 - FAQ
 
-It is also the intended corpus for a future docs-grounded Q&A chatbot.
+Native site search is available for exact terms, commands, flags, artifacts,
+and symptoms.
 
 ## Local preview
 
