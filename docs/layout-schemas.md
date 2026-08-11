@@ -1,5 +1,8 @@
 # Layout-schema reference
 
+This page documents the **0.1.0b2** layout-schema grammar and matching
+behavior. Examples use symbolic anchors and are not executable assay inputs.
+
 A layout schema is per-library JSON configuration consumed by Step 2. It tells
 the parser how to walk R1 and R2, which variable fields to capture, which
 constant anchors to verify, the output-column order, and which captured fields

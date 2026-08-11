@@ -19,23 +19,20 @@ plugins:
 
 nav:
   - Home: index.md
-  - Quickstart: quickstart.md
   - Tasks: tasks.md
+  - Quickstart: quickstart.md
   - Learn:
       - Assay model: assay-model.md
       - Canonical glossary: glossary.md
-      - Workflow: workflow.md
-      - Artifact formats: formats.md
   - Run:
       - Prepare inputs: input-preparation.md
       - Layout schemas: layout-schemas.md
       - Complete command paths: complete-command-paths.md
+      - Workflow and stage handoffs: workflow.md
       - Steps 1–2: steps-1-2.md
       - Steps 3–5: steps-3-5.md
       - Steps 6–8: steps-6-8.md
       - Step 9: steps-9.md
-      - Pipeline CLI: cli/pipe.md
-      - CLI overview: cli/index.md
   - Diagnose:
       - FAQ: faq.md
       - Known limitations: known-limitations.md
@@ -45,8 +42,6 @@ nav:
       - QC CLI: cli/qc.md
       - Export CLI: cli/export.md
       - Artifact formats: formats.md
-      - Step 9 activity: steps-9.md
-  - FAQ: faq.md
 
 markdown_extensions:
   - admonition

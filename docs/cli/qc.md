@@ -1,5 +1,8 @@
 # `yulab_reporter_qc`
 
+This page documents the **0.1.0b2** QC command and its released plot
+semantics; QC remains diagnostic and does not add acceptance thresholds.
+
 Read-only plotting commands over existing pipeline artifacts. QC reads the
 explicit paths supplied on the command line, computes values for display (and,
 for orientation scatter, an optional table), and writes new outputs. It never
@@ -182,7 +185,7 @@ yulab_reporter_qc make_between_rep_activity_plot \
 Forward-vs-reverse activity scatter from a single Step 9
 [`activity-by-element`](../formats.md#activity-by-element) table plus paired
 reference FASTAs. Pairing is **positional** by reference record order (see
-[Workflow](../workflow.md)#forwardreverse-reference-pairing). Activity rows are
+[Workflow](../workflow.md#forwardreverse-reference-pairing). Activity rows are
 split by reference membership; an `Element` present in neither reference is a
 hard failure.
 

@@ -1,5 +1,8 @@
 # Workflow
 
+This page documents the released **0.1.0b2** stage graph, handoffs, and
+retention behavior.
+
 The pipeline starts from raw FASTQ pairs for pre-transfection and
 post-transfection libraries. It trims and parses reads, builds pre-transfection
 ID maps, matches post-transfection barcode observations back to those maps,

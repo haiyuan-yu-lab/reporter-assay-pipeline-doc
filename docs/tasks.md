@@ -5,10 +5,10 @@ to do. All pages describe release **0.1.0b2**.
 
 ## Learn
 
-- [Workflow](workflow.md) — understand the nine stages, their handoffs, and
-  retained outputs.
-- [Artifact formats](formats.md) — identify the tables, lists, and files used
-  at each handoff.
+- [Assay model](assay-model.md) — understand tested elements, eBC/pBC branches,
+  EID/PID identifier domains, PreTran/PostTran libraries, and activity evidence.
+- [Canonical glossary](glossary.md) — resolve exact terms such as CW, CCW, UMI,
+  Element, ActivityCall, and negative-control list.
 
 ## Run
 
@@ -19,13 +19,18 @@ to do. All pages describe release **0.1.0b2**.
   schemas with symbolic examples.
 - [Steps 3–5](steps-3-5.md) — match PreTran orientations, merge UMI counts,
   and build crosswalk/cluster references.
-- [Pipeline CLI](cli/pipe.md) — run grouped commands or individual steps.
-- [CLI overview](cli/index.md) — choose among pipeline, QC, and export commands.
+- [Steps 6–8](steps-6-8.md) — match post-transfection IDs, quantify molecules,
+  and map counts back to elements.
+- [Step 9](steps-9.md) — align replicates and produce an activity-by-element
+  table for each present branch.
+- [Complete command paths](complete-command-paths.md) — follow grouped or
+  individual commands across the complete dual-branch example.
 
 ## Diagnose
 
 - [FAQ](faq.md) — resolve common setup, retention, pairing, and branch questions.
-- [Workflow](workflow.md) — check stage completion criteria and summaries.
+- [Workflow](workflow.md) — check stage completion criteria, summaries, and
+  retained handoffs.
 - [Known limitations](known-limitations.md) — review behavior that is incomplete
   or inconsistent in 0.1.0b2.
 
@@ -35,3 +40,11 @@ to do. All pages describe release **0.1.0b2**.
 - [QC CLI](cli/qc.md) — plot inputs and options.
 - [Export CLI](cli/export.md) — ExogeneousSequences export contract.
 - [Artifact formats](formats.md) — exact columns and encodings.
+
+## Search suggestions
+
+Native site search is keyword-based. These exact queries are useful entry
+points: `eBC` / `pBC` (branches), `EID` / `PID` (identifier domains), `CW` /
+`CCW` (orientation), `PreTran` / `PostTran`, `UMI`, `ActivityCall`,
+`activity-by-element`, `--min-match-length`, `negative-control-list`,
+`zero retained`, `orientation scatter`, and `ExogeneousSequences`.

@@ -1,5 +1,7 @@
 # Assay model
 
+This page documents the released **0.1.0b2** assay model and vocabulary.
+
 This page explains the general dual reporter-assay model used by the
 Reporter Assay Pipeline. It is the conceptual starting point for the
 [workflow](workflow.md) and [canonical glossary](glossary.md).
