@@ -8,6 +8,9 @@ individual steps. See [Known limitations](../known-limitations.md), including
 the ineffective Step 6 `--min-match-length` option and inconsistent ambiguous
 branch handling.
 
+For the complete post-transfection procedure, branch handoffs, artifact
+contracts, and recovery guidance, see [Steps 6–8](../steps-6-8.md).
+
 ```bash
 yulab_reporter_pipe --help
 yulab_reporter_pipe <subcommand> --help

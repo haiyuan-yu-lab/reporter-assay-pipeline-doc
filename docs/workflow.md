@@ -58,6 +58,9 @@ Typical Step 8 retained artifact per replicate:
 
 - `work/posttran_element_mapping/<prefix>_step8_element_counts.tsv.gz`
 
+For the exact eBC and pBC commands, summaries, validation checks, and
+symptom-first recovery matrix, see [Steps 6–8](steps-6-8.md).
+
 ## PreTran profiles
 
 | Profile | Grouped command | Typical `--id-columns` |
