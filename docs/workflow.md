@@ -1,5 +1,8 @@
 # Workflow
 
+This page documents the released **0.1.0b2** stage graph, handoffs, and
+retention behavior.
+
 The pipeline starts from raw FASTQ pairs for pre-transfection and
 post-transfection libraries. It trims and parses reads, builds pre-transfection
 ID maps, matches post-transfection barcode observations back to those maps,
@@ -57,6 +60,11 @@ Typical Step 5 retained artifacts (ExactID filenames; domains follow `--id-colum
 Typical Step 8 retained artifact per replicate:
 
 - `work/posttran_element_mapping/<prefix>_step8_element_counts.tsv.gz`
+
+For the exact eBC and pBC commands, summaries, validation checks, and
+symptom-first recovery matrix, see [Steps 6–8](steps-6-8.md).
+For the exact activity calculation and Step 9 completion contract, see
+[Step 9: call activity](steps-9.md).
 
 ## PreTran profiles
 

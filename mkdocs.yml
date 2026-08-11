@@ -10,19 +10,38 @@ theme:
     - navigation.sections
     - navigation.expand
     - search.suggest
+    - search.highlight
     - content.code.copy
+
+plugins:
+  - search:
+      lang: en
 
 nav:
   - Home: index.md
+  - Tasks: tasks.md
   - Quickstart: quickstart.md
-  - Workflow: workflow.md
-  - CLI:
-      - Overview: cli/index.md
-      - Pipeline: cli/pipe.md
-      - QC: cli/qc.md
-      - Export: cli/export.md
-  - Artifact formats: formats.md
-  - FAQ: faq.md
+  - Learn:
+      - Assay model: assay-model.md
+      - Canonical glossary: glossary.md
+  - Run:
+      - Prepare inputs: input-preparation.md
+      - Layout schemas: layout-schemas.md
+      - Complete command paths: complete-command-paths.md
+      - Workflow and stage handoffs: workflow.md
+      - Steps 1–2: steps-1-2.md
+      - Steps 3–5: steps-3-5.md
+      - Steps 6–8: steps-6-8.md
+      - Step 9: steps-9.md
+  - Diagnose:
+      - FAQ: faq.md
+      - Known limitations: known-limitations.md
+  - Reference:
+      - CLI overview: cli/index.md
+      - Pipeline CLI: cli/pipe.md
+      - QC CLI: cli/qc.md
+      - Export CLI: cli/export.md
+      - Artifact formats: formats.md
 
 markdown_extensions:
   - admonition

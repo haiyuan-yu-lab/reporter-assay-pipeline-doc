@@ -1,5 +1,8 @@
 # Quickstart
 
+This page documents release **0.1.0b2**. Follow the pinned installation and
+input contracts here before using the command examples.
+
 ## Requirements
 
 - Python 3.9 or newer
@@ -11,7 +14,7 @@
 From the public GitHub repository:
 
 ```bash
-pip install git+https://github.com/haiyuan-yu-lab/reporter-assay-pipeline.git
+pip install git+https://github.com/haiyuan-yu-lab/reporter-assay-pipeline.git@0.1.0b2
 ```
 
 Or from a local checkout of a `0.1.0b2` tag or matching commit:
@@ -20,7 +23,8 @@ Or from a local checkout of a `0.1.0b2` tag or matching commit:
 pip install .
 ```
 
-Install `fastp` separately before running Step 1 or `prep_lib`.
+Install `fastp` separately before running Step 1 or `prep_lib`. The pinned
+package release and this site together describe the current public contract.
 
 ## Verify
 
@@ -38,8 +42,14 @@ Prepare these before a full run:
 - Layout schema JSON files that describe how Step 2 parses barcode and anchor fields
 - Forward- and/or reverse-orientation tested-library reference FASTA files
   (dual-orientation assays need both; CW-only needs one — see
-  [Workflow](workflow.md)#forwardreverse-reference-pairing)
+  [Workflow](workflow.md#forwardreverse-reference-pairing)
 - A negative-control annotation file (one element ID per non-empty line)
+
+Use the [input-readiness checklist](input-preparation.md) to verify gzip
+validity, non-empty synchronized pairs, positional reference pairing, retained
+controls, and the selected CW-only or dual-branch profile. Build schemas using
+the [layout-schema reference](layout-schemas.md); do not copy private construct
+sequences into public examples.
 
 Default intermediates and outputs are written under `<project_dir>/work/` unless you set `--project-dir` or `--output-dir`.
 
