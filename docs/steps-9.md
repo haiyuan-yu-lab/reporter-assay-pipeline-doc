@@ -2,13 +2,23 @@
 
 Step 9 combines the element-count tables from matching PostTran DNA and RNA
 replicates into one `activity-by-element` table. Run it once for each branch
-that is present. A full dual-branch assay therefore produces one eBC/EID table
-and one pBC/PID table; an EID-only assay produces only the eBC table.
+that is present. A full dual-branch workflow therefore produces one eBC/EID
+table and one pBC/PID table. An explicitly selected EID-only variation runs
+Step 9 once and is complete only within that reduced variation; it does not
+satisfy full dual-branch workflow completion. Detailed variation commands are
+covered by the workflow task documentation.
 
 The input tables must be successful Step 8 `element-counts` artifacts with the
 exact header `Element\tMoleculeCount`. The negative-control annotation is a
 plain-text `negative-control-list`: one non-empty `Element` ID per line, with
 no header.
+
+Each input table must also satisfy the Step 8 value contract: every `Element`
+is a non-empty string, every `MoleculeCount` is a positive integer, and an
+`Element` occurs at most once within that replicate. A missing or malformed
+header is configuration-fatal. Individual malformed data rows may be skipped
+and counted when valid rows remain, but duplicate element keys are not a valid
+replicate input and must be corrected before activity calling.
 
 ## Run one branch
 
@@ -116,7 +126,9 @@ Step 9 writes one primary table and one JSON summary. A successful summary has
 `retained_element_count`, `negative_control_count`,
 `negative_control_retained_count`, `nc_mean`, `nc_median`, `nc_std`,
 `skipped_missing_field_count`, `skipped_invalid_row_count`, `status`, and
-`failure_reason` (null on success). `input_element_count_min` is the smallest
+`failure_reason`. `status` is exactly `success` or `failed`. `failure_reason`
+is null on success and is required and non-null when status is `failed`.
+`input_element_count_min` is the smallest
 input table element count; `retained_element_count` is the size of the shared
 intersection.
 
@@ -138,7 +150,8 @@ branches to succeed.
 | Summary says `failed` or the output is empty/schema-invalid | Completion failure | Read `failure_reason` first, fix that reported condition, and rerun Step 9 before downstream QC/export. |
 
 Some malformed rows are intentionally skipped and counted; that tolerance does
-not make a failed summary complete. If one branch fails, do not treat the other
-branch's successful output as evidence that the failed branch is biologically
-inactive. Downstream QC and export should consume only a successful,
+not make a failed summary complete. For the full dual-branch workflow, if one
+branch fails, do not treat the other branch's successful output as evidence
+that the failed branch is biologically inactive: both branch invocations must
+report success. Downstream QC and export should consume only a successful,
 contract-conforming `activity-by-element` table.
