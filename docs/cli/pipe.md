@@ -5,8 +5,7 @@ Pipeline steps and grouped workflows.
 The released documentation is the behavioral contract for **0.1.0b2**. The
 installed command's help describes the local build and may be incomplete for
 individual steps. See [Known limitations](../known-limitations.md), including
-the ineffective Step 6 `--min-match-length` option and inconsistent ambiguous
-branch handling.
+the ineffective Step 6 `--min-match-length` option.
 
 For the complete post-transfection procedure, branch handoffs, artifact
 contracts, and recovery guidance, see [Steps 6–8](../steps-6-8.md).

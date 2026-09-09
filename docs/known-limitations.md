@@ -17,10 +17,3 @@ The Step 6 `--min-match-length` option is accepted but does not currently alter
 matching behavior as its name suggests. Do not treat it as an effective tuning
 control. Track this defect in
 [public issue 6](https://github.com/DignoMor/reporter-assay-pipeline/issues/6).
-
-## Ambiguous branch handling is inconsistent
-
-Records that can be interpreted through more than one assay branch are not
-handled consistently across the released workflow. Treat ambiguous outcomes as
-requiring diagnosis rather than assuming a stable branch-selection rule. Track
-this defect in [public issue 7](https://github.com/DignoMor/reporter-assay-pipeline/issues/7).

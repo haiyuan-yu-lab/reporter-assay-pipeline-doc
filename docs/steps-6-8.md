@@ -88,18 +88,20 @@ yulab_reporter_pipe step6 \
 ```
 
 Use `--id-field EID` and the EID reference for eBC; use `--id-field PID1` and
-the PID reference for pBC. Step 6 validates the selected input column, the
-branch-required columns, and the reference's `ObservedID`/`CanonicalID`
-columns and unique observed keys. It then performs an exact lookup of each
-observed value in `ObservedID` and emits the corresponding `CanonicalID`.
-There is no fuzzy remapping.
+the PID reference for pBC. Step 6 resolves the branch from the Step 2 schema:
+exactly one supported layout must be present, a valid eBC layout (`UMI`,
+`EID`) or a valid pBC layout (`UMI1`, `PID1`, `PID2`, `UMI2`). It then
+validates the selected input column, the branch-required columns, and the
+reference's `ObservedID`/`CanonicalID` columns and unique observed keys. It
+performs an exact lookup of each observed value in `ObservedID` and emits the
+corresponding `CanonicalID`. There is no fuzzy remapping.
 
 Rows with missing required fields, malformed columns, an `N` in the selected
 identifier, or no reference match are skipped and counted. These row-level
 conditions are not fatal if at least one row remains. A missing/corrupt input
-or reference, invalid configuration, duplicate observed key, unwritable
-output, or zero retained rows is fatal and produces a failed summary; do not
-start Step 7 after such a failure.
+or reference, invalid configuration, duplicate observed key, ambiguous eBC/pBC
+schema, unwritable output, or zero retained rows is fatal and produces a
+failed summary; do not start Step 7 after such a failure.
 
 Step 6 writes:
 
@@ -121,12 +123,6 @@ expected branch header, and internally consistent counts.
 In **0.1.0b2**, `--min-match-length` is accepted but ineffective: changing it
 does not change matching behavior. Do not treat it as a tuning control; see
 [public issue 6](https://github.com/DignoMor/reporter-assay-pipeline/issues/6).
-
-An input schema containing all eBC and all pBC columns is ambiguous and is not
-a supported workflow input. Step 7 rejects this case, while the current Step 6
-branch inference does not reject it consistently. Do not rely on its routing;
-split or correct the input schema first. Track the release defect in
-[public issue 7](https://github.com/DignoMor/reporter-assay-pipeline/issues/7).
 
 ## Step 7: deduplicate molecules and quantify the replicate
 
@@ -218,7 +214,7 @@ jq '{status, failure_reason, input_record_count, mapped_record_count,
 | --- | --- | --- |
 | Step 6 has many unmatched, `N`, or missing rows | Tolerated row loss or wrong branch/reference | Check the Step 2 header, `--id-field`, and matching EID/PID cluster reference; inspect summary counts, correct the input/reference, and rerun Step 6. |
 | Step 6 summary is `failed` or matched output is empty | Fatal handoff failure | Fix the reported schema, reference, parsing, or output problem; rerun Step 6 before Step 7. |
-| Step 7 reports ambiguous schema | Unsupported eBC/pBC-compatible input | Remove the extra branch columns or produce a valid branch-specific Step 6 output; rerun Step 6/7. |
+| Step 6 or Step 7 reports ambiguous schema | Unsupported eBC/pBC-compatible input | Remove the extra branch columns so exactly one schema remains; rerun Step 6, then Step 7. |
 | Step 7 has high deduplication or no groups | Valid duplicate collapse or fatal zero-output | Inspect molecule-key inputs and summary; continue only with `success` and groups > 0, otherwise repair and rerun Step 7. |
 | Step 8 has unmapped IDs | Tolerated mapping loss or wrong domain | Use `EID` with the EID cluster reference for eBC, or `PID1` with the PID cluster reference for pBC; inspect canonical IDs and rerun Step 8 after correction. |
 | Step 8 summary is `failed` or output is empty | Fatal mapping/output failure | Fix selectors, reference uniqueness, counts, or I/O; rerun Step 8 before Step 9. |
