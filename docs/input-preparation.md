@@ -2,7 +2,7 @@
 
 Use this page before running `prep_lib`, `process_pretrans`,
 `process_pretrans_cw_only`, `process_posttrans`, or `call_activity`. It is the
-input-readiness contract for release **0.1.0b2**. Check every item before
+input-readiness contract for release **0.1.0b3**. Check every item before
 starting a library; a failure in one required input should stop that library
 or workflow rather than being treated as a low read-retention result.
 

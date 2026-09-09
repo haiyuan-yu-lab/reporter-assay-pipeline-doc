@@ -2,7 +2,7 @@
 
 Public user-facing documentation for the
 [Reporter Assay Pipeline](https://github.com/haiyuan-yu-lab/reporter-assay-pipeline)
-**0.1.0b2** (beta).
+**0.1.0b3** (beta).
 
 **Site:** https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/
 

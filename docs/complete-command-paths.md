@@ -1,7 +1,7 @@
 # Complete command paths
 
 This page gives two complete, copyable command narratives for release
-**0.1.0b2**. Both use the same de-identified experiment:
+**0.1.0b3**. Both use the same de-identified experiment:
 
 - PreTran libraries: `PreTran_CW` and `PreTran_CCW`;
 - eBC branch: `eBC_DNA_rep1..3` and `eBC_RNA_rep1..3`;

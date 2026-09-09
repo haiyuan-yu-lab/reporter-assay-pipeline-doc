@@ -2,12 +2,9 @@
 
 Pipeline steps and grouped workflows.
 
-The released documentation is the behavioral contract for **0.1.0b2**. See
-[Known limitations](../known-limitations.md) for that release's discrepancies,
-including incomplete individual-step help and the ineffective Step 6
-`--min-match-length` option. Current local builds print complete individual-step
-help from each step-owned parser. Current Step 6 matching is exact
-`ObservedID` lookup; the option is not part of the current command surface.
+The released documentation is the behavioral contract for **0.1.0b3**.
+Individual-step help comes from each step-owned parser. Step 6 matching is exact
+`ObservedID` lookup; `--min-match-length` is not part of the command surface.
 
 For the complete post-transfection procedure, branch handoffs, artifact
 contracts, and recovery guidance, see [Steps 6–8](../steps-6-8.md).

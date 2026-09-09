@@ -1,7 +1,7 @@
 # Steps 3–5: build the PreTran identifier map
 
 This page is the canonical procedure for running and checking Steps 3–5 for
-release **0.1.0b2**. Use it when you need explicit handoffs, resumable
+release **0.1.0b3**. Use it when you need explicit handoffs, resumable
 execution, or diagnosis of PreTran mapping. The [Pipeline CLI](cli/pipe.md)
 is the compact flag reference; [Artifact formats](formats.md) is the
 canonical column reference.

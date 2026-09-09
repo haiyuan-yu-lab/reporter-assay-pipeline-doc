@@ -1,6 +1,6 @@
 # Workflow
 
-This page documents the released **0.1.0b2** stage graph, handoffs, and
+This page documents the released **0.1.0b3** stage graph, handoffs, and
 retention behavior.
 
 The pipeline starts from raw FASTQ pairs for pre-transfection and

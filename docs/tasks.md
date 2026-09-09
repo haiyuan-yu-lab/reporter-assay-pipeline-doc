@@ -1,7 +1,7 @@
 # Task index
 
 Use this index to enter the current-release documentation by the job you need
-to do. All pages describe release **0.1.0b2**.
+to do. All pages describe release **0.1.0b3**.
 
 ## Learn
 
@@ -32,8 +32,8 @@ to do. All pages describe release **0.1.0b2**.
 - [FAQ](faq.md) — resolve common setup, retention, pairing, and branch questions.
 - [Workflow](workflow.md) — check stage completion criteria, summaries, and
   retained handoffs.
-- [Known limitations](known-limitations.md) — review behavior that is incomplete
-  or inconsistent in 0.1.0b2.
+- [Known limitations](known-limitations.md) — review external-tool versioning
+  and release-validation boundaries in 0.1.0b3.
 
 ## Reference
 

@@ -1,6 +1,6 @@
 # Step 9: call activity
 
-This page documents the released **0.1.0b2** activity-calling contract.
+This page documents the released **0.1.0b3** activity-calling contract.
 
 Step 9 combines the element-count tables from matching PostTran DNA and RNA
 replicates into one `activity-by-element` table. Run it once for each branch

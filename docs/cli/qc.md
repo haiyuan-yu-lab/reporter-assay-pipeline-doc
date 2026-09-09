@@ -1,6 +1,6 @@
 # `yulab_reporter_qc`
 
-This page documents the **0.1.0b2** QC command and its released plot
+This page documents the **0.1.0b3** QC command and its released plot
 semantics, plus the additional `pretrans_nc_representation` diagnostic
 implemented after that tag. QC remains diagnostic and does not add
 acceptance thresholds.

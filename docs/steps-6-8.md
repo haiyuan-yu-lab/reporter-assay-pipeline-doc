@@ -1,7 +1,7 @@
 # Steps 6–8: quantify PostTran replicates
 
 This page is the canonical procedure for turning one PostTran Step 2 delimited
-records file into one element-count table for release **0.1.0b2**. Repeat the
+records file into one element-count table for release **0.1.0b3**. Repeat the
 three-step handoff independently for every DNA and RNA replicate. The [Pipeline
 CLI](cli/pipe.md) is the compact flag reference; [Artifact formats](formats.md)
 defines the shared column contracts.
@@ -118,13 +118,11 @@ and output paths, `input_record_count`,
 Completion requires `status` `success`, a non-empty matched-records file, the
 expected branch header, and internally consistent counts.
 
-### Step 6 release limitations
+### Step 6 exact matching
 
-In **0.1.0b2**, `--min-match-length` is accepted but ineffective: changing it
-does not change matching behavior. The current command surface does not accept
-this option. Do not treat it as a tuning control; see
-[public issue 6](https://github.com/DignoMor/reporter-assay-pipeline/issues/6)
-and [Known limitations](known-limitations.md).
+In **0.1.0b3**, matching is exact `ObservedID` to `CanonicalID` lookup. The
+command surface does not accept `--min-match-length`; do not supply it or treat
+match length as a tuning control.
 
 ## Step 7: deduplicate molecules and quantify the replicate
 

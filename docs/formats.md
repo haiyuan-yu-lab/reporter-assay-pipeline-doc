@@ -1,6 +1,6 @@
 # Artifact formats
 
-These format IDs and encodings are the **0.1.0b2** public handoff contract.
+These format IDs and encodings are the **0.1.0b3** public handoff contract.
 
 Tabular pipeline handoffs use shared **format IDs**. CLI flags that take user
 paths document which format each input or output must satisfy.

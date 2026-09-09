@@ -1,6 +1,6 @@
 # Canonical glossary
 
-These definitions apply to the released **0.1.0b2** documentation and its
+These definitions apply to the released **0.1.0b3** documentation and its
 artifact and command names.
 
 Use these definitions when reading pipeline commands, artifacts, summaries,

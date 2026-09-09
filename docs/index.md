@@ -16,7 +16,7 @@ export artifacts.
 | Current limitations | [Known limitations](known-limitations.md) |
 
 !!! note "Beta"
-    This site documents release **0.1.0b2**. Interfaces may still change before
+    This site documents release **0.1.0b3**. Interfaces may still change before
     a stable release. The public documentation is the released behavioral
     contract; installed `COMMAND --help` describes the command surface of the
     local build. If they disagree, report a defect rather than silently
