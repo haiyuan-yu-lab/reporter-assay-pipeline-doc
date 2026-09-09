@@ -1,7 +1,9 @@
 # `yulab_reporter_qc`
 
-This page documents the **0.1.0b2** QC command and its released plot
-semantics; QC remains diagnostic and does not add acceptance thresholds.
+This page documents the **0.1.0b3** QC command and its released plot
+semantics, plus the additional `pretrans_nc_representation` diagnostic
+implemented after that tag. QC remains diagnostic and does not add
+acceptance thresholds.
 
 Read-only plotting commands over existing pipeline artifacts. QC reads the
 explicit paths supplied on the command line, computes values for display (and,
@@ -22,6 +24,7 @@ yulab_reporter_qc <subcommand> --help
 | `make_umi_per_id_plot` | `crosswalk-map` | UMI support by crosswalk row or ID grouping |
 | `make_between_rep_activity_plot` | Step 8 [`element-counts`](../formats.md#element-counts) | Between-replicate activity concordance |
 | `plot_orientation_scatter` | Step 9 [`activity-by-element`](../formats.md#activity-by-element) + references | Forward-vs-reverse activity scatter |
+| `pretrans_nc_representation` | Step 5 [`crosswalk-map`](../formats.md#crosswalk-map) + [`negative-control-list`](../formats.md#negative-control-list) | PreTran negative-control representation CDF and inventory table |
 
 ## Shared figure options
 
@@ -120,6 +123,48 @@ yulab_reporter_qc make_umi_per_id_plot \
   --count-grain id-pair \
   --plot-type cdf-complement \
   --output-path "<out_dir>/qc/umi_per_id_pair.png"
+```
+
+### `pretrans_nc_representation`
+
+Compare retained negative controls with other retained elements as empirical
+CDFs and emit a complete negative-control inventory table. This command is
+independent of `process_pretrans` and uses the same `negative-control-list`
+annotation format as Step 9. Controls are matched to crosswalk `Element`
+values by exact case-sensitive string; orientation suffixes such as `.fwd` and
+`.rev` are significant.
+
+| Flag | Required | Default |
+| --- | --- | --- |
+| `--records` | yes | Retained Step 5 `crosswalk-map` |
+| `--negative-control-annotation` | yes | `negative-control-list` |
+| `--plot_opath` | yes | PNG plot destination |
+| `--table_opath` | yes | `pretran-negative-control-representation` table (`.tsv` or `.tsv.gz`) |
+| `--id-column` | no | Omit for summed `PreTranUMICount` per element; supply one leading ID column name for distinct-count CDF |
+| `--dpi` | no | `300` |
+| `--figure-width` / `--figure-height` | no | `4.0` / `3.0` inches |
+| `--title` | no | `PreTran negative-control representation` |
+
+There is no `--plot-type`. The plot is always a dual empirical CDF. Legend
+series are `Negative controls (n={retained}; {missing} missing)` and
+`Other elements (n={other})`. When one population is empty, only the available
+curve is drawn; the command still succeeds and writes both outputs.
+
+The table has fixed columns `Element`, `Status`, and `PreTranUMICount`,
+followed by every crosswalk ID column in input order under its original name.
+**Dynamic ID columns contain distinct counts, not identifier values.** One row
+is emitted per unique annotated control, sorted lexically by `Element`.
+`Status` is `retained` or `missing`; missing controls have zero measurements.
+
+Plot and table publish together: success requires both artifacts. Failures
+leave no newly published pair from the invocation.
+
+```bash
+yulab_reporter_qc pretrans_nc_representation \
+  --records work/id_map_generation/pretran_step5_id_crosswalk.tsv.gz \
+  --negative-control-annotation "<ref_dir>/negative_controls.txt" \
+  --plot_opath "<out_dir>/qc/pretran_nc_representation.png" \
+  --table_opath "<out_dir>/qc/pretran_nc_representation.tsv"
 ```
 
 ---
@@ -290,6 +335,11 @@ with equal record counts, rejects duplicate `Element` rows in the
 `activity-by-element` input, rejects activity elements in neither reference,
 rejects a supplied negative-control file with no usable IDs, and requires at
 least one `Both` pair when no table output was requested.
+`pretrans_nc_representation` additionally requires a non-empty usable
+negative-control annotation, rejects invalid or case-mismatched `--id-column`
+selection, rejects aliased `--plot_opath` / `--table_opath`, and requires
+supported table suffixes (`.tsv` or `.tsv.gz`). Zero retained controls or zero
+other elements are successful diagnostic outcomes, not validation failures.
 
 For duplicate activity rows, return to the Step 9 producer, validate that its
 `activity-by-element` output has one row per `Element`, and regenerate the

@@ -1,6 +1,6 @@
 # `yulab_reporter_export`
 
-This page documents the `0.1.0b2` ExogeneousSequences export contract. Run the
+This page documents the `0.1.0b3` ExogeneousSequences export contract. Run the
 export after a successful Step 9 `call_activity` invocation. It creates one
 reference-ordered FASTA and one ExogeneousSequences **stat** annotation array
 for each requested activity column.
@@ -133,7 +133,7 @@ completed export; downstream consumers must not use partial output files.
 
 ## Unsupported legacy reference options
 
-In `0.1.0b2`, `--forward-reference` and `--reverse-reference` are unsupported
+In `0.1.0b3`, `--forward-reference` and `--reverse-reference` are unsupported
 and are rejected; they are not aliases or available alternatives. Use one or
 more repeatable `--reference` arguments in the desired export order. The
 forward/reverse positional pairing rule remains relevant to dual-orientation

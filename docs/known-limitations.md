@@ -1,26 +1,25 @@
-# Known limitations in 0.1.0b2
+# Known limitations in 0.1.0b3
 
 These are limitations of the released build, not instructions to work around
-them by guessing at undocumented behavior. Check the linked public issue for
-updates before relying on an affected path.
+them by guessing at undocumented behavior.
 
-## Individual-step help is incomplete
+## `fastp` is not version-pinned
 
-Help for some individual pipeline steps does not yet describe the complete
-released command surface. Use the documented step pages and contracts while
-checking the installed command's help for the local build. Track this defect in
-[public issue 5](https://github.com/DignoMor/reporter-assay-pipeline/issues/5).
+Step 1 and `prep_lib` invoke whichever compatible `fastp` executable is selected
+or available on `PATH`. Record the external tool version with each run; this
+release does not promise equivalent cleaning behavior across `fastp` versions.
 
-## Step 6 `--min-match-length` is ineffective
+## Release validation is unit-test-focused
 
-The Step 6 `--min-match-length` option is accepted but does not currently alter
-matching behavior as its name suggests. Do not treat it as an effective tuning
-control. Track this defect in
-[public issue 6](https://github.com/DignoMor/reporter-assay-pipeline/issues/6).
+The code repository has no continuous-integration workflow, and the release was
+not validated by rerunning a large end-to-end assay fixture. Contract-level tests
+cover the supported command surfaces and artifact behavior.
 
-## Ambiguous branch handling is inconsistent
+## Resolved since 0.1.0b2
 
-Records that can be interpreted through more than one assay branch are not
-handled consistently across the released workflow. Treat ambiguous outcomes as
-requiring diagnosis rather than assuming a stable branch-selection rule. Track
-this defect in [public issue 7](https://github.com/DignoMor/reporter-assay-pipeline/issues/7).
+Release **0.1.0b3** routes every `yulab_reporter_pipe stepN --help` request to
+the step-owned parser, resolving [public issue
+5](https://github.com/DignoMor/reporter-assay-pipeline/issues/5). It also removes
+the ineffective Step 6 `--min-match-length` option; matching remains exact
+`ObservedID` to `CanonicalID` lookup, resolving [public issue
+6](https://github.com/DignoMor/reporter-assay-pipeline/issues/6).

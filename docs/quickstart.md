@@ -1,6 +1,6 @@
 # Quickstart
 
-This page documents release **0.1.0b2**. Follow the pinned installation and
+This page documents release **0.1.0b3**. Follow the pinned installation and
 input contracts here before using the command examples.
 
 ## Requirements
@@ -14,10 +14,10 @@ input contracts here before using the command examples.
 From the public GitHub repository:
 
 ```bash
-pip install git+https://github.com/haiyuan-yu-lab/reporter-assay-pipeline.git@0.1.0b2
+pip install git+https://github.com/haiyuan-yu-lab/reporter-assay-pipeline.git@0.1.0b3
 ```
 
-Or from a local checkout of a `0.1.0b2` tag or matching commit:
+Or from a local checkout of a `0.1.0b3` tag or matching commit:
 
 ```bash
 pip install .

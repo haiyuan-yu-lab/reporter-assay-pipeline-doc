@@ -1,6 +1,6 @@
 # Canonical glossary
 
-These definitions apply to the released **0.1.0b2** documentation and its
+These definitions apply to the released **0.1.0b3** documentation and its
 artifact and command names.
 
 Use these definitions when reading pipeline commands, artifacts, summaries,
@@ -121,7 +121,9 @@ that sample.
 
 An element identifier designated as a control for Step 9 baseline
 normalization. Controls must remain in the shared retained analysis space for
-the invocation to succeed.
+the invocation to succeed. Before PostTran data exists, `pretrans_nc_representation`
+compares retained controls with other retained elements in the Step 5
+`crosswalk-map` using the same annotation list and exact `Element` matching.
 
 ## Outputs and measurements
 

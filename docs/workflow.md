@@ -1,6 +1,6 @@
 # Workflow
 
-This page documents the released **0.1.0b2** stage graph, handoffs, and
+This page documents the released **0.1.0b3** stage graph, handoffs, and
 retention behavior.
 
 The pipeline starts from raw FASTQ pairs for pre-transfection and
@@ -50,6 +50,11 @@ Default work directories sit under `<project-dir>/work/` (cwd when `--project-di
 | 7 | Step 6 matched records | Per-replicate quantification under `work/posttran_quantification/` |
 | 8 | Step 7 counts + cluster reference | Element-count table under `work/posttran_element_mapping/` |
 | 9 | Step 8 DNA/RNA replicate tables + negative controls | Activity-by-element table (user `--output-path`) |
+
+When one PostTran replicate is parsed twice with orientation-specific layouts,
+[`concat_step2_records`](cli/pipe.md#concat_step2_records) pools those gzip-compressed
+Step 2 tables into `work/delimited/<prefix>_step2_records.tsv.gz` before Step 6.
+The helper preserves rows; it is not Step 4 aggregation.
 
 Typical Step 5 retained artifacts (ExactID filenames; domains follow `--id-columns`):
 

@@ -1,7 +1,7 @@
 # Steps 3–5: build the PreTran identifier map
 
 This page is the canonical procedure for running and checking Steps 3–5 for
-release **0.1.0b2**. Use it when you need explicit handoffs, resumable
+release **0.1.0b3**. Use it when you need explicit handoffs, resumable
 execution, or diagnosis of PreTran mapping. The [Pipeline CLI](cli/pipe.md)
 is the compact flag reference; [Artifact formats](formats.md) is the
 canonical column reference.
@@ -268,7 +268,10 @@ Step 5 writes:
 One cluster-reference file is emitted for each declared ID, with ExactID
 casing. Every retained observed ID in a domain is assigned exactly once in its
 domain reference. Cluster references are the downstream consumer for Step 6;
-the crosswalk is the retained PreTran evidence and input to pre-trans QC.
+the crosswalk is the retained PreTran evidence and input to pre-trans QC,
+including `pretrans_nc_representation` when you need to compare retained
+negative controls with other elements before PostTran data exists (see
+[`yulab_reporter_qc pretrans_nc_representation`](cli/qc.md#pretrans_nc_representation)).
 
 The summary includes `input_pretran_counts_path`, `id_columns`,
 `output_crosswalk_path`, `output_cluster_paths`, all clustering and threshold
