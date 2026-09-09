@@ -13,7 +13,8 @@ These pages document the released **0.1.0b2** contract for flags and defaults.
 surface of the installed local build; if help disagrees with these release
 documents, treat the disagreement as a defect.
 
-Some individual-step help is incomplete in this release. See [Known
-limitations](../known-limitations.md) before relying on installed help.
+In **0.1.0b2**, some individual-step help is incomplete. See [Known
+limitations](../known-limitations.md). Current local builds print the complete
+step-owned command surface from `yulab_reporter_pipe stepN --help`.
 
 See also [Workflow](../workflow.md) and [Artifact formats](../formats.md).

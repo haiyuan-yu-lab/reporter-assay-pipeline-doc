@@ -6,9 +6,10 @@ updates before relying on an affected path.
 
 ## Individual-step help is incomplete
 
-Help for some individual pipeline steps does not yet describe the complete
-released command surface. Use the documented step pages and contracts while
-checking the installed command's help for the local build. Track this defect in
+In **0.1.0b2**, help for some individual pipeline steps does not describe the
+complete released command surface. Use the documented step pages and contracts
+for that published package. Later local builds route `yulab_reporter_pipe
+stepN --help` through each step-owned parser. Track this defect in
 [public issue 5](https://github.com/DignoMor/reporter-assay-pipeline/issues/5).
 
 ## Step 6 `--min-match-length` is ineffective

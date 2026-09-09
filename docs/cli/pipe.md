@@ -2,11 +2,11 @@
 
 Pipeline steps and grouped workflows.
 
-The released documentation is the behavioral contract for **0.1.0b2**. The
-installed command's help describes the local build and may be incomplete for
-individual steps. See [Known limitations](../known-limitations.md) for
-`0.1.0b2` discrepancies, including that release's ineffective Step 6
-`--min-match-length` option. Current Step 6 matching is exact
+The released documentation is the behavioral contract for **0.1.0b2**. See
+[Known limitations](../known-limitations.md) for that release's discrepancies,
+including incomplete individual-step help and the ineffective Step 6
+`--min-match-length` option. Current local builds print complete individual-step
+help from each step-owned parser. Current Step 6 matching is exact
 `ObservedID` lookup; the option is not part of the current command surface.
 
 For the complete post-transfection procedure, branch handoffs, artifact

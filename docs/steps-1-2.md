@@ -58,10 +58,12 @@ yulab_reporter_pipe step1 \
   --cleaner fastp
 ```
 
-The installed individual-step help may not expose the complete released
-surface in `0.1.0b2`; use this versioned procedure as the contract and see the
-[known limitations](known-limitations.md#individual-step-help-is-incomplete)
-for the documented discrepancy.
+In **0.1.0b2**, installed individual-step help may not expose the complete
+released surface; that release's discrepancy is recorded under
+[known limitations](known-limitations.md#individual-step-help-is-incomplete).
+Current local builds print the complete Step 1 contract from
+`yulab_reporter_pipe step1 --help`. This versioned procedure remains the
+`0.1.0b2` contract.
 
 The command exits successfully only when the cleaner exits zero and the
 cleaned output can be read. Step 1 validates required argument shape and
