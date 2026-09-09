@@ -20,7 +20,8 @@ to do. All pages describe release **0.1.0b2**.
 - [Steps 3–5](steps-3-5.md) — match PreTran orientations, merge UMI counts,
   and build crosswalk/cluster references.
 - [Steps 6–8](steps-6-8.md) — match post-transfection IDs, quantify molecules,
-  and map counts back to elements.
+  map counts back to elements, and optionally concatenate orientation-specific
+  Step 2 tables first.
 - [Step 9](steps-9.md) — align replicates and produce an activity-by-element
   table for each present branch.
 - [Complete command paths](complete-command-paths.md) — follow grouped or
@@ -36,7 +37,8 @@ to do. All pages describe release **0.1.0b2**.
 
 ## Reference
 
-- [Pipeline CLI](cli/pipe.md) — exact pipeline flags and outputs.
+- [Pipeline CLI](cli/pipe.md) — exact pipeline flags and outputs, including
+  `concat_step2_records`.
 - [QC CLI](cli/qc.md) — plot inputs and options.
 - [Export CLI](cli/export.md) — ExogeneousSequences export contract.
 - [Artifact formats](formats.md) — exact columns and encodings.
@@ -47,4 +49,5 @@ Native site search is keyword-based. These exact queries are useful entry
 points: `eBC` / `pBC` (branches), `EID` / `PID` (identifier domains), `CW` /
 `CCW` (orientation), `PreTran` / `PostTran`, `UMI`, `ActivityCall`,
 `activity-by-element`, `--min-match-length`, `negative-control-list`,
-`zero retained`, `orientation scatter`, and `ExogeneousSequences`.
+`zero retained`, `orientation scatter`, `concat_step2_records`, and
+`ExogeneousSequences`.

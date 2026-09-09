@@ -22,6 +22,13 @@ branch layouts:
 | eBC | `UMI`, `EID` | `pretran_step5_EID_cluster_reference.tsv.gz` | `EID`, `MoleculeCount` |
 | pBC | `UMI1`, `PID1`, `PID2`, `UMI2` | `pretran_step5_PID_cluster_reference.tsv.gz` | `PID1`, `MoleculeCount` |
 
+If a replicate was parsed twice with orientation-specific layouts, concatenate
+the compatible gzip-compressed Step 2 tables into the single path that
+`process_posttrans` will resolve (`work/delimited/<library-prefix>_step2_records.tsv.gz`)
+before this grouped command. See
+[`concat_step2_records`](cli/pipe.md#concat_step2_records). Do not concatenate
+Step 2 summary JSON files.
+
 Each cluster reference is a `cluster-reference` table with
 `ObservedID`, `CanonicalID`, and `Element`. Its observed IDs must be unique and
 its IDs must be non-empty. The same reference is supplied to Step 6 for

@@ -53,7 +53,17 @@ EID-only libraries only need the eBC run.
 It resolves
 `<project-dir>/work/delimited/<library-prefix>_step2_records.tsv.gz`
 from `--library-prefix`. Run `prep_lib` for that prefix first (or place an
-equivalent file at that path).
+equivalent file at that path). If the replicate was parsed twice with
+orientation-specific layouts, concatenate those gzip-compressed tables into
+that path with [`concat_step2_records`](cli/pipe.md#concat_step2_records)
+first.
+
+## How do I concatenate orientation-specific Step 2 tables?
+
+Use `yulab_reporter_pipe concat_step2_records` with at least two `--records`
+paths and `--output`. Headers must match exactly. Do not use `zcat`: it keeps
+every input header unless you strip later headers by hand. See
+[`concat_step2_records`](cli/pipe.md#concat_step2_records).
 
 ## Do QC plots gate the pipeline?
 

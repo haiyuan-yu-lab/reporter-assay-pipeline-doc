@@ -34,7 +34,7 @@ standard dual-ID reporter-assay profile uses `EID,PID`.
 
 | Format ID | Column contract | Typical producer |
 | --- | --- | --- |
-| `delimited-records` | Layout-defined (`column_names` from layout schema) | Step 2 |
+| `delimited-records` | Layout-defined (`column_names` from layout schema) | Step 2; optional `concat_step2_records` |
 | `orientation-resolved-pretran` | `Element`, `UMI` required; ≥1 ID column | Step 3 |
 | `pretran-merged-counts` | `<id-columns>…`, `Element`, `PreTranUMICount` | Step 4 |
 | `crosswalk-map` | same suffix as above | Step 5 |
@@ -59,7 +59,9 @@ standard dual-ID reporter-assay profile uses `EID,PID`.
 
 Columns and order match the per-sample layout schema JSON used at Step 2.
 Common PreTran layouts emit `UMI`, `EID`, `PID`, `ElementAnchorSeq`;
-post-transfection layouts vary by branch.
+post-transfection layouts vary by branch. Compatible gzip-compressed tables
+with identical headers may be pooled by
+[`concat_step2_records`](cli/pipe.md#concat_step2_records).
 
 ### `orientation-resolved-pretran`
 

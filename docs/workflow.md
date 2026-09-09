@@ -51,6 +51,11 @@ Default work directories sit under `<project-dir>/work/` (cwd when `--project-di
 | 8 | Step 7 counts + cluster reference | Element-count table under `work/posttran_element_mapping/` |
 | 9 | Step 8 DNA/RNA replicate tables + negative controls | Activity-by-element table (user `--output-path`) |
 
+When one PostTran replicate is parsed twice with orientation-specific layouts,
+[`concat_step2_records`](cli/pipe.md#concat_step2_records) pools those gzip-compressed
+Step 2 tables into `work/delimited/<prefix>_step2_records.tsv.gz` before Step 6.
+The helper preserves rows; it is not Step 4 aggregation.
+
 Typical Step 5 retained artifacts (ExactID filenames; domains follow `--id-columns`):
 
 - `work/id_map_generation/pretran_step5_id_crosswalk.tsv.gz`

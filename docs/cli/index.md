@@ -4,7 +4,7 @@ Installing the package exposes three commands:
 
 | Command | Role |
 | --- | --- |
-| [`yulab_reporter_pipe`](pipe.md) | Nine pipeline steps plus grouped orchestration |
+| [`yulab_reporter_pipe`](pipe.md) | Nine pipeline steps, grouped orchestration, and `concat_step2_records` |
 | [`yulab_reporter_qc`](qc.md) | Read-only analytical plots over existing artifacts |
 | [`yulab_reporter_export`](export.md) | ExogeneousSequences FASTA + stat `.npy` export |
 

@@ -26,6 +26,7 @@ yulab_reporter_pipe <subcommand> --help
 | `process_pretrans_cw_only` | 3 → 4 → 5 | CW-only PreTran + ID maps |
 | `process_posttrans` | 6 → 7 → 8 | One post-transfection replicate |
 | `call_activity` | 9 | Activity calling |
+| `concat_step2_records` | helper | Concatenate compatible gzip-compressed Step 2 tables |
 
 Grouped commands wire step-to-step intermediates automatically. By default,
 `--delete-intermediate` is **on**: orchestrator-managed intermediates are
@@ -92,7 +93,9 @@ output via `--records`.
 
 **Input resolution:** Step 6 `--input-records` is resolved automatically as
 `<project-dir>/work/delimited/<library-prefix>_step2_records.tsv.gz`. Run
-`prep_lib` for that prefix first (or place an equivalent Step 2 file at that path).
+`prep_lib` for that prefix first (or place an equivalent Step 2 file at that
+path). If the replicate was parsed twice with orientation-specific layouts,
+run [`concat_step2_records`](#concat_step2_records) into that path first.
 
 `--cluster-reference` is used for Step 6 matching and is also passed to Step 8
 as the element reference.
@@ -107,6 +110,37 @@ as the element reference.
 
 DNA and RNA lists must contain the same number of replicate tables. Run once per
 branch (eBC and pBC when both are present). Output format: [`activity-by-element`](../formats.md#activity-by-element).
+
+### `concat_step2_records`
+
+Standalone helper, not a numbered step and not a grouped workflow. Concatenate
+two or more gzip-compressed [`delimited-records`](../formats.md#delimited-records)
+tables that share an exact logical header. Use this when one biological
+replicate was parsed twice with orientation-specific layouts (typically pooled
+pBC libraries) before `process_posttrans`.
+
+**Required:** `--records` (repeatable; at least twice), `--output`
+
+The command writes exactly one header, then every data row in `--records`
+argument order and original row order within each file. It does not sort,
+deduplicate, aggregate, or rewrite fields. Inputs must be gzip-compressed;
+headers must match byte-for-byte after newline stripping.
+
+Validation runs to completion before `--output` is published. Publication is
+atomic (`os.replace` from a temporary file in the destination directory). A
+failure returns nonzero, names the failure class and offending input on
+stderr, leaves an existing destination unchanged, and does not leave a new
+partial file.
+
+Failure classes: `too-few-inputs`, `unreadable`, `invalid-gzip`,
+`missing-header`, `header-only`, `header-mismatch`, `row-width`.
+
+```bash
+yulab_reporter_pipe concat_step2_records \
+  --records work/delimited/pBC_DNA_rep1_CW_step2_records.tsv.gz \
+  --records work/delimited/pBC_DNA_rep1_CCW_step2_records.tsv.gz \
+  --output work/delimited/pBC_DNA_rep1_step2_records.tsv.gz
+```
 
 ---
 

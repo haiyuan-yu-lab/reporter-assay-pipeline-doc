@@ -176,3 +176,6 @@ pair as fatal.
 Do not continue to Step 3 or Step 6 from a failed summary. After a successful
 Step 2, use the retained records path shown in its summary and follow the
 [workflow handoff](workflow.md) for the library's branch and orientation.
+When one replicate produced two orientation-specific Step 2 tables, concatenate
+them with [`concat_step2_records`](cli/pipe.md#concat_step2_records) before
+Step 6.
