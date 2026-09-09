@@ -4,8 +4,10 @@ Pipeline steps and grouped workflows.
 
 The released documentation is the behavioral contract for **0.1.0b2**. The
 installed command's help describes the local build and may be incomplete for
-individual steps. See [Known limitations](../known-limitations.md), including
-the ineffective Step 6 `--min-match-length` option.
+individual steps. See [Known limitations](../known-limitations.md) for
+`0.1.0b2` discrepancies, including that release's ineffective Step 6
+`--min-match-length` option. Current Step 6 matching is exact
+`ObservedID` lookup; the option is not part of the current command surface.
 
 For the complete post-transfection procedure, branch handoffs, artifact
 contracts, and recovery guidance, see [Steps 6–8](../steps-6-8.md).
@@ -88,7 +90,7 @@ output via `--records`.
 
 **Required:** `--library-prefix`, `--id-field`, `--cluster-reference`, `--input-id-col`, `--input-count-col`
 
-**Optional:** `--project-dir`, `--output-dir`, `--min-match-length` (default `20`), `--delete-intermediate` / `--no-delete-intermediate`
+**Optional:** `--project-dir`, `--output-dir`, `--delete-intermediate` / `--no-delete-intermediate`
 
 **Input resolution:** Step 6 `--input-records` is resolved automatically as
 `<project-dir>/work/delimited/<library-prefix>_step2_records.tsv.gz`. Run
@@ -318,7 +320,6 @@ orchestrated flags; step modules also expose their own parsers.
 | `--id-field` | yes | — |
 | `--input-records` | yes | — |
 | `--cluster-reference` | yes | — |
-| `--min-match-length` | no | `20` |
 
 ### `step7`
 

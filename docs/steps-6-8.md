@@ -111,7 +111,7 @@ Step 6 writes:
 | `work/posttran_id_matching/<prefix>_step6_summary.json` | Run metadata and row-level skip counts. |
 
 The summary includes `library_prefix`, `branch`, `id_field`, input/reference
-and output paths, `min_match_length`, `input_record_count`,
+and output paths, `input_record_count`,
 `output_record_count`, `skipped_missing_field_count`,
 `skipped_invalid_row_count`, `skipped_contains_n_count`,
 `skipped_unmatched_id_count`, `status`, and `failure_reason`.
@@ -121,8 +121,10 @@ expected branch header, and internally consistent counts.
 ### Step 6 release limitations
 
 In **0.1.0b2**, `--min-match-length` is accepted but ineffective: changing it
-does not change matching behavior. Do not treat it as a tuning control; see
-[public issue 6](https://github.com/DignoMor/reporter-assay-pipeline/issues/6).
+does not change matching behavior. The current command surface does not accept
+this option. Do not treat it as a tuning control; see
+[public issue 6](https://github.com/DignoMor/reporter-assay-pipeline/issues/6)
+and [Known limitations](known-limitations.md).
 
 ## Step 7: deduplicate molecules and quantify the replicate
 

@@ -13,7 +13,8 @@ checking the installed command's help for the local build. Track this defect in
 
 ## Step 6 `--min-match-length` is ineffective
 
-The Step 6 `--min-match-length` option is accepted but does not currently alter
-matching behavior as its name suggests. Do not treat it as an effective tuning
+In **0.1.0b2**, the Step 6 `--min-match-length` option is accepted but does not
+alter matching. Matching is an exact `ObservedID` lookup regardless of the
+supplied value. Do not treat that release's option as an effective tuning
 control. Track this defect in
 [public issue 6](https://github.com/DignoMor/reporter-assay-pipeline/issues/6).
