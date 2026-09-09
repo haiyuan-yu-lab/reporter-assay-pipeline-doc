@@ -6,6 +6,8 @@ Public user-facing documentation for the
 
 **Site:** https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/
 
+**Agent index:** https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/llms.txt
+
 This repository is the source of truth for:
 
 - Quickstart and install guidance

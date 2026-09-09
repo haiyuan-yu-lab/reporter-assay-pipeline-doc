@@ -7,6 +7,7 @@ export artifacts.
 | Resource | Link |
 | --- | --- |
 | Code | [haiyuan-yu-lab/reporter-assay-pipeline](https://github.com/haiyuan-yu-lab/reporter-assay-pipeline) |
+| Agent index | [`llms.txt`](llms.txt) |
 | Start by task | [Task index](tasks.md) |
 | Install | [Quickstart](quickstart.md) |
 | Stages | [Workflow](workflow.md) |
