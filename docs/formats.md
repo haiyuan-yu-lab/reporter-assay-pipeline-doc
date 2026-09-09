@@ -44,6 +44,7 @@ standard dual-ID reporter-assay profile uses `EID,PID`.
 | `element-counts` | `Element`, `MoleculeCount` | Step 8 |
 | `activity-by-element` | `Element`, `DNACount`, `RNACount`, `ActivityScore`, `log2FC`, `ActivityZ`, `ActivityCall` | Step 9 |
 | `orientation-collapsed-activity` | 26 fixed columns; one row per reference pair | QC `plot_orientation_scatter` |
+| `pretran-negative-control-representation` | `Element`, `Status`, `PreTranUMICount`, then `<id-columns>…` | QC `pretrans_nc_representation` |
 | `negative-control-list` | One element ID per non-empty line | Reference asset |
 
 !!! note "CLI flag naming"
@@ -159,7 +160,24 @@ Key fields:
 - Boolean columns use lowercase `true` / `false`
 - `ActivityCall` columns use `Active` or `Inactive`
 
+### `pretran-negative-control-representation`
+
+Required QC table from `pretrans_nc_representation`. Suffix-dynamic header:
+
+```text
+Element, Status, PreTranUMICount, <id-column-1>[, <id-column-2>, …]
+```
+
+Trailing ID columns reuse each input `crosswalk-map` ID-column name in input
+order. **Cell values are distinct counts for that domain, not identifier
+values** — do not treat this table as a second crosswalk.
+
+One row per unique annotated negative-control `Element`, sorted lexically.
+`Status` is `retained` or `missing`. Missing controls have zero
+`PreTranUMICount` and zero in every dynamic ID column.
+
 ### `negative-control-list`
 
 One element ID per non-empty line. Blank lines ignored. Required (non-empty)
-for Step 9 / `call_activity` and for export `ES`.
+for Step 9 / `call_activity` and for export `ES`. Also required for
+`pretrans_nc_representation`.
