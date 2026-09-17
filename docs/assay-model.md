@@ -106,3 +106,30 @@ The exact formulas, pseudocount behavior, shared-element intersection, and
 undefined-normalization failures belong to the Step 9 contract and are
 documented with the activity command. This page supplies the model and
 vocabulary needed to read those contracts.
+
+## Cap-selection assay (separate workflow)
+
+Cap-selection assays (for example QUASARR-cap) measure **nascent RNA endpoints**
+from PCR-amplified cDNA after cap selection on plasmid constructs. The
+`cap-assay-pipeline` executable implements this path; it does not produce
+reporter-assay activity tables or consume reporter layout schemas.
+
+### Cap-selection RNA endpoints
+
+Paired-end sequencing places **R2** on the capped RNA 5′ side and **R1** on the
+antisense side. Step 4 emits two distinct measurement types on plus and minus
+**biological RNA strands** (relative to the construct-derived alignment
+reference):
+
+| Measurement | Read source | Biological meaning |
+| --- | --- | --- |
+| **Cap signal** | R2 sequenced 5′ | RNA initiation / capped 5′ endpoint observation |
+| **Polymerase-position proxy** | R1 sequenced 5′ (strand inverted) | Pause-biased proxy for nascent RNA 3′; not a second cap-signal readout |
+
+Cap signal and the polymerase-position proxy are published as **four** bigWig
+files (`.5pl.bw`, `.5mn.bw`, `.3pl.bw`, `.3mn.bw`). Do not treat the R1-derived
+tracks as cap signal or as unbiased RNA polymerase II occupancy. Step 4 does not
+use R2 3′ endpoints.
+
+Operational topology and commands: [Cap-selection workflow](cap-selection/workflow.md).
+Terminology: [Glossary — cap-selection](glossary.md#cap-selection).

@@ -23,3 +23,18 @@ the step-owned parser, resolving [public issue
 the ineffective Step 6 `--min-match-length` option; matching remains exact
 `ObservedID` to `CanonicalID` lookup, resolving [public issue
 6](https://github.com/DignoMor/reporter-assay-pipeline/issues/6).
+
+## Cap-selection Step 4
+
+`cap-assay-pipeline step4-post-alignment-processing` intentionally does **not**:
+
+- merge biological or technical replicates across libraries;
+- normalize tracks between samples or to external references;
+- infer transcript models, pause sites, or TSS calls from the bigWigs;
+- consume R2 3′ sequencing endpoints;
+- provide unbiased RNA polymerase II occupancy (the R1-derived tracks are a
+  pause-biased polymerase-position proxy only).
+
+Pair filtering excludes duplicate-flagged alignments but does **not** perform
+barcode error correction or UMI-based rescue. There is no grouped
+whole-pipeline orchestration command; run Steps 1–4 explicitly.

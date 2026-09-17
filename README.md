@@ -12,7 +12,7 @@ This repository is the source of truth for:
 
 - Quickstart and install guidance
 - Workflow overview and library layout
-- CLI reference (`yulab_reporter_pipe`, `yulab_reporter_qc`, `yulab_reporter_export`)
+- CLI reference (`yulab_reporter_pipe`, `yulab_reporter_qc`, `yulab_reporter_export`, `cap-assay-pipeline`)
 - Intermediate/final artifact format descriptions
 - FAQ
 

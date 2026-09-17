@@ -6,8 +6,14 @@ input contracts here before using the command examples.
 ## Requirements
 
 - Python 3.9 or newer
-- `fastp` on `PATH` for Step 1 / `prep_lib` (not version-pinned; whatever binary is on `PATH` is used)
-- Core Python dependencies are declared in the code package `pyproject.toml` (`edlib`, `matplotlib`, `numpy`, `pandas`) and install with the package
+- `fastp` on `PATH` for reporter-assay Step 1 / `prep_lib` and cap-selection
+  `step1-prep-fastq` (not version-pinned)
+- Core Python dependencies are declared in the code package `pyproject.toml`
+  (`edlib`, `matplotlib`, `numpy`, `pandas`, `pyBigWig`, …) and install with
+  the package
+- Cap-selection Steps 3–4 additionally need external tools on `PATH` (STAR and
+  samtools for Step 3; samtools **1.12+** and BEDTools **2.30+** for Step 4)
+  — see [Cap-selection CLI](cli/cap-assay.md#installation-dependencies)
 
 ## Install
 
@@ -32,6 +38,7 @@ package release and this site together describe the current public contract.
 yulab_reporter_pipe --help
 yulab_reporter_qc --help
 yulab_reporter_export --help
+cap-assay-pipeline --help
 ```
 
 ## Required inputs
