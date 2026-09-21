@@ -14,14 +14,16 @@ cap-assay-pipeline step1-prep-fastq \
   --output-dir prepared/
 ```
 
-`fastp` trims adapters, moves a 12-base R1 UMI into read names, and removes
-exact-sequence duplicates. Each step is independently runnable: prepared FASTQ
-from any compatible source is valid for Step 3 when it satisfies Step 3’s FASTQ
-contract (including externally prepared reads without Step 1 provenance).
+`fastp` trims adapters, moves a 12-base R1 UMI into read names, and applies
+ordinary paired read filtering. Step 1 does not remove PCR duplicates by
+sequence or UMI; UMI-aware molecule deduplication runs in Step 4. Each step
+is independently runnable: prepared FASTQ from any compatible source is valid
+for Step 3 when it satisfies Step 3’s FASTQ contract (including externally
+prepared reads without Step 1 provenance).
 
 Typical published artifacts under `--output-dir` use the library prefix in
 their names; consult Step 1 help and `{prefix}_step1_summary.json` for the
-exact paths your invocation produced.
+exact paths, fastp filtering metrics, and the Step 4 deduplication handoff.
 
 ## Step 2: Construct-derived reference
 

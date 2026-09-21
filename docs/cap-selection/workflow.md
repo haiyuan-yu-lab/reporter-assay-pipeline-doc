@@ -36,7 +36,7 @@ flowchart LR
 
 | Leg | Step command | Role |
 | --- | --- | --- |
-| Read preparation | `step1-prep-fastq` | Adapter trim, 12-base R1 UMI in read names, exact-sequence duplicate removal (`fastp`) |
+| Read preparation | `step1-prep-fastq` | Adapter trim, 12-base R1 UMI in read names, fastp read filtering (`fastp`; UMI-aware dedup in Step 4) |
 | Reference | `step2-build-reference` | Construct-derived FASTA for alignment (independent of Step 1) |
 | Join | `step3-alignment` | STAR alignment to the Step 2 reference; coordinate-sorted BAM + BAI |
 | Endpoint | `step4-post-alignment-processing` | Pair filtering and four signed strand-separated bigWig tracks + summary |

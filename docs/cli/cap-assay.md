@@ -45,7 +45,7 @@ Exactly four subcommands are registered, in numeric order:
 
 | Command | Summary |
 | --- | --- |
-| `step1-prep-fastq` | Prepare reads with fastp (trim, R1 UMI in name, exact duplicate removal) |
+| `step1-prep-fastq` | Prepare reads with fastp (trim, R1 UMI in names, filter; UMI-aware dedup in Step 4) |
 | `step2-build-reference` | Build construct-derived reference FASTA |
 | `step3-alignment` | Align one library to one reference; publish BAM + BAI + summary |
 | `step4-post-alignment-processing` | Four strand-specific RNA endpoint bigWigs from one library BAM |
