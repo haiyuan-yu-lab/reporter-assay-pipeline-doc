@@ -91,11 +91,13 @@ count merging).
 | `--max-pair-mismatches` | `4` | Non-negative integer; **inclusive** ceiling on `NM(R1) + NM(R2)` |
 | `--samtools` | `samtools` | samtools executable path or name |
 | `--bedtools` | `bedtools` | BEDTools executable path or name |
+| `--umi-dedup-method` | `directional` | UMI-tools `dedup --method` (`unique`, `percentile`, `cluster`, `adjacency`, `directional`) |
+| `--umi-tools` | `umi_tools` | UMI-tools executable path or name |
 
 There is no reference path, BAI input, project root, overwrite flag, batch mode,
-normalization control, or generic passthrough to native tool CLIs. Native
-samtools and BEDTools streams are captured internally, not exposed as the user
-interface.
+no-deduplication mode, or generic passthrough to native tool CLIs. Native
+samtools, BEDTools, and UMI-tools streams are captured internally, not exposed
+as the user interface.
 
 ### BAM-only compatibility boundary
 
@@ -110,14 +112,19 @@ Step 4 admits structurally compatible **BAM** evidence only:
 No BAI, external reference FASTA, or chromosome-size file is required. Step 3
 provenance is not required when an external BAM satisfies the rules above.
 
+Every query name must end with a fastp-compatible UMI suffix:
+`_UMI:` followed by exactly twelve `A`, `C`, `G`, or `T` bases on both mates.
+Missing or malformed UMI evidence fails the invocation; there is no mode that
+skips UMI deduplication.
+
 **Not accepted as substitutes:** SAM, CRAM, split R1/R2 tables, or multi-library
 BAMs merged under several read groups.
 
 ### Pair-level filtering
 
 Filtering is **pair-aware**: R1 and R2 are assessed together per query name.
-The pipeline does **not** perform barcode error correction or UMI-aware
-rescuing; Step 1 UMI annotation is not reinterpreted here.
+Eligibility runs **before** UMI-tools paired deduplication so rejected pairs
+cannot affect molecule grouping.
 
 For each query name, records are name-collated. Exactly one primary R1 and one
 primary R2 must be present; duplicate primary mates for the same end fail the
@@ -140,10 +147,18 @@ of R2) and one R1 **polymerase-position proxy** observation (sequenced 5′ of
 R1, antisense to nascent RNA, inverted to biological RNA strand). **R2 3′
 endpoints are not consumed.**
 
-**Zero eligible pairs** after filtering is a failed invocation (`status: failed`
-in `{prefix}.step4_summary.json` when written). Success and failure summaries
-both publish reconciled `pair_total_groups`, `eligible_pairs`, `rejected_pairs`,
-`rejection_counts`, and `mismatch_histogram` when pair auditing completed.
+Eligible pairs are written to a staging BAM and deduplicated with UMI-tools
+`dedup --paired` using `--umi-dedup-method` (default `directional`). Track
+counts use **retained** pairs after deduplication.
+
+**Zero eligible pairs** after filtering or **zero retained pairs** after UMI
+deduplication is a failed invocation (`status: failed` in
+`{prefix}.step4_summary.json` when written). Success and failure summaries
+publish reconciled `pair_total_groups`, `eligible_pairs`,
+`pre_dedup_eligible_pairs`, `umi_duplicate_pairs_removed`, `rejected_pairs`,
+`rejection_counts`, and `mismatch_histogram` when pair auditing completed,
+with `pre_dedup_eligible_pairs = eligible_pairs + umi_duplicate_pairs_removed`
+and `pair_total_groups = rejected_pairs + pre_dedup_eligible_pairs`.
 
 ### Published artifacts
 

@@ -68,6 +68,12 @@ of the Step 4 input contract).
 
 ## Step 4 deliverable
 
+Step 4 requires fastp-compatible UMI suffixes on every read name, filters
+pairs for placement and geometry, then runs **UMI-tools** paired deduplication
+on eligible pairs before building endpoint bigWigs. Summary JSON reports
+`pre_dedup_eligible_pairs`, `umi_duplicate_pairs_removed`, and retained
+`eligible_pairs` (see [Cap-selection CLI — Step 4](../cli/cap-assay.md#step4-post-alignment-processing)).
+
 A successful Step 4 invocation publishes exactly five files under
 `--output-dir`:
 
