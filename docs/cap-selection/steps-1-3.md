@@ -35,8 +35,11 @@ cap-assay-pipeline step2-build-reference \
 ```
 
 Step 2 does not consume Step 1 output. The construct layout is a cap-selection
-domain entity (not the reporter-assay layout schema). The standard FASTA emitted
-here is the only required reference handoff for Step 3.
+domain entity (not the reporter-assay layout schema). Each Element must yield a
+unique normalized complete constructed sequence (left fixed, tested element, and
+right fixed concatenated); duplicate complete sequences across distinct Elements
+fail before any successful bundle is published. The standard FASTA emitted here
+is the only required reference handoff for Step 3.
 
 ## Step 3: Alignment
 

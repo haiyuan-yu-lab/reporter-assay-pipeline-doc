@@ -46,7 +46,7 @@ Exactly four subcommands are registered, in numeric order:
 | Command | Summary |
 | --- | --- |
 | `step1-prep-fastq` | Prepare reads with fastp (trim, R1 UMI in names, filter; UMI-aware dedup in Step 4) |
-| `step2-build-reference` | Build construct-derived reference FASTA |
+| `step2-build-reference` | Build construct-derived reference FASTA (unique complete sequence per Element) |
 | `step3-alignment` | Align one library to one reference; publish BAM + BAI + summary |
 | `step4-post-alignment-processing` | Four strand-specific RNA endpoint bigWigs from one library BAM |
 
@@ -214,6 +214,21 @@ Help prints on stdout with exit `0` without validating paths, resolving tools,
 or running external commands. It documents the flags above, BAM admission,
 tool minimums, endpoint meanings, track filenames, zero-eligible failure, and
 the example invocation.
+
+---
+
+## `step2-build-reference`
+
+Builds the four-file construct-derived reference bundle from a version-one
+construct-layout JSON and a tested-element FASTA. Each Element must produce a
+unique normalized complete constructed sequence; duplicates across distinct
+Elements exit `1` with a failed summary (`shared_sequence_count` reports collision
+groups) and no successful FASTA, annotations, or manifest. Successful bundles
+set `shared_sequence_count` to zero in the manifest and summary.
+
+Required flags: `--reference-prefix`, `--construct-layout`, `--tested-elements`,
+`--output-dir`. See `cap-assay-pipeline step2-build-reference --help` for the
+layout grammar, FASTA rules, artifact names, and example invocation.
 
 ---
 

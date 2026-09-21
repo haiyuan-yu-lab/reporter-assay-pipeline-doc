@@ -174,6 +174,8 @@ in `{prefix}.3pl.bw` and `{prefix}.3mn.bw`.
 ### Construct-derived reference
 
 FASTA alignment reference built from a cap-selection construct layout (Step 2).
+Each Element record must have a distinct complete constructed sequence; Step 2
+rejects identical normalized constructs across Elements before publication.
 BigWig sequence dictionaries and strand labels are defined relative to this
 reference, not genomic coordinates.
 
