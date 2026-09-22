@@ -71,7 +71,9 @@ Individual steps follow the table above for their owned parsers.
 ## `step4-post-alignment-processing`
 
 Processes **exactly one** coordinate-sorted library BAM per invocation into
-four signed bigWig tracks and one summary. This is the cap-selection **Step 4**
+strand-selected signed bigWig tracks and one summary: four tracks for the
+default `--rna-strand both`, cap-plus/proxy-plus for `plus`, cap-minus/
+proxy-minus for `minus`. This is the cap-selection **Step 4**
 endpoint; it is unrelated to reporter-assay `yulab_reporter_pipe step4` (PreTran
 count merging).
 
@@ -93,6 +95,7 @@ count merging).
 | `--bedtools` | `bedtools` | BEDTools executable path or name |
 | `--umi-dedup-method` | `directional` | UMI-tools `dedup --method` (`unique`, `percentile`, `cluster`, `adjacency`, `directional`) |
 | `--umi-tools` | `umi_tools` | UMI-tools executable path or name |
+| `--rna-strand` | `both` | Expected reference-relative biological RNA strand (`both`, `plus`, `minus`); also selects the published track set |
 
 There is no reference path, BAI input, project root, overwrite flag, batch mode,
 no-deduplication mode, or generic passthrough to native tool CLIs. Native
@@ -147,6 +150,18 @@ of R2) and one R1 **polymerase-position proxy** observation (sequenced 5′ of
 R1, antisense to nascent RNA, inverted to biological RNA strand). **R2 3′
 endpoints are not consumed.**
 
+**RNA strand assertion:** `--rna-strand` declares the expected
+reference-relative biological RNA strand, determined by R2's BAM strand. It
+is an assertion, not a filter: with `plus` or `minus`, any otherwise
+eligible pair whose R2 lies on the opposite strand fails the invocation
+before UMI-tools deduplication with its contradictory-pair count, and no
+tracks are published. Pairs rejected by ordinary filters never count as
+contradictory. Pass the same `--rna-strand` value to Steps 3 and 4; a
+permissive mismatch (selected-strand BAM passed as `both`) publishes extra
+empty tracks. Complete unmapped primary pairs without mapped-placement tags
+(Step 3 strand-rejected evidence) are admitted and audit as ordinary
+unmapped pairs.
+
 Eligible pairs are written to a staging BAM and deduplicated with UMI-tools
 `dedup --paired` using `--umi-dedup-method` (default `directional`). Track
 counts use **retained** pairs after deduplication.
@@ -166,12 +181,15 @@ On success, exactly these files appear directly under `--output-dir` (`S` =
 library prefix):
 
 ```text
-S.5pl.bw
-S.5mn.bw
-S.3pl.bw
-S.3mn.bw
-S.step4_summary.json
+both:  S.5pl.bw S.5mn.bw S.3pl.bw S.3mn.bw S.step4_summary.json
+plus:  S.5pl.bw S.3pl.bw S.step4_summary.json
+minus: S.5mn.bw S.3mn.bw S.step4_summary.json
 ```
+
+Policy-omitted tracks are absent (not header-only). Under `both`, selected
+tracks with no observations still publish real header-only bigWigs. The
+summary always retains all four track keys; omitted tracks carry `null`
+paths/hashes and zero metrics.
 
 Encoding details: [cap-selection Step 4 bigWig tracks](../formats.md#cap-selection-step-4-bigwig-tracks)
 and [step 4 summary](../formats.md#cap-selection-step-4-summary-json).
@@ -179,8 +197,10 @@ and [step 4 summary](../formats.md#cap-selection-step-4-summary-json).
 ### Concurrent runs and collisions
 
 Step 4 acquires `.{prefix}_step4.lock` in the output directory for the
-invocation. The five target paths (including symlinks) must be absent before
-processing; existing outputs are not overwritten. A cooperating second
+invocation. Only the selected track paths plus the summary must be absent
+before processing (five paths for `both`, three for `plus`/`minus`);
+existing outputs for omitted strands are unrelated files and are neither
+checked nor removed. A cooperating second
 invocation with the same prefix and directory receives an already-active error.
 
 ### Complete runnable example
@@ -201,8 +221,10 @@ cap-assay-pipeline step4-post-alignment-processing \
 
 Expect exit code `0`, no stdout, five new files under `tracks/`, and
 `tracks/LIB01.step4_summary.json` with `"status": "success"`. Observation
-totals reconcile: `track_observations.cap_plus + track_observations.cap_minus`
-and the proxy pair each equal `eligible_pairs`.
+totals reconcile per selected policy: under `both`,
+`track_observations.cap_plus + track_observations.cap_minus`
+and the proxy pair each equal `eligible_pairs`; under `plus`, `cap_plus`
+and `proxy_plus` each equal `eligible_pairs` (mirrored for `minus`).
 
 ### Help
 

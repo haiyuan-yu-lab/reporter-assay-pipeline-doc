@@ -193,14 +193,14 @@ only. They are not reporter-assay Step 4 tables.
 
 ### Cap-selection Step 4 bigWig tracks
 
-Four bigWig files per successful library, where `S` is `--library-prefix`:
+Strand-selected bigWig files per successful library, where `S` is `--library-prefix`:
 
-| Filename | Track key | Endpoint | Biological RNA strand |
-| --- | --- | --- | --- |
-| `S.5pl.bw` | `cap_plus` | R2 sequenced 5′ (cap signal) | Plus |
-| `S.5mn.bw` | `cap_minus` | R2 sequenced 5′ (cap signal) | Minus |
-| `S.3pl.bw` | `proxy_plus` | R1 sequenced 5′ → RNA 3′ proxy | Plus |
-| `S.3mn.bw` | `proxy_minus` | R1 sequenced 5′ → RNA 3′ proxy | Minus |
+| Filename | Track key | Endpoint | Biological RNA strand | Published when |
+| --- | --- | --- | --- | --- |
+| `S.5pl.bw` | `cap_plus` | R2 sequenced 5′ (cap signal) | Plus | `both`, `plus` |
+| `S.5mn.bw` | `cap_minus` | R2 sequenced 5′ (cap signal) | Minus | `both`, `minus` |
+| `S.3pl.bw` | `proxy_plus` | R1 sequenced 5′ → RNA 3′ proxy | Plus | `both`, `plus` |
+| `S.3mn.bw` | `proxy_minus` | R1 sequenced 5′ → RNA 3′ proxy | Minus | `both`, `minus` |
 
 **Coordinate system:** Sequence names and lengths match the admitted BAM `@SQ`
 dictionary exactly (same order as the BAM header). Intervals are **one-base**
@@ -212,8 +212,10 @@ tracks (`*.5mn.bw`, `*.3mn.bw`) store **negative** integers whose absolute
 values are observation counts. **Zero-valued intervals are omitted** from the
 files; absence of an interval means zero observations at that position.
 
-Strand tracks with no observations still publish a valid bigWig containing the
-full BAM sequence dictionary when at least one pair is eligible.
+Strand tracks selected by `both` with no observations still publish a valid
+bigWig containing the full BAM sequence dictionary when at least one pair
+is eligible. Tracks omitted by a `plus`/`minus` policy are absent from the
+output directory rather than header-only.
 
 ### Cap-selection Step 4 summary JSON
 
@@ -230,13 +232,15 @@ are `null`, not fabricated zeroes):
 | `status` | `success` or `failed` |
 | `warnings` | Array (may be empty) |
 | `failure_reason` | `null` on success; concise message on failure |
+| `rna_strand` | Selected policy: `both`, `plus`, or `minus` |
+| `contradictory_pairs` | Otherwise eligible opposite-strand pair count when pair auditing completed, else `null` |
 | `input_bam`, `output_dir` | Resolved paths |
-| `tracks` | Object with `cap_plus`, `cap_minus`, `proxy_plus`, `proxy_minus` paths |
+| `tracks` | Object with all four keys (`cap_plus`, `cap_minus`, `proxy_plus`, `proxy_minus`); policy-omitted tracks are `null` |
 | `summary` | Path to this JSON file |
 | `samtools`, `samtools_version` | Resolved executable and probed version |
 | `bedtools`, `bedtools_version` | Resolved executable and probed version |
 | `pybigwig_version` | pyBigWig version when known |
-| `effective_arguments` | `threads`, `max_pair_mismatches` |
+| `effective_arguments` | `threads`, `max_pair_mismatches`, `rna_strand` |
 | `bam_sequences` | `{name, length}` list from BAM `@SQ` |
 | `read_group_id` | Read group ID (equals library prefix when admitted) |
 | `pair_total_groups` | Distinct query names collated |
@@ -244,10 +248,10 @@ are `null`, not fabricated zeroes):
 | `rejected_pairs` | Count of rejected pairs |
 | `rejection_counts` | Map with keys `excluded_flags`, `mapping_completeness`, `uniqueness`, `cigar`, `mismatch_ceiling`, `geometry` |
 | `mismatch_histogram` | String keys of combined `NM(R1)+NM(R2)` → pair count |
-| `track_observations` | Per-track observation totals (`cap_plus`, `cap_minus`, `proxy_plus`, `proxy_minus`); plus minus sums equal `eligible_pairs` for cap and proxy groups |
-| `track_occupied_positions` | Distinct genomic positions with signal per track |
-| `maximum_absolute_pileup` | Max pileup magnitude per track |
-| `artifact_hashes` | SHA-256 per published bigWig track key |
+| `track_observations` | Per-track observation totals (`cap_plus`, `cap_minus`, `proxy_plus`, `proxy_minus`); selected cap and proxy groups each equal `eligible_pairs`; omitted tracks are `0` |
+| `track_occupied_positions` | Distinct genomic positions with signal per track (`0` for omitted tracks) |
+| `maximum_absolute_pileup` | Max pileup magnitude per track (`0` for omitted tracks) |
+| `artifact_hashes` | SHA-256 per published bigWig track key (`null` for omitted tracks) |
 
 Pure usage errors do not create a summary. An existing summary file is never
 overwritten.
