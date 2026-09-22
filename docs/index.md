@@ -1,8 +1,8 @@
 # Reporter Assay Pipeline
 
 Command-line toolkit for **reporter-assay** processing (element-level activity,
-QC plots, ExogeneousSequences export) and **cap-selection** processing (four
-strand-separated RNA endpoint bigWig tracks via `cap-assay-pipeline`).
+QC plots, ExogeneousSequences export) and **cap-selection** processing (strand-selected
+RNA endpoint bigWig tracks via `cap-assay-pipeline`).
 
 | Resource | Link |
 | --- | --- |

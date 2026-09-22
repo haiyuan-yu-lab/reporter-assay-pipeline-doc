@@ -183,3 +183,20 @@ reference, not genomic coordinates.
 
 The filename-safe token shared across cap-selection steps. Step 4 requires the
 sole BAM read-group ID to match `--library-prefix`.
+
+### Reference-relative RNA strand
+
+The plus or minus biological RNA strand measured relative to a
+construct-derived reference, independent of the tested element's CW or CCW
+orientation. Determined by the R2 BAM strand; R1 is the antisense mate.
+Selected with `--rna-strand {both,plus,minus}` (default `both`) at
+cap-selection Steps 3 and 4; callers repeat the same value at both steps
+because the BAM carries no policy marker.
+
+### Strand-rejected pair
+
+A read pair whose globally best alignments contain no placement on the
+selected reference-relative RNA strand. Step 3 retains it as one complete
+unmapped primary pair (flags `77`/`141`, read group only) and counts it in
+`strand_rejected_pairs`; Step 4 admits that shape as ordinary unmapped
+evidence.

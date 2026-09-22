@@ -126,10 +126,19 @@ reference):
 | **Cap signal** | R2 sequenced 5′ | RNA initiation / capped 5′ endpoint observation |
 | **Polymerase-position proxy** | R1 sequenced 5′ (strand inverted) | Pause-biased proxy for nascent RNA 3′; not a second cap-signal readout |
 
-Cap signal and the polymerase-position proxy are published as **four** bigWig
-files (`.5pl.bw`, `.5mn.bw`, `.3pl.bw`, `.3mn.bw`). Do not treat the R1-derived
+Cap signal and the polymerase-position proxy are published as strand-selected
+bigWig files: four (`.5pl.bw`, `.5mn.bw`, `.3pl.bw`, `.3mn.bw`) for the default
+`--rna-strand both`, or the two endpoint tracks for the selected strand under
+`--rna-strand plus`/`minus`. Do not treat the R1-derived
 tracks as cap signal or as unbiased RNA polymerase II occupancy. Step 4 does not
 use R2 3′ endpoints.
+
+**Reference-relative RNA strand** (plus or minus) is measured relative to the
+construct-derived alignment reference and is independent of the tested
+element's CW or CCW orientation; R2 determines the strand. Libraries pool at
+most one axis: one orientation with both strands uses `both`, pooled CW/CCW
+with one known strand uses that strand at both steps, and pooling both axes
+is unsupported (see [RNA strand policy](cap-selection/workflow.md#rna-strand-policy)).
 
 Operational topology and commands: [Cap-selection workflow](cap-selection/workflow.md).
 Terminology: [Glossary — cap-selection](glossary.md#cap-selection).

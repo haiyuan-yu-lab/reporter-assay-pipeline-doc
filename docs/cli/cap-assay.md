@@ -48,7 +48,7 @@ Exactly four subcommands are registered, in numeric order:
 | `step1-prep-fastq` | Prepare reads with fastp (trim, R1 UMI in names, filter; UMI-aware dedup in Step 4) |
 | `step2-build-reference` | Build construct-derived reference FASTA (unique complete sequence per Element) |
 | `step3-alignment` | Align one library to one reference; publish BAM + BAI + summary |
-| `step4-post-alignment-processing` | Four strand-specific RNA endpoint bigWigs from one library BAM |
+| `step4-post-alignment-processing` | Strand-selected RNA endpoint bigWigs from one library BAM (four tracks for `both`, two for `plus`/`minus`) |
 
 Unknown top-level commands and options are rejected before any step module
 loads. After a recognized command, all remaining tokens are forwarded to that
@@ -83,7 +83,7 @@ count merging).
 | --- | --- |
 | `--library-prefix` | Filename-safe token `[A-Za-z0-9][A-Za-z0-9._-]*` (not `.` or `..`); must match the sole `@RG` ID in the BAM |
 | `--input-bam` | Readable, non-empty coordinate-sorted BAM |
-| `--output-dir` | Directory that will receive the five published artifacts (created when possible) |
+| `--output-dir` | Directory that will receive the published artifacts (created when possible): five files for `both`, three for `plus`/`minus` |
 
 ### Optional arguments
 
@@ -256,9 +256,10 @@ layout grammar, FASTA rules, artifact names, and example invocation.
 
 ## Steps 1–3 (summary)
 
-Operational detail for the fork legs is in [Steps 1–3](../cap-selection/steps-1-3.md).
+Operational detail for the fork legs is in [Steps 1–3](../cap-selection/steps-1-3.md),
+including Step 3 `--rna-strand {both,plus,minus}` (default `both`) selection,
+strand-rejected unmapped retention, and `effective_mapping_counts`.
 Invoke help per step:
-
 ```bash
 cap-assay-pipeline step1-prep-fastq --help
 cap-assay-pipeline step2-build-reference --help

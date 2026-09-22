@@ -64,7 +64,27 @@ LIB01_step3_summary.json
 Verify `status` is `success` in the summary before Step 4. Zero uniquely mapped
 pairs is a Step 3 failure; Step 4 also fails when no read pairs pass its filter.
 
+### Step 3 RNA strand selection
+
+Step 3 accepts `--rna-strand {both,plus,minus}` (default `both`). The value
+names the reference-relative biological RNA strand determined by the R2 BAM
+strand (R1 is the antisense mate); it never describes CW/CCW construct
+orientation. The default publishes STAR's coordinate-sorted BAM unchanged.
+
+With `plus` or `minus`, Step 3 keeps all and only tied-best placements whose
+R2 lies on the selected strand, keeping linked R1/R2 mates together. One
+surviving placement becomes unique (`NH:1`); several survivors stay
+multimapped; no lower-scoring placement is ever substituted. A pair whose
+best placements are all on the excluded strand is retained as one complete
+unmapped pair and counted in `strand_rejected_pairs` (a subset of effective
+unmapped pairs in `effective_mapping_counts`), with one warning reporting the
+total rejected count. Partly or fully unmapped STAR pairs are preserved
+unchanged and never count as strand-rejected.
+
 ## Resume at Step 4
+
+Pass the same `--rna-strand` value used at Step 3 (see [RNA strand
+policy](workflow.md#rna-strand-policy)).
 
 When a compatible BAM already exists:
 
