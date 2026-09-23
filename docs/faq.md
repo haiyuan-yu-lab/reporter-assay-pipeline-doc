@@ -2,7 +2,9 @@
 
 ## Where is the source code?
 
-[haiyuan-yu-lab/reporter-assay-pipeline](https://github.com/haiyuan-yu-lab/reporter-assay-pipeline)
+[DignoMor/reporter-assay-pipeline](https://github.com/DignoMor/reporter-assay-pipeline)
+is private. Ask the repository maintainer for access before installing the
+package or opening source links.
 
 ## Which version do these docs describe?
 

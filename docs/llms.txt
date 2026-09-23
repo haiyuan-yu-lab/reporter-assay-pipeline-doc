@@ -1,7 +1,7 @@
 # Reporter Assay Pipeline
 > Command-line toolkit for reporter-assay activity calling and cap-selection RNA endpoint bigWigs (0.1.0b4).
 
-Software: [haiyuan-yu-lab/reporter-assay-pipeline](https://github.com/haiyuan-yu-lab/reporter-assay-pipeline).
+Software (access required): [DignoMor/reporter-assay-pipeline](https://github.com/DignoMor/reporter-assay-pipeline).
 
 ## Docs
 - [Home](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/): Reporter vs cap-selection paths

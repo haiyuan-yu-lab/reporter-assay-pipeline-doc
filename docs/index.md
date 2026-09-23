@@ -6,7 +6,7 @@ RNA endpoint bigWig tracks via `cap-assay-pipeline`).
 
 | Resource | Link |
 | --- | --- |
-| Code | [haiyuan-yu-lab/reporter-assay-pipeline](https://github.com/haiyuan-yu-lab/reporter-assay-pipeline) |
+| Code (access required) | [DignoMor/reporter-assay-pipeline](https://github.com/DignoMor/reporter-assay-pipeline) |
 | Agent index | [`llms.txt`](llms.txt) |
 | Start by task | [Task index](tasks.md) |
 | Install | [Quickstart](quickstart.md) |

@@ -18,10 +18,10 @@ input contracts here before using the command examples.
 
 ## Install
 
-From the public GitHub repository:
+With access to the private GitHub repository and SSH credentials configured:
 
 ```bash
-pip install git+https://github.com/haiyuan-yu-lab/reporter-assay-pipeline.git@0.1.0b4
+pip install git+ssh://git@github.com/DignoMor/reporter-assay-pipeline.git@0.1.0b4
 ```
 
 Or from a local checkout of a `0.1.0b4` tag or matching commit:

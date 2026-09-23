@@ -1,7 +1,7 @@
 # Reporter Assay Pipeline — Documentation
 
 Public user-facing documentation for the
-[Reporter Assay Pipeline](https://github.com/haiyuan-yu-lab/reporter-assay-pipeline)
+[Reporter Assay Pipeline](https://github.com/DignoMor/reporter-assay-pipeline)
 **0.1.0b4** (beta).
 
 **Site:** https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/
@@ -30,5 +30,5 @@ mkdocs serve
 
 | Role | Repo |
 | --- | --- |
-| Code | https://github.com/haiyuan-yu-lab/reporter-assay-pipeline |
+| Code (access required) | https://github.com/DignoMor/reporter-assay-pipeline |
 | Docs | https://github.com/haiyuan-yu-lab/reporter-assay-pipeline-doc |
