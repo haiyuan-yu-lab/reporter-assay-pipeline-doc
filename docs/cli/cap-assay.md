@@ -8,7 +8,7 @@ executables and does not change `yulab_reporter_pipe` behavior.
 Process cap-selection assay sequencing data into strand-specific RNA endpoint bigWig tracks.
 ```
 
-This page documents the released **0.1.0b3** contract. `cap-assay-pipeline --help`
+This page documents the released **0.1.0b4** contract. `cap-assay-pipeline --help`
 and `cap-assay-pipeline <step> --help` describe the installed local build.
 
 See [Cap-selection workflow](../cap-selection/workflow.md) for fork–join topology
@@ -25,10 +25,10 @@ executable alongside the reporter-assay commands (same package version as
 | 1 | `fastp` (not version-pinned by the package) |
 | 2 | (layout-driven; see step help) |
 | 3 | STAR **2.7.0+**, samtools **1.10+**, `zcat` on `PATH` |
-| 4 | samtools **1.12+**, BEDTools **2.30+**; **pyBigWig** is a Python dependency |
+| 4 | samtools **1.12+**, BEDTools **2.30+**, UMI-tools; **pyBigWig** is a Python dependency |
 
 Record external tool versions in each step summary JSON. Step 4 resolves
-`samtools` and `bedtools` from `--samtools` / `--bedtools` or `PATH`, probes
+`samtools`, `bedtools`, and `umi_tools` from their step options or `PATH`, probes
 `--version` before processing, and stores accepted version strings in the
 summary when known.
 

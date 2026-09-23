@@ -1,5 +1,5 @@
 # Reporter Assay Pipeline
-> Command-line toolkit for reporter-assay activity calling and cap-selection RNA endpoint bigWigs (0.1.0b3).
+> Command-line toolkit for reporter-assay activity calling and cap-selection RNA endpoint bigWigs (0.1.0b4).
 
 Software: [haiyuan-yu-lab/reporter-assay-pipeline](https://github.com/haiyuan-yu-lab/reporter-assay-pipeline).
 

@@ -1,6 +1,6 @@
 # Quickstart
 
-This page documents release **0.1.0b3**. Follow the pinned installation and
+This page documents release **0.1.0b4**. Follow the pinned installation and
 input contracts here before using the command examples.
 
 ## Requirements
@@ -12,7 +12,8 @@ input contracts here before using the command examples.
   (`edlib`, `matplotlib`, `numpy`, `pandas`, `pyBigWig`, …) and install with
   the package
 - Cap-selection Steps 3–4 additionally need external tools on `PATH` (STAR and
-  samtools for Step 3; samtools **1.12+** and BEDTools **2.30+** for Step 4)
+  samtools for Step 3; samtools **1.12+**, BEDTools **2.30+**, and UMI-tools
+  for Step 4)
   — see [Cap-selection CLI](cli/cap-assay.md#installation-dependencies)
 
 ## Install
@@ -20,10 +21,10 @@ input contracts here before using the command examples.
 From the public GitHub repository:
 
 ```bash
-pip install git+https://github.com/haiyuan-yu-lab/reporter-assay-pipeline.git@0.1.0b3
+pip install git+https://github.com/haiyuan-yu-lab/reporter-assay-pipeline.git@0.1.0b4
 ```
 
-Or from a local checkout of a `0.1.0b3` tag or matching commit:
+Or from a local checkout of a `0.1.0b4` tag or matching commit:
 
 ```bash
 pip install .
@@ -75,5 +76,5 @@ CW-only / EID-only layouts omit `PreTran_CCW` and the pBC post-transfection set.
 ## Next steps
 
 - [Workflow](workflow.md) — stages, default paths, and success criteria
-- [CLI overview](cli/index.md) — the three installed commands
+- [CLI overview](cli/index.md) — the four installed commands
 - [Pipeline CLI](cli/pipe.md) — end-to-end grouped-command example

@@ -1,7 +1,7 @@
 # Steps 1–2: prepare one library
 
 This page is the canonical procedure for running and checking the first two
-pipeline stages for one library in release **0.1.0b3**. Use it when you need
+pipeline stages for one library in release **0.1.0b4**. Use it when you need
 to run or resume individual stages. For input checks and schema construction,
 see [Prepare inputs](input-preparation.md) and [Layout schemas](layout-schemas.md).
 For the equivalent grouped command, see [`prep_lib`](cli/pipe.md#prep_lib-step1-step2).
@@ -38,7 +38,7 @@ It must contain `layout1`, `layout2`, and ordered `column_names`; any named
 the library's read layout and branch. A valid schema is not interchangeable
 with another branch merely because the files have the same suffixes.
 
-Install the documented `0.1.0b3` package and put `fastp` on `PATH`. The
+Install the documented `0.1.0b4` package and put `fastp` on `PATH`. The
 documentation does not pin the external `fastp` version; record the binary
 used by your environment when reproducibility matters.
 
@@ -58,7 +58,7 @@ yulab_reporter_pipe step1 \
   --cleaner fastp
 ```
 
-In **0.1.0b3**, `yulab_reporter_pipe step1 --help` prints the complete
+In **0.1.0b4**, `yulab_reporter_pipe step1 --help` prints the complete
 step-owned command contract. This versioned procedure and the installed help
 describe the same command surface.
 

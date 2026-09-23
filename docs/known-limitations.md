@@ -1,4 +1,4 @@
-# Known limitations in 0.1.0b3
+# Known limitations in 0.1.0b4
 
 These are limitations of the released build, not instructions to work around
 them by guessing at undocumented behavior.
@@ -15,7 +15,7 @@ The code repository has no continuous-integration workflow, and the release was
 not validated by rerunning a large end-to-end assay fixture. Contract-level tests
 cover the supported command surfaces and artifact behavior.
 
-## Resolved since 0.1.0b2
+## Resolved in 0.1.0b3
 
 Release **0.1.0b3** routes every `yulab_reporter_pipe stepN --help` request to
 the step-owned parser, resolving [public issue
@@ -35,8 +35,9 @@ the ineffective Step 6 `--min-match-length` option; matching remains exact
 - provide unbiased RNA polymerase II occupancy (the R1-derived tracks are a
   pause-biased polymerase-position proxy only).
 
-Pair filtering excludes duplicate-flagged alignments but does **not** perform
-barcode error correction or UMI-based rescue. There is no grouped
+Step 4 deduplicates eligible pairs by their extracted UMIs with UMI-tools,
+but does **not** perform barcode error correction or UMI-based rescue of pairs
+rejected by earlier filters. There is no grouped
 whole-pipeline orchestration command; run Steps 1–4 explicitly.
 
 ## Cap-selection RNA strand policy

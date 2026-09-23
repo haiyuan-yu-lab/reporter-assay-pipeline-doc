@@ -1,6 +1,6 @@
 # Cap-selection Steps 1–3
 
-This page documents released **0.1.0b3** handoffs for the cap-selection legs
+This page documents released **0.1.0b4** handoffs for the cap-selection legs
 that feed [Step 4](workflow.md#step-4-deliverable). Full flag lists live in
 `cap-assay-pipeline <step> --help` and in the [Cap-selection CLI](../cli/cap-assay.md).
 

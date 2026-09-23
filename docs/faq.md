@@ -6,7 +6,7 @@
 
 ## Which version do these docs describe?
 
-**0.1.0b3** (beta). The public documentation describes the released
+**0.1.0b4** (beta). The public documentation describes the released
 behavioral contract. `COMMAND --help` describes the command surface of the
 installed local build; disagreements are defects.
 
@@ -73,4 +73,4 @@ modify pipeline artifacts.
 ## Where are the current release limitations?
 
 See [Known limitations](known-limitations.md) for external-tool versioning and
-release-validation boundaries in 0.1.0b3.
+release-validation boundaries in 0.1.0b4.
