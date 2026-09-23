@@ -1,23 +1,30 @@
 # Quickstart
 
-This page documents release **0.1.0b3**. Follow the pinned installation and
+This page documents release **0.1.0b4**. Follow the pinned installation and
 input contracts here before using the command examples.
 
 ## Requirements
 
 - Python 3.9 or newer
-- `fastp` on `PATH` for Step 1 / `prep_lib` (not version-pinned; whatever binary is on `PATH` is used)
-- Core Python dependencies are declared in the code package `pyproject.toml` (`edlib`, `matplotlib`, `numpy`, `pandas`) and install with the package
+- `fastp` on `PATH` for reporter-assay Step 1 / `prep_lib` and cap-selection
+  `step1-prep-fastq` (not version-pinned)
+- Core Python dependencies are declared in the code package `pyproject.toml`
+  (`edlib`, `matplotlib`, `numpy`, `pandas`, `pyBigWig`, …) and install with
+  the package
+- Cap-selection Steps 3–4 additionally need external tools on `PATH` (STAR and
+  samtools for Step 3; samtools **1.12+**, BEDTools **2.30+**, and UMI-tools
+  for Step 4)
+  — see [Cap-selection CLI](cli/cap-assay.md#installation-dependencies)
 
 ## Install
 
-From the public GitHub repository:
+With access to the private GitHub repository and SSH credentials configured:
 
 ```bash
-pip install git+https://github.com/haiyuan-yu-lab/reporter-assay-pipeline.git@0.1.0b3
+pip install git+ssh://git@github.com/DignoMor/reporter-assay-pipeline.git@0.1.0b4
 ```
 
-Or from a local checkout of a `0.1.0b3` tag or matching commit:
+Or from a local checkout of a `0.1.0b4` tag or matching commit:
 
 ```bash
 pip install .
@@ -32,6 +39,7 @@ package release and this site together describe the current public contract.
 yulab_reporter_pipe --help
 yulab_reporter_qc --help
 yulab_reporter_export --help
+cap-assay-pipeline --help
 ```
 
 ## Required inputs
@@ -68,5 +76,5 @@ CW-only / EID-only layouts omit `PreTran_CCW` and the pBC post-transfection set.
 ## Next steps
 
 - [Workflow](workflow.md) — stages, default paths, and success criteria
-- [CLI overview](cli/index.md) — the three installed commands
+- [CLI overview](cli/index.md) — the four installed commands
 - [Pipeline CLI](cli/pipe.md) — end-to-end grouped-command example

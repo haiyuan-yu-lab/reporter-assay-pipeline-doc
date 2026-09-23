@@ -24,11 +24,13 @@ nav:
   - Learn:
       - Assay model: assay-model.md
       - Canonical glossary: glossary.md
+      - Cap-selection workflow: cap-selection/workflow.md
   - Run:
       - Prepare inputs: input-preparation.md
       - Layout schemas: layout-schemas.md
       - Complete command paths: complete-command-paths.md
       - Workflow and stage handoffs: workflow.md
+      - Cap-selection Steps 1–3: cap-selection/steps-1-3.md
       - Steps 1–2: steps-1-2.md
       - Steps 3–5: steps-3-5.md
       - Steps 6–8: steps-6-8.md
@@ -41,6 +43,7 @@ nav:
       - Pipeline CLI: cli/pipe.md
       - QC CLI: cli/qc.md
       - Export CLI: cli/export.md
+      - Cap-selection CLI: cli/cap-assay.md
       - Artifact formats: formats.md
 
 markdown_extensions:

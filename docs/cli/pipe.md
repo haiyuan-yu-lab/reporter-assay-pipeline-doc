@@ -2,7 +2,7 @@
 
 Pipeline steps and grouped workflows.
 
-The released documentation is the behavioral contract for **0.1.0b3**.
+The released documentation is the behavioral contract for **0.1.0b4**.
 Individual-step help comes from each step-owned parser. Step 6 matching is exact
 `ObservedID` lookup; `--min-match-length` is not part of the command surface.
 

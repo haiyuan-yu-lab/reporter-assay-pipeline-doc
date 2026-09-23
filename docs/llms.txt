@@ -1,18 +1,20 @@
 # Reporter Assay Pipeline
-> Command-line toolkit for processing paired-end reporter-assay sequencing data into element-level activity calls, diagnostic QC plots, and ExogeneousSequences export artifacts.
+> Command-line toolkit for reporter-assay activity calling and cap-selection RNA endpoint bigWigs (0.1.0b4).
 
-This site is the released user-observable contract for 0.1.0b3. Software: [haiyuan-yu-lab/reporter-assay-pipeline](https://github.com/haiyuan-yu-lab/reporter-assay-pipeline).
+Software (access required): [DignoMor/reporter-assay-pipeline](https://github.com/DignoMor/reporter-assay-pipeline).
 
 ## Docs
-- [Home](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/): Reading paths (Learn, Run, Diagnose, Reference) and release contract note
-- [Quickstart](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/quickstart/): Install 0.1.0b3, prerequisites, and first-run inputs
-- [Tasks](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/tasks/): Task index for choosing a docs path by job
-- [Workflow](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/workflow/): Stages, artifact handoffs, completion, and resumption
-- [CLI overview](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cli/): `yulab_reporter_pipe`, `yulab_reporter_qc`, and `yulab_reporter_export`
-- [Pipeline CLI](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cli/pipe/): Steps, grouped orchestration, and flags
-- [QC CLI](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cli/qc/): Read-only analytical plots over existing artifacts
-- [Export CLI](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cli/export/): ExogeneousSequences FASTA and `.npy` export
-- [Artifact formats](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/formats/): Encodings, headers, columns, and summary schemas
-- [FAQ](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/faq/): Symptoms, likely stage, and recovery
-- [Known limitations](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/known-limitations/): Documented 0.1.0b3 defects and discrepancies
-- [Glossary](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/glossary/): EID, PID, eBC, pBC, CW, CCW, PreTran, PostTran, UMI, Element
+- [Home](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/): Reporter vs cap-selection paths
+- [Quickstart](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/quickstart/): Install and verify executables
+- [Tasks](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/tasks/): Task index
+- [Workflow](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/workflow/): Reporter-assay nine-step graph
+- [Cap-selection workflow](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cap-selection/workflow/): Fork–join Steps 1–4 and bigWig deliverables
+- [CLI overview](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cli/): All four executables
+- [Pipeline CLI](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cli/pipe/): `yulab_reporter_pipe`
+- [Cap-selection CLI](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cli/cap-assay/): Step 4 options, filtering, BAM boundary, example
+- [QC CLI](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cli/qc/): Analytical plots
+- [Export CLI](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cli/export/): ExogeneousSequences export
+- [Artifact formats](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/formats/): Tables and cap-selection `.5pl.bw` / summary JSON
+- [FAQ](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/faq/): Symptoms and recovery
+- [Known limitations](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/known-limitations/): Including cap-selection Step 4 scope
+- [Glossary](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/glossary/): Cap signal, polymerase-position proxy, reporter terms

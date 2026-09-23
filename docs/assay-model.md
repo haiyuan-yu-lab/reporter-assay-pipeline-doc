@@ -1,6 +1,6 @@
 # Assay model
 
-This page documents the released **0.1.0b3** assay model and vocabulary.
+This page documents the released **0.1.0b4** assay model and vocabulary.
 
 This page explains the general dual reporter-assay model used by the
 Reporter Assay Pipeline. It is the conceptual starting point for the
@@ -106,3 +106,39 @@ The exact formulas, pseudocount behavior, shared-element intersection, and
 undefined-normalization failures belong to the Step 9 contract and are
 documented with the activity command. This page supplies the model and
 vocabulary needed to read those contracts.
+
+## Cap-selection assay (separate workflow)
+
+Cap-selection assays (for example QUASARR-cap) measure **nascent RNA endpoints**
+from PCR-amplified cDNA after cap selection on plasmid constructs. The
+`cap-assay-pipeline` executable implements this path; it does not produce
+reporter-assay activity tables or consume reporter layout schemas.
+
+### Cap-selection RNA endpoints
+
+Paired-end sequencing places **R2** on the capped RNA 5′ side and **R1** on the
+antisense side. Step 4 emits two distinct measurement types on plus and minus
+**biological RNA strands** (relative to the construct-derived alignment
+reference):
+
+| Measurement | Read source | Biological meaning |
+| --- | --- | --- |
+| **Cap signal** | R2 sequenced 5′ | RNA initiation / capped 5′ endpoint observation |
+| **Polymerase-position proxy** | R1 sequenced 5′ (strand inverted) | Pause-biased proxy for nascent RNA 3′; not a second cap-signal readout |
+
+Cap signal and the polymerase-position proxy are published as strand-selected
+bigWig files: four (`.5pl.bw`, `.5mn.bw`, `.3pl.bw`, `.3mn.bw`) for the default
+`--rna-strand both`, or the two endpoint tracks for the selected strand under
+`--rna-strand plus`/`minus`. Do not treat the R1-derived
+tracks as cap signal or as unbiased RNA polymerase II occupancy. Step 4 does not
+use R2 3′ endpoints.
+
+**Reference-relative RNA strand** (plus or minus) is measured relative to the
+construct-derived alignment reference and is independent of the tested
+element's CW or CCW orientation; R2 determines the strand. Libraries pool at
+most one axis: one orientation with both strands uses `both`, pooled CW/CCW
+with one known strand uses that strand at both steps, and pooling both axes
+is unsupported (see [RNA strand policy](cap-selection/workflow.md#rna-strand-policy)).
+
+Operational topology and commands: [Cap-selection workflow](cap-selection/workflow.md).
+Terminology: [Glossary — cap-selection](glossary.md#cap-selection).

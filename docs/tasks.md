@@ -1,7 +1,7 @@
 # Task index
 
 Use this index to enter the current-release documentation by the job you need
-to do. All pages describe release **0.1.0b3**.
+to do. All pages describe release **0.1.0b4**.
 
 ## Learn
 
@@ -12,6 +12,10 @@ to do. All pages describe release **0.1.0b3**.
 
 ## Run
 
+- [Cap-selection workflow](cap-selection/workflow.md) — fork–join Steps 1–4,
+  BAM handoff, and bigWig deliverables (distinct from reporter-assay Step 4).
+- [Cap-selection Steps 1–3](cap-selection/steps-1-3.md) — prepare reads,
+  build reference, align to BAM before endpoint processing.
 - [Quickstart](quickstart.md) — install the pinned release and check inputs.
 - [Prepare inputs](input-preparation.md) — validate FASTQ pairs, references,
   controls, branches, and replicate sets before execution.
@@ -33,10 +37,12 @@ to do. All pages describe release **0.1.0b3**.
 - [Workflow](workflow.md) — check stage completion criteria, summaries, and
   retained handoffs.
 - [Known limitations](known-limitations.md) — review external-tool versioning
-  and release-validation boundaries in 0.1.0b3.
+  and release-validation boundaries in 0.1.0b4.
 
 ## Reference
 
+- [Cap-selection CLI](cli/cap-assay.md) — `cap-assay-pipeline` flags, Step 4
+  filtering, BAM boundary, and runnable example.
 - [Pipeline CLI](cli/pipe.md) — exact pipeline flags and outputs, including
   `concat_step2_records`.
 - [QC CLI](cli/qc.md) — plot inputs and options.

@@ -1,6 +1,6 @@
 # Canonical glossary
 
-These definitions apply to the released **0.1.0b3** documentation and its
+These definitions apply to the released **0.1.0b4** documentation and its
 artifact and command names.
 
 Use these definitions when reading pipeline commands, artifacts, summaries,
@@ -146,3 +146,57 @@ The negative-control-normalized z-score derived from the retained controls.
 The deterministic `Active` or `Inactive` category assigned from `ActivityZ`
 and the configured activity threshold. It is an output classification, not a
 claim that the assay has established a biological mechanism.
+
+## Cap-selection
+
+Terms below apply to `cap-assay-pipeline` and cap-selection artifacts only.
+They do not redefine reporter-assay Step numbers or PreTran/PostTran tables.
+
+### Cap-selection assay
+
+An assay that sequences cap-selected nascent RNA from construct libraries
+before reporter-style barcode matching. QUASARR-cap is one cap-selection assay;
+it shares plasmid construct context with QUASARR-seq but uses a different
+pipeline command namespace and deliverables.
+
+### Cap signal
+
+The canonical name for observations derived from the **R2** sequenced 5′
+endpoint (nascent RNA 5′). Published in `{prefix}.5pl.bw` and `{prefix}.5mn.bw`.
+
+### Polymerase-position proxy
+
+Observations derived from the **R1** sequenced 5′ endpoint after inverting BAM
+strand into biological RNA strand. Interprets a pause-biased nascent RNA 3′
+endpoint; it is **not** cap signal and not unbiased Pol II occupancy. Published
+in `{prefix}.3pl.bw` and `{prefix}.3mn.bw`.
+
+### Construct-derived reference
+
+FASTA alignment reference built from a cap-selection construct layout (Step 2).
+Each Element record must have a distinct complete constructed sequence; Step 2
+rejects identical normalized constructs across Elements before publication.
+BigWig sequence dictionaries and strand labels are defined relative to this
+reference, not genomic coordinates.
+
+### Library prefix
+
+The filename-safe token shared across cap-selection steps. Step 4 requires the
+sole BAM read-group ID to match `--library-prefix`.
+
+### Reference-relative RNA strand
+
+The plus or minus biological RNA strand measured relative to a
+construct-derived reference, independent of the tested element's CW or CCW
+orientation. Determined by the R2 BAM strand; R1 is the antisense mate.
+Selected with `--rna-strand {both,plus,minus}` (default `both`) at
+cap-selection Steps 3 and 4; callers repeat the same value at both steps
+because the BAM carries no policy marker.
+
+### Strand-rejected pair
+
+A read pair whose globally best alignments contain no placement on the
+selected reference-relative RNA strand. Step 3 retains it as one complete
+unmapped primary pair (flags `77`/`141`, read group only) and counts it in
+`strand_rejected_pairs`; Step 4 admits that shape as ordinary unmapped
+evidence.
