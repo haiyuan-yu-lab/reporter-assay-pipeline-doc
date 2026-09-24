@@ -1,7 +1,7 @@
 # Task index
 
 Use this index to enter the current-release documentation by the job you need
-to do. All pages describe release **0.1.0b4**.
+to do. All pages describe release **0.2.0b1**.
 
 ## Learn
 
@@ -37,7 +37,7 @@ to do. All pages describe release **0.1.0b4**.
 - [Workflow](workflow.md) — check stage completion criteria, summaries, and
   retained handoffs.
 - [Known limitations](known-limitations.md) — review external-tool versioning
-  and release-validation boundaries in 0.1.0b4.
+  and release-validation boundaries in 0.2.0b1.
 
 ## Reference
 

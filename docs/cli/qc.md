@@ -1,9 +1,8 @@
 # `yulab_reporter_qc`
 
-This page documents the **0.1.0b4** QC command and its released plot
-semantics, plus the additional `pretrans_nc_representation` diagnostic
-implemented after that tag. QC remains diagnostic and does not add
-acceptance thresholds.
+This page documents the **0.2.0b1** QC command and its released plot
+semantics, plus the additional `pretrans_nc_representation` diagnostic.
+QC remains diagnostic and does not add acceptance thresholds.
 
 Read-only plotting commands over existing pipeline artifacts. QC reads the
 explicit paths supplied on the command line, computes values for display (and,
@@ -244,7 +243,7 @@ table with one row per reference pair. If zero both-orientation pairs exist:
 
 | Flag | Required | Default |
 | --- | --- | --- |
-| `--activity-output` | yes | Step 9 table (format ID `activity-by-element`; seven columns in **0.1.0b4**, thirteen in the unreleased revision — historical tables are rejected by new readers) |
+| `--activity-output` | yes | Step 9 table (format ID `activity-by-element`; thirteen columns in **0.2.0b1** — historical seven-column tables are rejected) |
 | `--forward-reference` | yes | FASTA |
 | `--reverse-reference` | yes | FASTA |
 | `--output-path` | yes | Plot path (always required; unused only on table-only success when no Both pairs exist) |
@@ -299,14 +298,12 @@ optional annotation (or false for every row when no annotation is supplied).
 For a `Both` row, collapsed DNA and RNA counts are the sums of the two
 orientation counts; collapsed `ActivityScore`, `Log2FC`, and `ActivityZ` are
 the arithmetic means of the two corresponding fields. `CollapsedActivityCall`
-(**0.1.0b4** tables) is `Active` if either orientation call is `Active`,
-otherwise `Inactive`. Under the unreleased thirteen-column Step 9 revision,
-one-sided pairs retain the present call; two `Control` rows collapse to
-`Control`; control/candidate mixes collapse to `MixedControl`; opposing
-`Active`/`Repressive` collapses to `Discordant`; otherwise a directional call
-wins over `NoCall`, and two `NoCall` results remain `NoCall`. New readers
-accept only the thirteen-column table and reject seven-column tables with a
-format diagnostic.
+is `Control` for two `Control` rows; `MixedControl` for control/candidate
+mixes; `Discordant` for opposing `Active`/`Repressive`; otherwise a
+directional call wins over `NoCall`, two `NoCall` results remain `NoCall`,
+and one-sided pairs retain the present call. Readers accept only the
+thirteen-column table and reject seven-column tables with a format
+diagnostic.
 `ActivityScoreDelta` and `ActivityZDelta` are reverse minus forward. For
 `FwdOnly` or `RevOnly`, collapsed values use the one present row and deltas are
 blank. For `Neither`, all collapsed and delta fields are blank. The table is

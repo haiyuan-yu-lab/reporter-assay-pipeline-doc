@@ -1,6 +1,6 @@
 # `yulab_reporter_export`
 
-This page documents the `0.1.0b4` ExogeneousSequences export contract. Run the
+This page documents the `0.2.0b1` ExogeneousSequences export contract. Run the
 export after a successful Step 9 `call_activity` invocation. It creates one
 reference-ordered FASTA and one ExogeneousSequences **stat** annotation array
 for each requested activity column.
@@ -23,14 +23,14 @@ yulab_reporter_export ES --help
 | `--anno-track COLUMN OUTPUT_NPY_PATH` | A requested numeric activity column and its `.npy` destination; repeat at least once. |
 
 The `activity-by-element` input has the Step 9 columns `Element`, `DNACount`,
-`RNACount`, `ActivityScore`, `log2FC`, `ActivityZ`, and `ActivityCall` in
-**0.1.0b4**. Under the unreleased thirteen-column revision the same seven
-columns are retained as the prefix (with fitted `ActivityCall` values) followed
-by the six model fields; new readers accept only the thirteen-column table and
-reject seven-column tables with a format diagnostic. The
+`RNACount`, `ActivityScore`, `log2FC`, `ActivityZ`, `ActivityCall`,
+`FittedRNADNALog2FC`, `ControlRelativeLog2FC`, `ControlRelativeSE`, `PValue`,
+`AdjustedPValue`, and `IsNegativeControl` in **0.2.0b1**. Readers accept only
+this thirteen-column table and reject seven-column tables with a format
+diagnostic. The
 supported annotation columns are the exact, case-sensitive names
-`ActivityScore`, `log2FC`, `ActivityZ`, `DNACount`, and `RNACount` — unchanged
-by the revision; fitted-effect columns are not selectable. Each column
+`ActivityScore`, `log2FC`, `ActivityZ`, `DNACount`, and `RNACount` —
+fitted-effect columns are not selectable. Each column
 may be requested only once; at least one must be requested. A requested
 `ActivityZ` annotation fails with a diagnostic naming `ActivityZ` when the
 table carries no usable `ActivityZ` values.

@@ -1,7 +1,7 @@
 # Complete command paths
 
 This page gives two complete, copyable command narratives for release
-**0.1.0b4**. Both use the same de-identified experiment:
+**0.2.0b1**. Both use the same de-identified experiment:
 
 - PreTran libraries: `PreTran_CW` and `PreTran_CCW`;
 - eBC branch: `eBC_DNA_rep1..3` and `eBC_RNA_rep1..3`;
@@ -193,7 +193,7 @@ Completion requires both tables to be non-empty, have the exact
 `activity-by-element` header, and have successful summaries. Retain the two
 tables, their summaries, and any selected QC/export outputs. A failed branch
 does not make the other branch complete; repair and rerun only the failed
-branch after checking the shared element intersection and retained controls.
+branch after checking DNA eligibility and eligible controls.
 
 ## Individual path: debugging and resumption
 

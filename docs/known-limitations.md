@@ -1,4 +1,4 @@
-# Known limitations in 0.1.0b4
+# Known limitations in 0.2.0b1
 
 These are limitations of the released build, not instructions to work around
 them by guessing at undocumented behavior.
@@ -11,9 +11,16 @@ release does not promise equivalent cleaning behavior across `fastp` versions.
 
 ## Release validation is unit-test-focused
 
-The code repository has no continuous-integration workflow, and the release was
-not validated by rerunning a large end-to-end assay fixture. Contract-level tests
-cover the supported command surfaces and artifact behavior.
+The code repository has no continuous-integration workflow. Release
+validation used the unit suite plus R-backed Step 9, QC, and ES contract
+tests (`Rscript` 4.0.5, edgeR 3.32.1, limma 3.46.0, statmod 1.5.2). Large
+local sandbox outputs are not a versioned release fixture.
+
+## Step 9 R backend and two-pair blocking
+
+Step 9 requires `Rscript` with edgeR and limma. Three-or-more-pair fits also
+require `statmod`. Two-pair fits use ordinary voom with **fixed replicate
+blocks**; they do not estimate `duplicateCorrelation`.
 
 ## Resolved in 0.1.0b3
 
