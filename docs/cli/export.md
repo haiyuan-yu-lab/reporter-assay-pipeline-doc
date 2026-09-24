@@ -23,10 +23,17 @@ yulab_reporter_export ES --help
 | `--anno-track COLUMN OUTPUT_NPY_PATH` | A requested numeric activity column and its `.npy` destination; repeat at least once. |
 
 The `activity-by-element` input has the Step 9 columns `Element`, `DNACount`,
-`RNACount`, `ActivityScore`, `log2FC`, `ActivityZ`, and `ActivityCall`. The
+`RNACount`, `ActivityScore`, `log2FC`, `ActivityZ`, and `ActivityCall` in
+**0.1.0b4**. Under the unreleased thirteen-column revision the same seven
+columns are retained as the prefix (with fitted `ActivityCall` values) followed
+by the six model fields; new readers accept only the thirteen-column table and
+reject seven-column tables with a format diagnostic. The
 supported annotation columns are the exact, case-sensitive names
-`ActivityScore`, `log2FC`, `ActivityZ`, `DNACount`, and `RNACount`. Each column
-may be requested only once; at least one must be requested.
+`ActivityScore`, `log2FC`, `ActivityZ`, `DNACount`, and `RNACount` — unchanged
+by the revision; fitted-effect columns are not selectable. Each column
+may be requested only once; at least one must be requested. A requested
+`ActivityZ` annotation fails with a diagnostic naming `ActivityZ` when the
+table carries no usable `ActivityZ` values.
 
 The negative-control list uses the same `Element` identifier namespace as the
 activity table. Blank lines are ignored. A file with no usable IDs is invalid.

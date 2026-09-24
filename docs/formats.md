@@ -1,11 +1,9 @@
 # Artifact formats
 
-These format IDs and encodings are the **0.1.0b4** public handoff contract.
-
-Tabular pipeline handoffs use shared **format IDs**. CLI flags that take user
+These format IDs and encodings are the **0.1.0b4** public handoff contract,
+except for the explicitly marked **unreleased** Step 9 revision below. Tabular
+pipeline handoffs use shared **format IDs**. CLI flags that take user
 paths document which format each input or output must satisfy.
-
-## Shared encoding
 
 Unless a format entry says otherwise:
 
@@ -42,7 +40,7 @@ standard dual-ID reporter-assay profile uses `EID,PID`.
 | `posttran-matched-records` | eBC: `EID`, `UMI`; pBC: `UMI1`, `PID1`, `PID2`, `UMI2` | Step 6 |
 | `posttran-quantification` | eBC: `EID`, `MoleculeCount`; pBC: `PID1`, `PID2`, `MoleculeCount` | Step 7 |
 | `element-counts` | `Element`, `MoleculeCount` | Step 8 |
-| `activity-by-element` | `Element`, `DNACount`, `RNACount`, `ActivityScore`, `log2FC`, `ActivityZ`, `ActivityCall` | Step 9 |
+| `activity-by-element` | `Element`, `DNACount`, `RNACount`, `ActivityScore`, `log2FC`, `ActivityZ`, `ActivityCall` (**0.1.0b4**; unreleased revision appends six fitted columns — see definition) | Step 9 |
 | `orientation-collapsed-activity` | 26 fixed columns; one row per reference pair | QC `plot_orientation_scatter` |
 | `pretran-negative-control-representation` | `Element`, `Status`, `PreTranUMICount`, then `<id-columns>…` | QC `pretrans_nc_representation` |
 | `negative-control-list` | One element ID per non-empty line | Reference asset |
@@ -115,11 +113,22 @@ file. Consumed by `call_activity` and `make_between_rep_activity_plot`.
 
 ### `activity-by-element`
 
-Fixed columns in order:
+**0.1.0b4** fixed columns in order:
 
 `Element`, `DNACount`, `RNACount`, `ActivityScore`, `log2FC`, `ActivityZ`, `ActivityCall`
 
 Final branch-specific Step 9 output (for example `EID-ActivityByElement.tsv.gz`).
+
+**Unreleased revision** (no release version yet): the seven columns above are
+retained as the prefix with their original formulas, followed by
+`FittedRNADNALog2FC`, `ControlRelativeLog2FC`, `ControlRelativeSE`, `PValue`,
+`AdjustedPValue`, `IsNegativeControl` in that order. `ActivityCall` becomes
+`Active` / `Repressive` / `NoCall` / `Control`; control rows carry empty
+`PValue` / `AdjustedPValue`; `IsNegativeControl` is lowercase `true` /
+`false`. New QC and export readers accept only this thirteen-column table and
+reject the seven-column table with a format diagnostic. See
+[Step 9](steps-9.md#unreleased-revised-contract-control-relative-limma-voom)
+for the field semantics.
 
 ### `orientation-collapsed-activity`
 
@@ -160,7 +169,12 @@ Key fields:
 - `PairCoverage`: `Both`, `FwdOnly`, `RevOnly`, or `Neither`
 - `Plotted`: `true` when `PairCoverage` is `Both`; otherwise `false`
 - Boolean columns use lowercase `true` / `false`
-- `ActivityCall` columns use `Active` or `Inactive`
+- `ActivityCall` columns use `Active` or `Inactive` (**0.1.0b4**). Under the
+  unreleased Step 9 revision they use `Active` / `Repressive` / `NoCall` /
+  `Control`, and `CollapsedActivityCall` additionally uses `MixedControl`
+  (control/candidate mix) or `Discordant` (opposing `Active`/`Repressive`);
+  one-sided pairs retain the present call, directional calls win over
+  `NoCall`, and two `NoCall` results remain `NoCall`.
 
 ### `pretran-negative-control-representation`
 

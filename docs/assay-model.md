@@ -13,8 +13,9 @@ sequence placed in a reporter construct. Sequencing measures the abundance of
 reporter molecules before and after transfection. For each retained element,
 the pipeline compares RNA abundance with DNA abundance and emits an
 element-level activity score and call. The pipeline contract defines the
-calculation; an `Active` or `Inactive` call is not a claim about a biological
-mechanism beyond that calculation.
+calculation; an `Active` or `Inactive` call (**0.1.0b4**; `Active` /
+`Repressive` / `NoCall` / `Control` under the unreleased fitted revision) is
+not a claim about a biological mechanism beyond that calculation.
 
 The public [QUASARR-seq publication](https://www.nature.com/articles/s41467-026-68780-y)
 provides scientific context for this kind of quantitative reporter assay. Its

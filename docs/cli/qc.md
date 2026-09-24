@@ -244,7 +244,7 @@ table with one row per reference pair. If zero both-orientation pairs exist:
 
 | Flag | Required | Default |
 | --- | --- | --- |
-| `--activity-output` | yes | Step 9 table (format ID `activity-by-element`) |
+| `--activity-output` | yes | Step 9 table (format ID `activity-by-element`; seven columns in **0.1.0b4**, thirteen in the unreleased revision — historical tables are rejected by new readers) |
 | `--forward-reference` | yes | FASTA |
 | `--reverse-reference` | yes | FASTA |
 | `--output-path` | yes | Plot path (always required; unused only on table-only success when no Both pairs exist) |
@@ -299,7 +299,14 @@ optional annotation (or false for every row when no annotation is supplied).
 For a `Both` row, collapsed DNA and RNA counts are the sums of the two
 orientation counts; collapsed `ActivityScore`, `Log2FC`, and `ActivityZ` are
 the arithmetic means of the two corresponding fields. `CollapsedActivityCall`
-is `Active` if either orientation call is `Active`, otherwise `Inactive`.
+(**0.1.0b4** tables) is `Active` if either orientation call is `Active`,
+otherwise `Inactive`. Under the unreleased thirteen-column Step 9 revision,
+one-sided pairs retain the present call; two `Control` rows collapse to
+`Control`; control/candidate mixes collapse to `MixedControl`; opposing
+`Active`/`Repressive` collapses to `Discordant`; otherwise a directional call
+wins over `NoCall`, and two `NoCall` results remain `NoCall`. New readers
+accept only the thirteen-column table and reject seven-column tables with a
+format diagnostic.
 `ActivityScoreDelta` and `ActivityZDelta` are reverse minus forward. For
 `FwdOnly` or `RevOnly`, collapsed values use the one present row and deltas are
 blank. For `Neither`, all collapsed and delta fields are blank. The table is
@@ -315,7 +322,9 @@ reference sets; an element in neither set is a hard validation failure. A
 one-sided pair is omitted from the scatter, not treated as a zero. The selected
 `activity_score` or `activityZ` is used on both axes, a dashed `y = x` line is
 drawn, and negative-control points get a red edge when either paired name is
-listed.
+listed. Requesting `activityZ` when a plotted pair has an empty (unavailable)
+`ActivityZ` fails with a diagnostic naming `ActivityZ`; use `activity_score`
+for tables whose legacy control-score standard deviation was zero.
 
 Pearson and Spearman annotations are computed over all plotted points,
 including negative controls. Spearman is Pearson correlation after average

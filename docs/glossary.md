@@ -143,8 +143,11 @@ The negative-control-normalized z-score derived from the retained controls.
 
 ### ActivityCall
 
-The deterministic `Active` or `Inactive` category assigned from `ActivityZ`
-and the configured activity threshold. It is an output classification, not a
+The deterministic output category for an element. In **0.1.0b4** it is `Active`
+or `Inactive`, assigned from `ActivityZ` and the configured activity threshold.
+Under the unreleased fitted revision it is `Active`, `Repressive`, `NoCall`,
+or `Control`, assigned from the control-relative effect and adjusted p-value.
+It is an output classification, not a
 claim that the assay has established a biological mechanism.
 
 ## Cap-selection

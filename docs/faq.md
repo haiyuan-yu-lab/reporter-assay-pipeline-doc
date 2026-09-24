@@ -10,7 +10,9 @@ package or opening source links.
 
 **0.1.0b4** (beta). The public documentation describes the released
 behavioral contract. `COMMAND --help` describes the command surface of the
-installed local build; disagreements are defects.
+installed local build; disagreements are defects. Sections explicitly marked
+**unreleased** (the revised Step 9 fitted contract) have no release version
+yet and are not part of the 0.1.0b4 contract.
 
 ## Why did my intermediates disappear after a grouped command?
 
