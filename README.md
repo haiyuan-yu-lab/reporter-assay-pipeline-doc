@@ -2,7 +2,7 @@
 
 Public user-facing documentation for the
 [Reporter Assay Pipeline](https://github.com/DignoMor/reporter-assay-pipeline)
-**0.1.0b4** (beta).
+**0.2.0b1** (beta).
 
 **Site:** https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/
 

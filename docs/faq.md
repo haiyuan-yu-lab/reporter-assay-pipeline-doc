@@ -8,9 +8,11 @@ package or opening source links.
 
 ## Which version do these docs describe?
 
-**0.1.0b4** (beta). The public documentation describes the released
-behavioral contract. `COMMAND --help` describes the command surface of the
-installed local build; disagreements are defects.
+**0.2.0b1** (beta). The public documentation describes the released
+behavioral contract, including control-relative limma–voom Step 9 tables.
+`COMMAND --help` describes the command surface of the installed local build;
+disagreements are defects. Historical **0.1.0b4** seven-column activity
+tables are not part of this contract.
 
 ## Why did my intermediates disappear after a grouped command?
 
@@ -75,4 +77,4 @@ modify pipeline artifacts.
 ## Where are the current release limitations?
 
 See [Known limitations](known-limitations.md) for external-tool versioning and
-release-validation boundaries in 0.1.0b4.
+release-validation boundaries in 0.2.0b1.

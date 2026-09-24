@@ -2,7 +2,7 @@
 
 Pipeline steps and grouped workflows.
 
-The released documentation is the behavioral contract for **0.1.0b4**.
+The released documentation is the behavioral contract for **0.2.0b1**.
 Individual-step help comes from each step-owned parser. Step 6 matching is exact
 `ObservedID` lookup; `--min-match-length` is not part of the command surface.
 
@@ -104,10 +104,13 @@ as the element reference.
 
 **Required:** `--dna-records` (repeatable; one or more paths per use), `--rna-records` (same count as DNA), `--negative-control-annotation`, `--output-path`
 
-**Optional:** `--project-dir`, `--summary-path` (derived from `--output-path` when omitted), `--pseudocount` (default `1.0`), `--activity-threshold-z` (default `2.0`), `--delete-intermediate` / `--no-delete-intermediate` (no-op; no orchestrator intermediates)
+**Optional:** `--project-dir`, `--summary-path` (derived from `--output-path` when omitted), `--pseudocount` (default `1.0`; legacy descriptive ratios only), `--min-absolute-log2-effect` (default `1.0`), `--max-adjusted-p` (default `0.05`), `--min-total-dna-count` (default `50`), `--min-dna-replicates` (default `2`), `--min-usable-controls` (default `20`), `--filtered-elements-output-path` (a `.tsv` / `.tsv.gz` audit sidecar written only when requested), `--delete-intermediate` / `--no-delete-intermediate` (no-op; no orchestrator intermediates)
 
-DNA and RNA lists must contain the same number of replicate tables. Run once per
-branch (eBC and pBC when both are present). Output format: [`activity-by-element`](../formats.md#activity-by-element).
+DNA and RNA lists must contain the same number of replicate tables, with at
+least two pairs. Run once per branch (eBC and pBC when both are present).
+Output format: [`activity-by-element`](../formats.md#activity-by-element).
+The thirteen-column table uses fitted `Active` / `Repressive` / `NoCall` /
+`Control` calls. See [Step 9](../steps-9.md#released-contract-020b1).
 
 ### `concat_step2_records`
 
@@ -345,7 +348,16 @@ orchestrated flags; step modules also expose their own parsers.
 | `--output-path` | yes | — |
 | `--summary-path` | no | derived from `--output-path` |
 | `--pseudocount` | no | `1.0` |
-| `--activity-threshold-z` | no | `2.0` |
+| `--min-absolute-log2-effect` | no | `1.0` |
+| `--max-adjusted-p` | no | `0.05` |
+| `--min-total-dna-count` | no | `50` |
+| `--min-dna-replicates` | no | `2` |
+| `--min-usable-controls` | no | `20` |
+| `--filtered-elements-output-path` | no | none (`.tsv` / `.tsv.gz` sidecar only when requested) |
 
-Step 9 output columns: `Element`, `DNACount`, `RNACount`, `ActivityScore`,
-`log2FC`, `ActivityZ`, `ActivityCall` ([`activity-by-element`](../formats.md#activity-by-element)).
+Step 9 output columns (**0.2.0b1**): `Element`, `DNACount`, `RNACount`, `ActivityScore`,
+`log2FC`, `ActivityZ`, `ActivityCall`, `FittedRNADNALog2FC`,
+`ControlRelativeLog2FC`, `ControlRelativeSE`, `PValue`, `AdjustedPValue`,
+`IsNegativeControl` ([`activity-by-element`](../formats.md#activity-by-element)).
+See [Step 9](../steps-9.md#released-contract-020b1). `--activity-threshold-z`
+is retired.

@@ -1,7 +1,7 @@
 # Steps 6–8: quantify PostTran replicates
 
 This page is the canonical procedure for turning one PostTran Step 2 delimited
-records file into one element-count table for release **0.1.0b4**. Repeat the
+records file into one element-count table for release **0.2.0b1**. Repeat the
 three-step handoff independently for every DNA and RNA replicate. The [Pipeline
 CLI](cli/pipe.md) is the compact flag reference; [Artifact formats](formats.md)
 defines the shared column contracts.

@@ -1,5 +1,5 @@
 # Reporter Assay Pipeline
-> Command-line toolkit for reporter-assay activity calling and cap-selection RNA endpoint bigWigs (0.1.0b4).
+> Command-line toolkit for reporter-assay activity calling and cap-selection RNA endpoint bigWigs (0.2.0b1).
 
 Software (access required): [DignoMor/reporter-assay-pipeline](https://github.com/DignoMor/reporter-assay-pipeline).
 

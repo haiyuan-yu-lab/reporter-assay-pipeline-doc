@@ -1,6 +1,6 @@
 # Canonical glossary
 
-These definitions apply to the released **0.1.0b4** documentation and its
+These definitions apply to the released **0.2.0b1** documentation and its
 artifact and command names.
 
 Use these definitions when reading pipeline commands, artifacts, summaries,
@@ -120,8 +120,9 @@ that sample.
 ### Negative control (negative-control list)
 
 An element identifier designated as a control for Step 9 baseline
-normalization. Controls must remain in the shared retained analysis space for
-the invocation to succeed. Before PostTran data exists, `pretrans_nc_representation`
+normalization. Eligible controls must pass the same DNA representation rule
+as candidates; a controls-only retained set fails. Before PostTran data
+exists, `pretrans_nc_representation`
 compares retained controls with other retained elements in the Step 5
 `crosswalk-map` using the same annotation list and exact `Element` matching.
 
@@ -143,9 +144,12 @@ The negative-control-normalized z-score derived from the retained controls.
 
 ### ActivityCall
 
-The deterministic `Active` or `Inactive` category assigned from `ActivityZ`
-and the configured activity threshold. It is an output classification, not a
-claim that the assay has established a biological mechanism.
+The deterministic output category for an element. In **0.2.0b1** it is
+`Active`, `Repressive`, `NoCall`, or `Control`, assigned from the
+control-relative effect and adjusted p-value. Historical **0.1.0b4** used
+`Active` or `Inactive` from `ActivityZ` and `--activity-threshold-z`. It is
+an output classification, not a claim that the assay has established a
+biological mechanism.
 
 ## Cap-selection
 

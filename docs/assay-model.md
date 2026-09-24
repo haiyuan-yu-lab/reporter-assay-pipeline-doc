@@ -1,6 +1,6 @@
 # Assay model
 
-This page documents the released **0.1.0b4** assay model and vocabulary.
+This page documents the released **0.2.0b1** assay model and vocabulary.
 
 This page explains the general dual reporter-assay model used by the
 Reporter Assay Pipeline. It is the conceptual starting point for the
@@ -13,8 +13,9 @@ sequence placed in a reporter construct. Sequencing measures the abundance of
 reporter molecules before and after transfection. For each retained element,
 the pipeline compares RNA abundance with DNA abundance and emits an
 element-level activity score and call. The pipeline contract defines the
-calculation; an `Active` or `Inactive` call is not a claim about a biological
-mechanism beyond that calculation.
+calculation; an `Active` / `Repressive` / `NoCall` / `Control` call
+(**0.2.0b1**) is not a claim about a biological mechanism beyond that
+calculation.
 
 The public [QUASARR-seq publication](https://www.nature.com/articles/s41467-026-68780-y)
 provides scientific context for this kind of quantitative reporter assay. Its
@@ -93,7 +94,7 @@ tested element
   -> observed identifier / canonical identifier cluster references
   -> PostTran DNA and RNA molecule counts
   -> element-level replicate counts
-  -> activity score, negative-control normalization, and ActivityCall
+  -> control-relative fitted activity call (legacy descriptive scores remain)
 ```
 
 A **UMI** (unique molecular identifier) is deduplicated to count distinct
@@ -102,10 +103,10 @@ merged into identifier-to-element counts. PostTran UMI evidence is resolved
 through the appropriate branch's cluster reference, quantified per replicate,
 and mapped back to elements before activity calling.
 
-The exact formulas, pseudocount behavior, shared-element intersection, and
-undefined-normalization failures belong to the Step 9 contract and are
-documented with the activity command. This page supplies the model and
-vocabulary needed to read those contracts.
+The exact formulas, DNA-eligibility filters, TMM factors, and fitted-call
+rules belong to the Step 9 contract and are documented with the activity
+command. This page supplies the model and vocabulary needed to read those
+contracts.
 
 ## Cap-selection assay (separate workflow)
 
