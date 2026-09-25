@@ -122,7 +122,9 @@ suffix, as emitted by the supported Step 1 fastp configuration). Missing,
 malformed (including the former `_UMI:` spelling), or `N`-bearing UMI
 evidence fails the invocation before pair filtering, UMI-tools
 deduplication, or track publication; there is no mode that
-skips UMI deduplication.
+skips UMI deduplication. `N`-bearing UMIs produced by fastp are normally
+excluded upstream by Step 1 (see [Steps 1–3](../cap-selection/steps-1-3.md));
+a BAM that still contains them fails here.
 
 **Not accepted as substitutes:** SAM, CRAM, split R1/R2 tables, or multi-library
 BAMs merged under several read groups.
