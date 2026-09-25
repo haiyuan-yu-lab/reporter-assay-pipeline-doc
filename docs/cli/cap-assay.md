@@ -115,9 +115,13 @@ Step 4 admits structurally compatible **BAM** evidence only:
 No BAI, external reference FASTA, or chromosome-size file is required. Step 3
 provenance is not required when an external BAM satisfies the rules above.
 
-Every query name must end with a fastp-compatible UMI suffix:
-`_UMI:` followed by exactly twelve `A`, `C`, `G`, or `T` bases on both mates.
-Missing or malformed UMI evidence fails the invocation; there is no mode that
+Every query name must end with the canonical fastp-produced UMI suffix:
+`:UMI_` followed by exactly twelve uppercase `A`, `C`, `G`, or `T` bases
+on both mates (the first whitespace-delimited identifier carries the
+suffix, as emitted by the supported Step 1 fastp configuration). Missing,
+malformed (including the former `_UMI:` spelling), or `N`-bearing UMI
+evidence fails the invocation before pair filtering, UMI-tools
+deduplication, or track publication; there is no mode that
 skips UMI deduplication.
 
 **Not accepted as substitutes:** SAM, CRAM, split R1/R2 tables, or multi-library
