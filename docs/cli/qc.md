@@ -229,9 +229,11 @@ yulab_reporter_qc make_between_rep_activity_plot \
 Forward-vs-reverse activity scatter from a single Step 9
 [`activity-by-element`](../formats.md#activity-by-element) table plus paired
 reference FASTAs. Pairing is **positional** by reference record order (see
-[Workflow](../workflow.md#forwardreverse-reference-pairing). Activity rows are
-split by reference membership; an `Element` present in neither reference is a
-hard failure.
+[Workflow](../workflow.md#forwardreverse-reference-pairing). The references
+define the orientation QC universe: activity rows whose `Element` is outside
+the forward/reverse union are ignored and the ignored row count is reported on
+stderr. Only in-universe rows participate in pair coverage, plot statistics, and
+collapsed-table values.
 
 Only pairs with activity on **both** orientations are plotted. One-sided pairs
 are omitted from the scatter. Optional `--table-output-path` writes an
