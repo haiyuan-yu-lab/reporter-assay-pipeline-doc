@@ -1,6 +1,6 @@
 # Quickstart
 
-This page documents release **0.2.0b1**. Follow the pinned installation and
+This page documents release **0.2.0b2**. Follow the pinned installation and
 input contracts here before using the command examples.
 
 ## Requirements
@@ -21,10 +21,10 @@ input contracts here before using the command examples.
 With access to the private GitHub repository and SSH credentials configured:
 
 ```bash
-pip install git+ssh://git@github.com/DignoMor/reporter-assay-pipeline.git@0.2.0b1
+pip install git+ssh://git@github.com/DignoMor/reporter-assay-pipeline.git@0.2.0b2
 ```
 
-Or from a local checkout of a `0.2.0b1` tag or matching commit:
+Or from a local checkout of a `0.2.0b2` tag or matching commit:
 
 ```bash
 pip install .

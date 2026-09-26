@@ -1,6 +1,6 @@
 # `yulab_reporter_qc`
 
-This page documents the **0.2.0b1** QC command and its released plot
+This page documents the **0.2.0b2** QC command and its released plot
 semantics, plus the additional `pretrans_nc_representation` diagnostic.
 QC remains diagnostic and does not add acceptance thresholds.
 
@@ -245,7 +245,7 @@ table with one row per reference pair. If zero both-orientation pairs exist:
 
 | Flag | Required | Default |
 | --- | --- | --- |
-| `--activity-output` | yes | Step 9 table (format ID `activity-by-element`; thirteen columns in **0.2.0b1** — historical seven-column tables are rejected) |
+| `--activity-output` | yes | Step 9 table (format ID `activity-by-element`; thirteen columns in **0.2.0b2** — historical seven-column tables are rejected) |
 | `--forward-reference` | yes | FASTA |
 | `--reverse-reference` | yes | FASTA |
 | `--output-path` | yes | Plot path (always required; unused only on table-only success when no Both pairs exist) |

@@ -8,7 +8,7 @@ executables and does not change `yulab_reporter_pipe` behavior.
 Process cap-selection assay sequencing data into strand-specific RNA endpoint bigWig tracks.
 ```
 
-This page documents the released **0.2.0b1** contract. `cap-assay-pipeline --help`
+This page documents the released **0.2.0b2** contract. `cap-assay-pipeline --help`
 and `cap-assay-pipeline <step> --help` describe the installed local build.
 
 See [Cap-selection workflow](../cap-selection/workflow.md) for fork–join topology

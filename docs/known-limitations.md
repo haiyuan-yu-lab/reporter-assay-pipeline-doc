@@ -1,4 +1,4 @@
-# Known limitations in 0.2.0b1
+# Known limitations in 0.2.0b2
 
 These are limitations of the released build, not instructions to work around
 them by guessing at undocumented behavior.

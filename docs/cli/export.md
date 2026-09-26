@@ -1,6 +1,6 @@
 # `yulab_reporter_export`
 
-This page documents the `0.2.0b1` ExogeneousSequences export contract. Run the
+This page documents the `0.2.0b2` ExogeneousSequences export contract. Run the
 export after a successful Step 9 `call_activity` invocation. It creates one
 reference-ordered FASTA and one ExogeneousSequences **stat** annotation array
 for each requested activity column.
@@ -25,7 +25,7 @@ yulab_reporter_export ES --help
 The `activity-by-element` input has the Step 9 columns `Element`, `DNACount`,
 `RNACount`, `ActivityScore`, `log2FC`, `ActivityZ`, `ActivityCall`,
 `FittedRNADNALog2FC`, `ControlRelativeLog2FC`, `ControlRelativeSE`, `PValue`,
-`AdjustedPValue`, and `IsNegativeControl` in **0.2.0b1**. Readers accept only
+`AdjustedPValue`, and `IsNegativeControl` in **0.2.0b2**. Readers accept only
 this thirteen-column table and reject seven-column tables with a format
 diagnostic. The
 supported annotation columns are the exact, case-sensitive names

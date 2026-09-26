@@ -1,6 +1,6 @@
 # Cap-selection workflow
 
-This page documents the released **0.2.0b1** `cap-assay-pipeline` stage graph,
+This page documents the released **0.2.0b2** `cap-assay-pipeline` stage graph,
 handoffs, and how it differs from the nine-step [reporter-assay workflow](../workflow.md).
 
 ## Two pipelines in one distribution
