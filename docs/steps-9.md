@@ -1,13 +1,13 @@
 # Step 9: call activity
 
-> **Version applicability.** This page documents **0.2.0b1**. The
-> [released contract](#released-contract-020b1) is the control-relative
+> **Version applicability.** This page documents **0.2.0b2**. The
+> [released contract](#released-contract-020b2) is the control-relative
 > limma–voom table (thirteen columns). Historical
 > [0.1.0b4](#historical-contract-010b4) used a seven-column z-score table.
 > Do not mix tables across contracts: QC and export readers accept only
 > the thirteen-column table and reject historical seven-column tables.
 
-## Released contract (0.2.0b1)
+## Released contract (0.2.0b2)
 
 Step 9 combines the element-count tables from matching PostTran DNA and RNA
 replicates into one `activity-by-element` table. Run it once for each branch

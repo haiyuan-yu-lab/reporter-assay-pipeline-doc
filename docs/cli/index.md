@@ -9,12 +9,12 @@ Installing the package exposes four commands:
 | [`yulab_reporter_export`](export.md) | ExogeneousSequences FASTA + stat `.npy` export |
 | [`cap-assay-pipeline`](cap-assay.md) | Four cap-selection steps to strand-separated RNA endpoint bigWigs |
 
-These pages document the released **0.2.0b1** contract for flags and defaults.
+These pages document the released **0.2.0b2** contract for flags and defaults.
 `COMMAND --help` and `COMMAND <subcommand> --help` describe the command
 surface of the installed local build; if help disagrees with these release
 documents, treat the disagreement as a defect.
 
-In **0.2.0b1**, each `yulab_reporter_pipe stepN --help` request prints the
+In **0.2.0b2**, each `yulab_reporter_pipe stepN --help` request prints the
 complete step-owned command surface.
 
 See also [Workflow](../workflow.md) and [Artifact formats](../formats.md).

@@ -1,6 +1,6 @@
 # Canonical glossary
 
-These definitions apply to the released **0.2.0b1** documentation and its
+These definitions apply to the released **0.2.0b2** documentation and its
 artifact and command names.
 
 Use these definitions when reading pipeline commands, artifacts, summaries,
@@ -144,7 +144,7 @@ The negative-control-normalized z-score derived from the retained controls.
 
 ### ActivityCall
 
-The deterministic output category for an element. In **0.2.0b1** it is
+The deterministic output category for an element. In **0.2.0b2** it is
 `Active`, `Repressive`, `NoCall`, or `Control`, assigned from the
 control-relative effect and adjusted p-value. Historical **0.1.0b4** used
 `Active` or `Inactive` from `ActivityZ` and `--activity-threshold-z`. It is

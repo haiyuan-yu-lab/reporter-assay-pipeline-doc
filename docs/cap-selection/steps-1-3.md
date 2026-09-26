@@ -1,6 +1,6 @@
 # Cap-selection Steps 1–3
 
-This page documents released **0.2.0b1** handoffs for the cap-selection legs
+This page documents released **0.2.0b2** handoffs for the cap-selection legs
 that feed [Step 4](workflow.md#step-4-deliverable). Full flag lists live in
 `cap-assay-pipeline <step> --help` and in the [Cap-selection CLI](../cli/cap-assay.md).
 
@@ -15,11 +15,18 @@ cap-assay-pipeline step1-prep-fastq \
 ```
 
 `fastp` trims adapters, moves a 12-base R1 UMI into read names, and applies
-ordinary paired read filtering. Step 1 does not remove PCR duplicates by
-sequence or UMI; UMI-aware molecule deduplication runs in Step 4. Each step
-is independently runnable: prepared FASTQ from any compatible source is valid
-for Step 3 when it satisfies Step 3’s FASTQ contract (including externally
-prepared reads without Step 1 provenance).
+ordinary paired read filtering. Step 1 then excludes both mates of every
+pair whose extracted 12-base UMI contains an ambiguous (`N`) base: published
+FASTQs contain only synchronized pairs with twelve `A`/`C`/`G`/`T` UMI
+bases, and the step summary reports the excluded count separately as
+`ambiguous_umi_pairs_removed` alongside `fastp_output_read_pairs` (pairs
+fastp retained before exclusion). A missing or malformed UMI annotation, or
+zero remaining pairs, fails the invocation instead of publishing. Step 1
+does not remove PCR duplicates by sequence or UMI; UMI-aware molecule
+deduplication runs in Step 4. Each step is independently runnable: prepared
+FASTQ from any compatible source is valid for Step 3 when it satisfies Step
+3’s FASTQ contract (including externally prepared reads without Step 1
+provenance).
 
 Typical published artifacts under `--output-dir` use the library prefix in
 their names; consult Step 1 help and `{prefix}_step1_summary.json` for the
