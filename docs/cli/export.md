@@ -29,11 +29,18 @@ The `activity-by-element` input has the Step 9 columns `Element`, `DNACount`,
 this thirteen-column table and reject seven-column tables with a format
 diagnostic. The
 supported annotation columns are the exact, case-sensitive names
-`ActivityScore`, `log2FC`, `ActivityZ`, `DNACount`, and `RNACount` —
-fitted-effect columns are not selectable. Each column
+`ActivityScore`, `log2FC`, `ActivityZ`, `DNACount`, `RNACount`,
+`FittedRNADNALog2FC`, and `ControlRelativeLog2FC`. Other fitted columns
+(`ControlRelativeSE`, `PValue`, `AdjustedPValue`) are not selectable. Each column
 may be requested only once; at least one must be requested. A requested
 `ActivityZ` annotation fails with a diagnostic naming `ActivityZ` when the
 table carries no usable `ActivityZ` values.
+
+`FittedRNADNALog2FC` is the fitted RNA-versus-DNA log2 coefficient from Step 9.
+`ControlRelativeLog2FC` is that coefficient minus the median fitted
+negative-control coefficient (control-relative activity). Zero
+control-relative activity means equal to the negative-control baseline, not
+absence of reporter RNA. The two scales must not be treated as interchangeable.
 
 The negative-control list uses the same `Element` identifier namespace as the
 activity table. Blank lines are ignored. A file with no usable IDs is invalid.
@@ -99,7 +106,9 @@ yulab_reporter_export ES \
   --anno-track log2FC "<export_dir>/<export_prefix>-log2fc.npy" \
   --anno-track ActivityZ "<export_dir>/<export_prefix>-activity-z.npy" \
   --anno-track DNACount "<export_dir>/<export_prefix>-dna-count.npy" \
-  --anno-track RNACount "<export_dir>/<export_prefix>-rna-count.npy"
+  --anno-track RNACount "<export_dir>/<export_prefix>-rna-count.npy" \
+  --anno-track FittedRNADNALog2FC "<export_dir>/<export_prefix>-fitted-rna-dna-log2fc.npy" \
+  --anno-track ControlRelativeLog2FC "<export_dir>/<export_prefix>-control-relative-log2fc.npy"
 ```
 
 For a single-orientation/CW-only branch, omit the second reference. The
