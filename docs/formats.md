@@ -41,7 +41,7 @@ standard dual-ID reporter-assay profile uses `EID,PID`.
 | `posttran-quantification` | eBC: `EID`, `MoleculeCount`; pBC: `PID1`, `PID2`, `MoleculeCount` | Step 7 |
 | `element-counts` | `Element`, `MoleculeCount` | Step 8 |
 | `activity-by-element` | `Element`, `DNACount`, `RNACount`, `ActivityScore`, `log2FC`, `ActivityZ`, `ActivityCall`, `FittedRNADNALog2FC`, `ControlRelativeLog2FC`, `ControlRelativeSE`, `PValue`, `AdjustedPValue`, `IsNegativeControl` (**0.2.0b1**; historical **0.1.0b4** was the seven-column prefix) | Step 9 |
-| `orientation-collapsed-activity` | 26 fixed columns; one row per reference pair | QC `plot_orientation_scatter` |
+| `orientation-collapsed-activity` | 30 fixed columns; one row per reference pair | QC `plot_orientation_scatter` |
 | `pretran-negative-control-representation` | `Element`, `Status`, `PreTranUMICount`, then `<id-columns>…` | QC `pretrans_nc_representation` |
 | `negative-control-list` | One element ID per non-empty line | Reference asset |
 
@@ -159,10 +159,14 @@ Columns in order:
 24. `CollapsedActivityCall`
 25. `ActivityScoreDelta`
 26. `ActivityZDelta`
+27. `FwdControlRelativeLog2FC`
+28. `RevControlRelativeLog2FC`
+29. `CollapsedControlRelativeLog2FC`
+30. `ControlRelativeLog2FCDelta`
 
 Key fields:
 
-- `PairCoverage`: `Both`, `FwdOnly`, `RevOnly`, or `Neither`
+- `PairCoverage`: `Both`, `FwdOnly`, `RevOnly`, or `Neither` (after the selected QC metric filter when `--metric ControlRelativeLog2FC`)
 - `Plotted`: `true` when `PairCoverage` is `Both`; otherwise `false`
 - Boolean columns use lowercase `true` / `false`
 - `ActivityCall` columns use `Active` / `Repressive` / `NoCall` / `Control`

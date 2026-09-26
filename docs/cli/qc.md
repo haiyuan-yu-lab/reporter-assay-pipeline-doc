@@ -235,8 +235,8 @@ the forward/reverse union are ignored and the ignored row count is reported on
 stderr. Only in-universe rows participate in pair coverage, plot statistics, and
 collapsed-table values.
 
-Only pairs with activity on **both** orientations are plotted. One-sided pairs
-are omitted from the scatter. Optional `--table-output-path` writes an
+Only pairs with activity on **both** orientations (after the selected metric
+filter) are plotted. One-sided pairs are omitted from the scatter. Optional `--table-output-path` writes an
 [`orientation-collapsed-activity`](../formats.md#orientation-collapsed-activity)
 table with one row per reference pair. If zero both-orientation pairs exist:
 
@@ -250,7 +250,7 @@ table with one row per reference pair. If zero both-orientation pairs exist:
 | `--reverse-reference` | yes | FASTA |
 | `--output-path` | yes | Plot path (always required; unused only on table-only success when no Both pairs exist) |
 | `--table-output-path` | no | Optional collapsed table (`.tsv` or `.tsv.gz`) |
-| `--metric` | no | `activity_score` (`activity_score` \| `activityZ`) |
+| `--metric` | no | `ControlRelativeLog2FC` (`ControlRelativeLog2FC` \| `activity_score` \| `activityZ`) |
 | `--negative-control-annotation` | no | Red-edge highlight when either orientation name is listed |
 
 ### Correlation annotations
@@ -275,6 +275,20 @@ yulab_reporter_qc plot_orientation_scatter \
   --table-output-path "<out_dir>/qc/ebc_orientation_collapsed.tsv.gz"
 ```
 
+The default `--metric` is `ControlRelativeLog2FC` (the fitted control-relative
+effect from Step 9). Use `--metric activity_score` or `--metric activityZ` for
+legacy descriptive scales. When the default metric is selected, in-universe rows
+with empty or nonfinite `ControlRelativeLog2FC` are reported on stderr and
+treated as missing orientation coverage rather than plotted as zero.
+
+```bash
+yulab_reporter_qc plot_orientation_scatter \
+  --activity-output "<out_dir>/EID-ActivityByElement.tsv.gz" \
+  --forward-reference "<ref_dir>/forward_elements.fa" \
+  --reverse-reference "<ref_dir>/reverse_elements.fa" \
+  --output-path "<out_dir>/qc/ebc_orientation_scatter_control_relative.png"
+```
+
 The same command can be run for the other released branch by supplying its
 Step 9 output and the corresponding references, for example:
 
@@ -290,11 +304,16 @@ yulab_reporter_qc plot_orientation_scatter \
 ### Orientation-collapsed table
 
 `--table-output-path` writes exactly one row for each positional FASTA pair,
-in ascending `PairIndex`. The 26 columns are documented in the
+in ascending `PairIndex`. The 30 columns are documented in the
 [`orientation-collapsed-activity` format](../formats.md#orientation-collapsed-activity).
-`PairCoverage` is `Both`, `FwdOnly`, `RevOnly`, or `Neither`; `Plotted` is true
-only for `Both`. Per-orientation fields are copied when present and blank when
-absent. `IsNegativeControl` is true when either element is listed in the
+`PairCoverage` is `Both`, `FwdOnly`, `RevOnly`, or `Neither` (after the selected
+metric filter); `Plotted` is true only for `Both`. Per-orientation fields are
+copied when present and blank when absent. Trailing columns
+`FwdControlRelativeLog2FC`, `RevControlRelativeLog2FC`,
+`CollapsedControlRelativeLog2FC`, and `ControlRelativeLog2FCDelta` name the
+fitted control-relative effects on the Step 9 scale (ADR 0007).
+
+`IsNegativeControl` is true when either element is listed in the
 optional annotation (or false for every row when no annotation is supplied).
 
 For a `Both` row, collapsed DNA and RNA counts are the sums of the two
