@@ -41,11 +41,12 @@ cap-assay-pipeline --help
 
 ## Top-level commands
 
-Exactly four subcommands are registered, in numeric order:
+Exactly five subcommands are registered, in numeric order:
 
 | Command | Summary |
 | --- | --- |
 | `step1-prep-fastq` | Prepare reads with fastp (trim, R1 UMI in names, filter; UMI-aware dedup in Step 4) |
+| `step1b-clip-construct-flank` | Optionally clip matched construct flanks from prepared paired FASTQs (between Steps 1 and 3) |
 | `step2-build-reference` | Build construct-derived reference FASTA (unique complete sequence per Element) |
 | `step3-alignment` | Align one library to one reference; publish BAM + BAI + summary |
 | `step4-post-alignment-processing` | Strand-selected RNA endpoint bigWigs from one library BAM (four tracks for `both`, two for `plus`/`minus`) |
@@ -65,6 +66,37 @@ step’s parser.
 | No subcommand | non-zero (help on stderr) |
 
 Individual steps follow the table above for their owned parsers.
+
+---
+
+## `step1b-clip-construct-flank` (optional)
+
+Use this step when prepared R1 reads begin with a verified construct flank
+(fixed sequence, variable PID, fixed sequence) that should be removed before
+alignment. It is **optional**: when clipping does not apply, run Step 3
+directly on Step 1 `{prefix}_R1.trim.fq.gz` / `{prefix}_R2.trim.fq.gz`
+outputs.
+
+```bash
+cap-assay-pipeline step1b-clip-construct-flank \
+  --library-prefix LIB01 \
+  --input-r1 prepared/LIB01_R1.trim.fq.gz \
+  --input-r2 prepared/LIB01_R2.trim.fq.gz \
+  --clip-layout construct_flank.json \
+  --output-dir clipped/
+```
+
+Published artifacts (typical names):
+
+```text
+LIB01_R1.clip.fq.gz
+LIB01_R2.clip.fq.gz
+LIB01_step1b_summary.json
+```
+
+Pass the clipped FASTQs to Step 3 `--input-r1` / `--input-r2`. R1-only JSON
+layouts omit R2 `clip_targets`. See `cap-assay-pipeline step1b-clip-construct-flank --help`
+for the version-one clip-layout schema and handoff notes.
 
 ---
 
@@ -268,6 +300,7 @@ strand-rejected unmapped retention, and `effective_mapping_counts`.
 Invoke help per step:
 ```bash
 cap-assay-pipeline step1-prep-fastq --help
+cap-assay-pipeline step1b-clip-construct-flank --help
 cap-assay-pipeline step2-build-reference --help
 cap-assay-pipeline step3-alignment --help
 ```

@@ -21,16 +21,18 @@ mix step numbers or artifact names across the two workflows.
 
 ## Fork–join topology
 
-Cap-selection processing has four resumable steps with a fork after workflow
-inputs:
+Cap-selection processing has four required resumable steps plus one optional
+clip step between Step 1 and Step 3, with a fork after workflow inputs:
 
 ```mermaid
 flowchart LR
     RAW[Raw cap-selection FASTQ pairs]
     LAYOUT[Construct layout JSON]
     RAW --> S1[Step 1: Prepare FASTQ]
+    S1 --> S1B[Step 1b: Clip construct flank optional]
+    S1B --> S3[Step 3: Alignment → BAM]
+    S1 --> S3
     LAYOUT --> S2[Step 2: Construct reference]
-    S1 --> S3[Step 3: Alignment → BAM]
     S2 --> S3
     S3 --> S4[Step 4: Endpoint bigWigs]
 ```
@@ -38,6 +40,7 @@ flowchart LR
 | Leg | Step command | Role |
 | --- | --- | --- |
 | Read preparation | `step1-prep-fastq` | Adapter trim, 12-base R1 UMI in read names, ambiguous-UMI exclusion, fastp read filtering (`fastp`; UMI-aware dedup in Step 4) |
+| Optional flank clip | `step1b-clip-construct-flank` | Remove matched R1 construct prefixes from Step 1 trim FASTQs when configured; bypass by feeding Step 1 outputs directly to Step 3 |
 | Reference | `step2-build-reference` | Construct-derived FASTA for alignment (independent of Step 1) |
 | Join | `step3-alignment` | STAR alignment to the Step 2 reference; coordinate-sorted BAM + BAI |
 | Endpoint | `step4-post-alignment-processing` | Pair filtering and strand-selected signed bigWig tracks + summary |

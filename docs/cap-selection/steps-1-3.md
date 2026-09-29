@@ -32,6 +32,24 @@ Typical published artifacts under `--output-dir` use the library prefix in
 their names; consult Step 1 help and `{prefix}_step1_summary.json` for the
 exact paths, fastp filtering metrics, and the Step 4 deduplication handoff.
 
+## Optional Step 1b: Construct-flank clipping
+
+When a library’s prepared R1 reads begin with a known construct flank, run:
+
+```bash
+cap-assay-pipeline step1b-clip-construct-flank \
+  --library-prefix LIB01 \
+  --input-r1 prepared/LIB01_R1.trim.fq.gz \
+  --input-r2 prepared/LIB01_R2.trim.fq.gz \
+  --clip-layout construct_flank.json \
+  --output-dir clipped/
+```
+
+Use `{prefix}_R1.clip.fq.gz` and `{prefix}_R2.clip.fq.gz` as Step 3 inputs.
+When clipping does not apply, **bypass** this step and point Step 3 at the Step
+1 trim FASTQs directly. Step 3 does not require clip provenance for compatible
+paired FASTQs.
+
 ## Step 2: Construct-derived reference
 
 ```bash
