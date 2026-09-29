@@ -46,7 +46,10 @@ cap-assay-pipeline step1b-clip-construct-flank \
 ```
 
 Use `{prefix}_R1.clip.fq.gz` and `{prefix}_R2.clip.fq.gz` as Step 3 inputs.
-When clipping does not apply, **bypass** this step and point Step 3 at the Step
+The JSON layout selects independent clip targets (for example R1 clipping for
+both CW and CCW layouts while R2 3′ clipping applies only to CW). R2-only
+configurations still match construct layout on R1 to recover the PID. When
+clipping does not apply, **bypass** this step and point Step 3 at the Step
 1 trim FASTQs directly. Step 3 does not require clip provenance for compatible
 paired FASTQs.
 

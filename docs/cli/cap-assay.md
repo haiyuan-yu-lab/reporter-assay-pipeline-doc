@@ -94,9 +94,13 @@ LIB01_R2.clip.fq.gz
 LIB01_step1b_summary.json
 ```
 
-Pass the clipped FASTQs to Step 3 `--input-r1` / `--input-r2`. R1-only JSON
-layouts omit R2 `clip_targets`. See `cap-assay-pipeline step1b-clip-construct-flank --help`
-for the version-one clip-layout schema and handoff notes.
+Pass the clipped FASTQs to Step 3 `--input-r1` / `--input-r2`. Each
+`clip_targets` entry names its mate, end, match mode, and applicable layout IDs;
+omit R2 targets for R1-only clipping, or R1 targets for R2-only clipping (layout
+matching still uses R1). The step summary reconciles per-mate clipped and
+unchanged pair counts and reports retained clipped-read lengths. See
+`cap-assay-pipeline step1b-clip-construct-flank --help` for the version-one
+clip-layout schema and handoff notes.
 
 ---
 
