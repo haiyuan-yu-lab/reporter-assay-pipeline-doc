@@ -83,6 +83,7 @@ cap-assay-pipeline step1b-clip-construct-flank \
   --input-r1 prepared/LIB01_R1.trim.fq.gz \
   --input-r2 prepared/LIB01_R2.trim.fq.gz \
   --clip-layout construct_flank.json \
+  --gzip-compression-level 1 \
   --output-dir clipped/
 ```
 
@@ -100,7 +101,11 @@ omit R2 targets for R1-only clipping, or R1 targets for R2-only clipping (layout
 matching still uses R1). The step summary reconciles per-mate clipped and
 unchanged pair counts and reports retained clipped-read lengths. See
 `cap-assay-pipeline step1b-clip-construct-flank --help` for the version-one
-clip-layout schema and handoff notes.
+clip-layout schema and handoff notes. The paired FASTQs are validated and
+clipped in one bounded-memory pass; outputs publish only after both streams
+finish successfully. Gzip compression defaults to level 1 for faster
+processing. Choose a level from 0 (fastest, largest) through 9 (smallest,
+slowest) with `--gzip-compression-level`.
 
 ---
 

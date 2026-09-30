@@ -42,6 +42,7 @@ cap-assay-pipeline step1b-clip-construct-flank \
   --input-r1 prepared/LIB01_R1.trim.fq.gz \
   --input-r2 prepared/LIB01_R2.trim.fq.gz \
   --clip-layout construct_flank.json \
+  --gzip-compression-level 1 \
   --output-dir clipped/
 ```
 
@@ -51,7 +52,11 @@ both CW and CCW layouts while R2 3′ clipping applies only to CW). R2-only
 configurations still match construct layout on R1 to recover the PID. When
 clipping does not apply, **bypass** this step and point Step 3 at the Step
 1 trim FASTQs directly. Step 3 does not require clip provenance for compatible
-paired FASTQs.
+paired FASTQs. Step 1b validates and clips the paired streams in one pass,
+then publishes its outputs after both inputs finish successfully. Output gzip
+compression defaults to level 1 for faster processing; choose a level from 0
+(fastest and largest) through 9 (smallest and slowest) with
+`--gzip-compression-level`.
 
 ## Step 2: Construct-derived reference
 

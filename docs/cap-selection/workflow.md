@@ -40,7 +40,7 @@ flowchart LR
 | Leg | Step command | Role |
 | --- | --- | --- |
 | Read preparation | `step1-prep-fastq` | Adapter trim, 12-base R1 UMI in read names, ambiguous-UMI exclusion, fastp read filtering (`fastp`; UMI-aware dedup in Step 4) |
-| Optional flank clip | `step1b-clip-construct-flank` | Optionally clip matched R1 5′ prefixes and/or R2 3′ reverse-complement flanks per JSON targets; bypass by feeding Step 1 outputs directly to Step 3 |
+| Optional flank clip | `step1b-clip-construct-flank` | Optionally clip matched R1 5′ prefixes and/or R2 3′ reverse-complement flanks per JSON targets; streams validated pairs with bounded memory; gzip level 1 by default, configurable from 0–9; bypass by feeding Step 1 outputs directly to Step 3 |
 | Reference | `step2-build-reference` | Construct-derived FASTA for alignment (independent of Step 1) |
 | Join | `step3-alignment` | STAR alignment to the Step 2 reference; coordinate-sorted BAM + BAI |
 | Endpoint | `step4-post-alignment-processing` | Pair filtering and strand-selected signed bigWig tracks + summary |
