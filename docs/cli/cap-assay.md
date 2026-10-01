@@ -213,6 +213,13 @@ Eligible pairs are written to a staging BAM and deduplicated with UMI-tools
 `dedup --paired` using `--umi-dedup-method` (default `directional`). Track
 counts use **retained** pairs after deduplication.
 
+BEDTools may merge adjacent endpoint positions with equal counts into a
+single interval. Step 4 validates these intervals and expands them into
+one-base evidence before writing tracks. Counts remain unchanged at each
+position: a two-base interval with count three represents six observations,
+two occupied positions, and maximum absolute pileup three. Plus-track values
+are positive and minus-track values are negative.
+
 **Zero eligible pairs** after filtering or **zero retained pairs** after UMI
 deduplication is a failed invocation (`status: failed` in
 `{prefix}.step4_summary.json` when written). Success and failure summaries

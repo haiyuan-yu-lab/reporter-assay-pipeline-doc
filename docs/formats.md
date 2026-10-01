@@ -269,3 +269,9 @@ are `null`, not fabricated zeroes):
 
 Pure usage errors do not create a summary. An existing summary file is never
 overwritten.
+
+Endpoint metrics count covered bases individually, including adjacent
+equal-count positions that BEDTools merges during aggregation. A two-base
+interval with count three contributes six observations, two occupied
+positions, and maximum absolute pileup three. Published tracks preserve the
+count at each base, with positive plus-strand and negative minus-strand values.
