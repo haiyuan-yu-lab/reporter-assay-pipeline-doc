@@ -1,7 +1,8 @@
 # Cap-selection Steps 1–3
 
-This page documents released **0.2.0b2** handoffs for the cap-selection legs
-that feed [Step 4](workflow.md#step-4-deliverable). Full flag lists live in
+This page documents the upcoming external-reference handoffs for the
+cap-selection legs that feed [Step 4](workflow.md#step-4-deliverable). The
+released **0.2.0b2** still has the former reference-builder command. Full flag lists live in
 `cap-assay-pipeline <step> --help` and in the [Cap-selection CLI](../cli/cap-assay.md).
 
 ## Step 1: Prepare FASTQ
@@ -58,21 +59,32 @@ compression defaults to level 1 for faster processing; choose a level from 0
 (fastest and largest) through 9 (smallest and slowest) with
 `--gzip-compression-level`.
 
-## Step 2: Construct-derived reference
+## External reference assembly (unnumbered prerequisite)
+
+See the [migration guide](external-reference-migration.md) for converting the
+former construct-layout fixed regions into adapter FASTAs.
 
 ```bash
-cap-assay-pipeline step2-build-reference \
-  --library-prefix CONSTRUCT01 \
-  --construct-layout construct_layout.json \
-  --output-dir reference/
+ExogenousSequenceTools assemble add_adapter \
+  --fasta tested_elements.fasta \
+  --left_adapter_fasta left_adapter.fasta \
+  --right_adapter_fasta right_adapter.fasta \
+  --output_fasta reference/CONSTRUCT01_reference.fasta
 ```
 
-Step 2 does not consume Step 1 output. The construct layout is a cap-selection
-domain entity (not the reporter-assay layout schema). Each Element must yield a
-unique normalized complete constructed sequence (left fixed, tested element, and
-right fixed concatenated); duplicate complete sequences across distinct Elements
-fail before any successful bundle is published. The standard FASTA emitted here
-is the only required reference handoff for Step 3.
+This is a reference-preparation prerequisite outside the numbered CAP command
+sequence. Each adapter FASTA contains exactly one record. The tool assembles
+`left + tested element + right`, preserves each tested-element FASTA identifier,
+and writes the complete reference sequences as ordinary FASTA. The right adapter
+is optional when the construct has no fixed right region. A former CAP layout's
+`left_fixed.sequence` and `right_fixed.sequence` values become the corresponding
+one-record adapter FASTAs; the `tested_element` region maps to the input FASTA.
+Step 3 accepts compatible external FASTA without XP provenance or builder
+annotations, manifests, or summaries. It rejects uppercase-identical complete
+sequences across distinct IDs before invoking STAR.
+
+The current clipping command remains named Step 1b in this migration. This
+change removes the former Step 2 builder and does not renumber clipping.
 
 ## Step 3: Alignment
 

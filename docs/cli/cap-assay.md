@@ -8,8 +8,10 @@ executables and does not change `yulab_reporter_pipe` behavior.
 Process cap-selection assay sequencing data into strand-specific RNA endpoint bigWig tracks.
 ```
 
-This page documents the released **0.2.0b2** contract. `cap-assay-pipeline --help`
-and `cap-assay-pipeline <step> --help` describe the installed local build.
+This page documents the upcoming external-reference interface. Released
+**0.2.0b2** still includes the former reference-builder command;
+`cap-assay-pipeline --help` and `cap-assay-pipeline <step> --help` describe the
+installed local build.
 
 See [Cap-selection workflow](../cap-selection/workflow.md) for fork–join topology
 and distinction from the reporter-assay pipeline.
@@ -23,7 +25,6 @@ executable alongside the reporter-assay commands (same package version as
 | Step | External tools (minimum versions where probed) |
 | --- | --- |
 | 1 | `fastp` (not version-pinned by the package) |
-| 2 | (layout-driven; see step help) |
 | 3 | STAR **2.7.0+**, samtools **1.10+**, `zcat` on `PATH` |
 | 4 | samtools **1.12+**, BEDTools **2.30+**, UMI-tools; **pyBigWig** is a Python dependency |
 
@@ -41,13 +42,12 @@ cap-assay-pipeline --help
 
 ## Top-level commands
 
-Exactly five subcommands are registered, in numeric order:
+Four subcommands are registered, in workflow order:
 
 | Command | Summary |
 | --- | --- |
 | `step1-prep-fastq` | Prepare reads with fastp (trim, R1 UMI in names, filter; UMI-aware dedup in Step 4) |
 | `step1b-clip-construct-flank` | Optionally clip matched construct flanks from prepared paired FASTQs (between Steps 1 and 3) |
-| `step2-build-reference` | Build construct-derived reference FASTA (unique complete sequence per Element) |
 | `step3-alignment` | Align one library to one reference; publish BAM + BAI + summary |
 | `step4-post-alignment-processing` | Strand-selected RNA endpoint bigWigs from one library BAM (four tracks for `both`, two for `plus`/`minus`) |
 
@@ -65,7 +65,9 @@ step’s parser.
 | Top-level help or `--version` | `0` (stdout) |
 | No subcommand | non-zero (help on stderr) |
 
-Individual steps follow the table above for their owned parsers.
+Individual steps follow the table above for their owned parsers. Reference
+assembly is an unnumbered prerequisite performed outside CAP; CAP alignment
+accepts a compatible ordinary FASTA and has no XP runtime dependency.
 
 ---
 
@@ -293,18 +295,36 @@ the example invocation.
 
 ---
 
-## `step2-build-reference`
+## Prepare a reference outside CAP
 
-Builds the four-file construct-derived reference bundle from a version-one
-construct-layout JSON and a tested-element FASTA. Each Element must produce a
-unique normalized complete constructed sequence; duplicates across distinct
-Elements exit `1` with a failed summary (`shared_sequence_count` reports collision
-groups) and no successful FASTA, annotations, or manifest. Successful bundles
-set `shared_sequence_count` to zero in the manifest and summary.
+CAP no longer has a reference-builder command. Prepare a standalone FASTA with
+`ExogenousSequenceTools assemble add_adapter` before alignment:
 
-Required flags: `--reference-prefix`, `--construct-layout`, `--tested-elements`,
-`--output-dir`. See `cap-assay-pipeline step2-build-reference --help` for the
-layout grammar, FASTA rules, artifact names, and example invocation.
+```bash
+ExogenousSequenceTools assemble add_adapter \
+  --fasta tested_elements.fasta \
+  --left_adapter_fasta left_adapter.fasta \
+  --right_adapter_fasta right_adapter.fasta \
+  --output_fasta reference/CONSTRUCT01_reference.fasta
+```
+
+The tested-element input can contain many FASTA records; each record ID is
+preserved in the output. Each adapter FASTA must contain exactly one record.
+The complete sequence for each output record is the left adapter, tested
+element, and right adapter concatenated in that order. Omit
+`--right_adapter_fasta` when no fixed right region applies.
+
+For the former CAP construct-layout JSON, copy the sequence from the
+`left_fixed` region into a one-record `left_adapter.fasta` and the sequence from
+the `right_fixed` region into a one-record `right_adapter.fasta`; the
+`tested_element` region corresponds to `tested_elements.fasta`. Use the
+resulting FASTA with `step3-alignment --reference`. Compatible standalone FASTA
+needs no builder annotations, manifest, summary, XP provenance, or XP
+installation at alignment time. Step 3 rejects identical complete sequences
+across distinct IDs before invoking STAR.
+
+The optional clipping command remains named `step1b-clip-construct-flank` in
+this migration. Removing the reference builder does not renumber clipping.
 
 ---
 
@@ -317,6 +337,5 @@ Invoke help per step:
 ```bash
 cap-assay-pipeline step1-prep-fastq --help
 cap-assay-pipeline step1b-clip-construct-flank --help
-cap-assay-pipeline step2-build-reference --help
 cap-assay-pipeline step3-alignment --help
 ```
