@@ -116,7 +116,11 @@ as the element reference.
 
 **Required:** `--dna-records` (repeatable; one or more paths per use), `--rna-records` (same count as DNA), `--negative-control-annotation`, `--output-path`
 
-**Optional:** `--project-dir`, `--summary-path` (derived from `--output-path` when omitted), `--pseudocount` (default `1.0`; legacy descriptive ratios only), `--min-absolute-log2-effect` (default `1.0`), `--max-adjusted-p` (default `0.05`), `--min-total-dna-count` (default `50`), `--min-dna-replicates` (default `2`), `--min-usable-controls` (default `20`), `--filtered-elements-output-path` (a `.tsv` / `.tsv.gz` audit sidecar written only when requested), `--delete-intermediate` / `--no-delete-intermediate` (no-op; no orchestrator intermediates)
+**Optional:** `--project-dir`, `--summary-path` (derived from `--output-path` when omitted), `--threads` (positive-integer CPU budget, default `1`), `--pseudocount` (default `1.0`; legacy descriptive ratios only), `--min-absolute-log2-effect` (default `1.0`), `--max-adjusted-p` (default `0.05`), `--min-total-dna-count` (default `50`), `--min-dna-replicates` (default `2`), `--min-usable-controls` (default `20`), `--filtered-elements-output-path` (a `.tsv` / `.tsv.gz` audit sidecar written only when requested), `--delete-intermediate` / `--no-delete-intermediate` (no-op; no orchestrator intermediates)
+
+`--threads` is passed to Step 9 unchanged. It bounds independent library-table
+loading; one global normalization and paired activity model remain per
+invocation, with common R/BLAS thread controls configured where supported.
 
 DNA and RNA lists must contain the same number of replicate tables, with at
 least two pairs. Run once per branch (eBC and pBC when both are present).
@@ -369,6 +373,7 @@ identifier/graph memory state.
 | `--negative-control-annotation` | yes | — |
 | `--output-path` | yes | — |
 | `--summary-path` | no | derived from `--output-path` |
+| `--threads` | no | `1` |
 | `--pseudocount` | no | `1.0` |
 | `--min-absolute-log2-effect` | no | `1.0` |
 | `--max-adjusted-p` | no | `0.05` |
