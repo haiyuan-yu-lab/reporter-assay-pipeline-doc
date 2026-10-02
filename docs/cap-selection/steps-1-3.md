@@ -111,6 +111,20 @@ cap-assay-pipeline step3-alignment \
 ```
 
 STAR aligns the library; samtools produces a coordinate-sorted BAM and index.
+`--threads` is a positive CPU budget (default 16) passed to STAR's index and
+alignment phases. Those phases run separately from Python processing. Step 3
+streams the paired FASTQs with at most one pair buffered. Its uppercase-literal
+reference uniqueness check remains global and serial. BAM validation and
+placement checks use complete query-name groups in bounded chunks, with at
+most `threads - 1` worker processes plus the parent; `--threads 1` runs
+directly. The parent performs global count reduction, coordinate sorting, and
+publication. Step 3 samtools commands use one default thread each; STAR's
+`zcat` reader is a separate fixed activity. Summary `resources` records the
+requested budget, phase workers, chunk limits, completed work, and worker PIDs.
+Exact FASTA uniqueness retains a set proportional to reference size, and QNAME
+grouping and BAM evidence scale with alignment count; worker queues remain
+bounded. No new dependency is required.
+
 Step 3 also checks the complete FASTA before probing or invoking STAR. It
 rejects two distinct first-token reference identifiers with identical
 sequences after uppercasing literal sequence strings, for both generated and

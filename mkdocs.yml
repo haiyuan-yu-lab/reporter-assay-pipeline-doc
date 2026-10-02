@@ -46,6 +46,7 @@ nav:
       - Export CLI: cli/export.md
       - Cap-selection CLI: cli/cap-assay.md
       - Artifact formats: formats.md
+      - Resource allocation: resource-allocation.md
 
 markdown_extensions:
   - admonition
