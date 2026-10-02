@@ -71,6 +71,11 @@ but the workflow is incomplete until this library is repaired and rerun.
 
 ### Step 1 artifacts
 
+`--threads` is passed to fastp's existing `-w` option (default 16). The Step 1
+summary adds `resources` evidence for the requested budget, fastp threads and
+serial parent-side input/output pair counting; this does not change fastp's
+trimming policy or existing scientific counts.
+
 All paths below are relative to `<project_dir>/work/trimmed` unless an explicit
 `--output-dir` was supplied.
 
@@ -101,6 +106,12 @@ Proceed to Step 2 only when the summary says `status: "success"`, both output
 paths are present, and `output_read_pairs` is non-zero and synchronized.
 
 ## Run Step 2
+
+`--threads` (default 16) bounds Step 2 extraction as one parent CPU slot plus
+at most `threads - 1` worker processes. The parent streams synchronized pairs,
+dispatches bounded chunks, merges rows in input order and publishes only after
+all workers and input validation succeed. The additive `resources` summary
+records the worker budget, queue bound, completed chunks and worker PIDs.
 
 Use the exact Step 1 output paths as Step 2 inputs. This explicit handoff is
 equivalent to the wiring performed by `prep_lib`.

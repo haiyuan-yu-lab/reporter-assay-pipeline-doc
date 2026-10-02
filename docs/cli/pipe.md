@@ -52,6 +52,10 @@ declared ID using ExactID filenames
 **Retained outputs (typical):** `{prefix}_step2_records.tsv.gz` under `work/delimited/`, plus Step 1/2 summary JSON files.
 
 Step 2 inputs are wired from Step 1 cleaned reads.
+The selected `--threads` budget is reused sequentially by Step 1 and Step 2;
+it does not run both stages concurrently or multiply their CPU allocations.
+Step 1 passes the value to fastp, while Step 2 uses bounded ordered extraction
+workers. Both summaries include additive resource evidence.
 
 ### `process_pretrans` (step3 CW → step3 CCW → step4 → step5)
 
