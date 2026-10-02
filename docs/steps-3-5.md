@@ -76,6 +76,7 @@ yulab_reporter_pipe process_pretrans \
   --cluster-max-edit-distance 1 \
   --idmap-min-dominant-count 10 \
   --idmap-min-dominant-ratio 0.8 \
+  --threads 4 \
   --no-delete-intermediate
 ```
 
@@ -99,6 +100,7 @@ yulab_reporter_pipe process_pretrans_cw_only \
   --cluster-max-edit-distance 1 \
   --idmap-min-dominant-count 10 \
   --idmap-min-dominant-ratio 0.8 \
+  --threads 4 \
   --no-delete-intermediate
 ```
 
@@ -257,7 +259,8 @@ yulab_reporter_pipe step5 \
   --cluster-mode connected \
   --cluster-max-edit-distance 1 \
   --idmap-min-dominant-count 10 \
-  --idmap-min-dominant-ratio 0.8
+  --idmap-min-dominant-ratio 0.8 \
+  --threads 4
 ```
 
 Rows below `--min-pretran-umi-count` are filtered before clustering. Each
@@ -267,6 +270,17 @@ most `--cluster-max-edit-distance`, using connected components. The canonical
 member is the ID with highest aggregate `PreTranUMICount`, with a
 lexicographically smallest-ID tie-break. `cluster-max-edit-distance 0` is
 equivalent to `unique`.
+
+`--threads` is a positive CPU budget with standalone default `1`. Step 5
+generates plausible candidate ID pairs lazily, compares them in bounded
+partitions of at most 64 pairs, and returns accepted edges to the parent. The
+parent joins edges across all partitions before forming connected components,
+so support totals, canonical tie-breaking, disambiguation, and cross-domain
+consistency stay global. The comparison queue and pending edge results are
+bounded; identifier signatures, the accepted-edge graph, and final mapping
+state scale with identifier-domain cardinality. The additive `resources`
+summary records worker and queue evidence, candidate and accepted-edge totals
+by ID domain, serial global phases, and the natural-cardinality memory note.
 
 For each canonical ID (and the full canonical tuple in a multi-ID profile),
 Step 5 keeps only dominant mappings meeting both

@@ -61,7 +61,12 @@ workers. Both summaries include additive resource evidence.
 
 **Required:** `--id-columns`, `--cw-prefix`, `--ccw-prefix`, `--cw-records`, `--ccw-records`, `--forward-reference`, `--reverse-reference`
 
-**Optional:** `--project-dir`, `--output-dir`, `--max-edit-distance` (default `1`), `--min-pretran-umi-count` (default `1`), `--cluster-mode` (`connected` \| `unique`, default `connected`), `--cluster-max-edit-distance` (default `1`), `--idmap-min-dominant-count` (default `10`), `--idmap-min-dominant-ratio` (default `0.8`), `--delete-intermediate` / `--no-delete-intermediate`
+**Optional:** `--project-dir`, `--output-dir`, `--max-edit-distance` (default `1`), `--threads` (positive-integer CPU budget, default `1`; reused sequentially by mapped Steps 3–5), `--min-pretran-umi-count` (default `1`), `--cluster-mode` (`connected` \| `unique`, default `connected`), `--cluster-max-edit-distance` (default `1`), `--idmap-min-dominant-count` (default `10`), `--idmap-min-dominant-ratio` (default `0.8`), `--delete-intermediate` / `--no-delete-intermediate`
+
+Step 5 uses this same budget for bounded candidate comparisons. The parent
+reconciles accepted edges across all comparison partitions before it computes
+global clusters and mapping decisions; see the additive Step 5 `resources`
+summary for actual worker and queue evidence.
 
 **Retained outputs (typical, dual-ID):**
 
@@ -79,7 +84,10 @@ output via `--records`.
 
 **Rejected:** `--ccw-prefix`, `--ccw-records`, `--reverse-reference`
 
-**Optional:** same Step 5 / project / intermediate flags as `process_pretrans`
+**Optional:** `--threads` (positive-integer CPU budget, default `1`; reused sequentially by mapped Steps 3–5), plus the same Step 5 / project / intermediate flags as `process_pretrans`
+
+Step 5 uses the shared budget for bounded candidate comparisons and global
+identifier-map reconciliation, as in `process_pretrans`.
 
 **Retained outputs (typical, EID-only):**
 
@@ -319,6 +327,12 @@ orchestrated flags; step modules also expose their own parsers.
 | `--cluster-max-edit-distance` | no | `1` |
 | `--idmap-min-dominant-count` | no | `10` |
 | `--idmap-min-dominant-ratio` | no | `0.8` |
+| `--threads` | no | `1` |
+
+Step 5 compares bounded candidate partitions in workers and globally joins
+accepted edges before connected-component and mapping decisions. Its additive
+`resources` summary records the effective comparison budget and natural
+identifier/graph memory state.
 
 ### `step6`
 
