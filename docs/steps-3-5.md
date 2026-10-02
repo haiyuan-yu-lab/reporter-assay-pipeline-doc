@@ -57,6 +57,7 @@ entirely.
 The grouped command runs Step 3 CW, Step 3 CCW, Step 4, then Step 5. The
 `--cw-records` and `--ccw-records` paths are Step 2 inputs; the orchestrator
 then wires the two newly produced orientation-resolved outputs into Step 4.
+Its optional positive-integer `--threads` budget defaults to `1` and is reused sequentially by mapped Steps 3–5. It does not run CW and CCW concurrently.
 
 ```bash
 yulab_reporter_pipe process_pretrans \
@@ -123,7 +124,8 @@ yulab_reporter_pipe step3 \
   --id-columns EID,PID \
   --project-dir "<project_dir>" \
   --output-dir "<project_dir>/work/pretran_orientation" \
-  --max-edit-distance 1
+  --max-edit-distance 1 \
+  --threads 4
 
 yulab_reporter_pipe step3 \
   --library-prefix PreTran_CCW \
@@ -132,7 +134,8 @@ yulab_reporter_pipe step3 \
   --id-columns EID,PID \
   --project-dir "<project_dir>" \
   --output-dir "<project_dir>/work/pretran_orientation" \
-  --max-edit-distance 1
+  --max-edit-distance 1 \
+  --threads 4
 ```
 
 For each valid row, matching is attempted in this order: exact anchor, unique
@@ -159,11 +162,15 @@ Step 3 writes, under `work/pretran_orientation/`:
 | `<prefix>_step3_orientation_resolved.tsv.gz` | `orientation-resolved-pretran` rows consumed by Step 4 |
 | `<prefix>_step3_summary.json` | Counts, matching configuration, status, and failure reason |
 
+`--threads` is a positive-integer CPU budget (standalone default `1`). The parent streams rows in chunks of at most 256, and at most `threads - 1` worker processes match rows with worker-local reference state; the parent writes results in original row order and reduces skip counts. Pending chunks and results are bounded. The additive `resources` summary reports requested/effective slots, worker PIDs, chunk and pending limits, completed chunks, and the parent-side serial reason. Outputs publish only after every chunk succeeds and at least one row is retained.
+
+Each bounded task carries reference sequence tuples needed to initialize a worker-local matcher. Processes reuse their matchers; queued task transport stays bounded by the pending-chunk limit and scales with reference size.
+
 The summary includes `library_prefix`, `id_columns`, `input_records_path`,
 `reference_path`, `max_edit_distance`, `output_records_path`,
 `input_record_count`, `output_record_count`,
 `skipped_missing_field_count`, `skipped_unmatched_anchor_count`,
-`skipped_ambiguous_match_count`, `status`, and `failure_reason`.
+`skipped_ambiguous_match_count`, `status`, and `failure_reason`, plus additive `resources`.
 
 Completion requires `status` `success`, a non-empty output, the expected
 header, and `output_record_count > 0`. A missing or malformed input/reference,
@@ -194,10 +201,24 @@ yulab_reporter_pipe step4 \
   --records "<project_dir>/work/pretran_orientation/PreTran_CCW_step3_orientation_resolved.tsv.gz" \
   --id-columns EID,PID \
   --project-dir "<project_dir>" \
-  --output-dir "<project_dir>/work/pretran_merge_counts"
+  --output-dir "<project_dir>/work/pretran_merge_counts" \
+  --threads 4
 ```
 
 Rows missing any required ID, `Element`, or `UMI` are skipped and counted.
+
+`--threads` is a positive CPU budget with standalone default `1`. The parent
+reads bounded row chunks in CLI order; up to `threads - 1` worker processes
+produce partial molecule contributions and the parent reconciles them in order.
+Deduplication by `(<declared IDs...>, UMI)` and ambiguous-UMI assignment remain
+global across every chunk and input file, preserving the first valid duplicate
+assignment and existing tie-break. Pending chunks/results are bounded, but the
+exact global unique-molecule and ambiguity state scales with the full input.
+The summary adds `resources` with the requested budget, effective workers,
+queue bounds, observed worker PIDs, and aggregate-state cardinality evidence.
+
+Grouped `process_pretrans` and `process_pretrans_cw_only` pass their shared
+`--threads` value to Step 4 after Step 3 completes.
 After cross-input deduplication, a UMI assigned to multiple distinct ID tuples
 is ambiguous. Step 4 retains the most frequent tuple for that UMI and drops
 the others; equal-frequency ties choose the lexicographically smallest tuple

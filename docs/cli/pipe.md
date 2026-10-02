@@ -296,6 +296,9 @@ orchestrated flags; step modules also expose their own parsers.
 | `--reference` | yes | Orientation-appropriate FASTA |
 | `--id-columns` | yes | e.g. `EID,PID` or `EID` |
 | `--max-edit-distance` | no | `1` |
+| `--threads` | no | `1` |
+
+`--threads` bounds orientation matching using a parent plus at most `threads - 1` worker processes. The parent preserves output order and reduces counts; grouped Step 3 orientations run sequentially under the same selected budget.
 
 ### `step4`
 
@@ -303,6 +306,7 @@ orchestrated flags; step modules also expose their own parsers.
 | --- | --- | --- |
 | `--records` | yes (repeatable, ≥1) | — |
 | `--id-columns` | yes | Must match Step 3 / Step 5 |
+| `--threads` | no | `1` (bounded count-aggregation CPU budget) |
 
 ### `step5`
 
