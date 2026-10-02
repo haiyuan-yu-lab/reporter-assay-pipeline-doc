@@ -86,6 +86,14 @@ cap-assay-pipeline step3-alignment \
 ```
 
 STAR aligns the library; samtools produces a coordinate-sorted BAM and index.
+Step 3 also checks the complete FASTA before probing or invoking STAR. It
+rejects two distinct first-token reference identifiers with identical
+sequences after uppercasing literal sequence strings, for both generated and
+supplied STAR indexes, and reports the colliding identifiers. Compatible
+standalone FASTA needs no annotations, manifest, assembly summary, or XP
+provenance. Reverse complements remain distinct unless their literal complete
+strings match, and IUPAC symbols are compared literally without expansion.
+The check compares complete records, not tested-element subsequences.
 Successful publication includes:
 
 ```text
