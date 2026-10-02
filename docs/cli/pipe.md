@@ -99,7 +99,10 @@ identifier-map reconciliation, as in `process_pretrans`.
 
 **Required:** `--library-prefix`, `--id-field`, `--cluster-reference`, `--input-id-col`, `--input-count-col`
 
-**Optional:** `--project-dir`, `--output-dir`, `--delete-intermediate` / `--no-delete-intermediate`
+**Optional:** `--project-dir`, `--output-dir`, `--threads` (positive-integer CPU budget, default `1`; reused sequentially by Steps 6–8), `--delete-intermediate` / `--no-delete-intermediate`
+
+The grouped budget is passed unchanged to each sequential step. It does not
+multiply across Steps 6–8.
 
 **Input resolution:** Step 6 `--input-records` is resolved automatically as
 `<project-dir>/work/delimited/<library-prefix>_step2_records.tsv.gz`. Run
@@ -346,6 +349,7 @@ identifier/graph memory state.
 | `--id-field` | yes | — |
 | `--input-records` | yes | — |
 | `--cluster-reference` | yes | — |
+| `--threads` | no | `1` |
 
 ### `step7`
 
@@ -353,6 +357,7 @@ identifier/graph memory state.
 | --- | --- | --- |
 | `--library-prefix` | yes | — |
 | `--input-records` | yes | — |
+| `--threads` | no | `1` |
 
 ### `step8`
 
@@ -363,6 +368,7 @@ identifier/graph memory state.
 | `--element-reference` | yes | — |
 | `--input-id-col` | yes | — |
 | `--input-count-col` | yes | — |
+| `--threads` | no | `1` |
 
 ### `step9`
 
@@ -373,7 +379,6 @@ identifier/graph memory state.
 | `--negative-control-annotation` | yes | — |
 | `--output-path` | yes | — |
 | `--summary-path` | no | derived from `--output-path` |
-| `--threads` | no | `1` |
 | `--pseudocount` | no | `1.0` |
 | `--min-absolute-log2-effect` | no | `1.0` |
 | `--max-adjusted-p` | no | `0.05` |
@@ -381,6 +386,7 @@ identifier/graph memory state.
 | `--min-dna-replicates` | no | `2` |
 | `--min-usable-controls` | no | `20` |
 | `--filtered-elements-output-path` | no | none (`.tsv` / `.tsv.gz` sidecar only when requested) |
+| `--threads` | no | `1` |
 
 Step 9 output columns (**0.2.0b2**): `Element`, `DNACount`, `RNACount`, `ActivityScore`,
 `log2FC`, `ActivityZ`, `ActivityCall`, `FittedRNADNALog2FC`,

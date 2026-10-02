@@ -10,6 +10,15 @@ eBC and pBC are separate assay branches. Use the eBC/EID cluster reference for
 eBC libraries and the pBC/PID cluster reference for pBC libraries; do not mix
 references or selector columns.
 
+Each standalone Step 6–8 command accepts a positive-integer `--threads` CPU
+budget with default `1`. `process_posttrans --threads N` forwards the same
+budget sequentially to all three stages; the parent uses one CPU slot and at
+most `N - 1` worker processes. Row chunks and pending tasks stay bounded.
+Step 7 retains the global set of unique molecule keys and its count map, and
+Step 8 retains global element totals, so those aggregate states scale with the
+number of distinct keys even though task buffers remain bounded. Each summary
+reports queue limits and global-state cardinality separately.
+
 ## Prerequisites and branch handoffs
 
 Complete Steps 1–2 for the selected PostTran library and complete the PreTran
@@ -52,6 +61,7 @@ yulab_reporter_pipe process_posttrans \
   --cluster-reference work/id_map_generation/pretran_step5_EID_cluster_reference.tsv.gz \
   --input-id-col EID \
   --input-count-col MoleculeCount \
+  --threads 4 \
   --project-dir "<project_dir>" \
   --no-delete-intermediate
 ```
@@ -65,6 +75,7 @@ yulab_reporter_pipe process_posttrans \
   --cluster-reference work/id_map_generation/pretran_step5_PID_cluster_reference.tsv.gz \
   --input-id-col PID1 \
   --input-count-col MoleculeCount \
+  --threads 4 \
   --project-dir "<project_dir>" \
   --no-delete-intermediate
 ```
@@ -84,6 +95,7 @@ yulab_reporter_pipe step6 \
   --id-field EID \
   --input-records work/delimited/eBC_DNA_rep1_step2_records.tsv.gz \
   --cluster-reference work/id_map_generation/pretran_step5_EID_cluster_reference.tsv.gz \
+  --threads 4 \
   --project-dir "<project_dir>"
 ```
 
@@ -117,6 +129,10 @@ and output paths, `input_record_count`,
 `skipped_unmatched_id_count`, `status`, and `failure_reason`.
 Completion requires `status` `success`, a non-empty matched-records file, the
 expected branch header, and internally consistent counts.
+Its additive `resources` object reports CPU slots, worker count, chunk and
+pending limits, completed chunks, worker PIDs, and loaded reference-map
+cardinality. Workers initialize the validated reference map once and return
+row results in input order; exact matching behavior is unchanged.
 
 ### Step 6 exact matching
 
@@ -130,6 +146,7 @@ match length as a tuning control.
 yulab_reporter_pipe step7 \
   --library-prefix eBC_DNA_rep1 \
   --input-records work/posttran_id_matching/eBC_DNA_rep1_step6_matched_records.tsv.gz \
+  --threads 4 \
   --project-dir "<project_dir>"
 ```
 
@@ -159,6 +176,11 @@ Step 7 writes:
 
 Completion requires a non-empty output with the branch-specific header and a
 successful summary. Do not continue to Step 8 after a failed summary.
+Workers return chunk-local molecule keys; the parent performs global
+deduplication across all chunks before counting, so duplicates on opposite
+sides of a chunk boundary still count once. The `resources` object reports
+bounded queue limits separately from retained unique-key and count-map
+cardinality.
 
 ## Step 8: map canonical IDs to Elements
 
@@ -169,6 +191,7 @@ yulab_reporter_pipe step8 \
   --element-reference work/id_map_generation/pretran_step5_EID_cluster_reference.tsv.gz \
   --input-id-col EID \
   --input-count-col MoleculeCount \
+  --threads 4 \
   --project-dir "<project_dir>"
 ```
 
@@ -189,6 +212,9 @@ Step 8 writes:
 
 Completion requires a non-empty element-count table, positive integer counts,
 and `status` `success`. These tables are the Step 9 DNA/RNA inputs.
+Workers return partial integer totals and the parent reduces them globally
+before sorted publication. The `resources` object separates bounded queue
+evidence from the cardinality of the global element-total map.
 
 ## Validation and symptom-first recovery
 

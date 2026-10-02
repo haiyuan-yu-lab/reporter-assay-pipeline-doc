@@ -21,6 +21,7 @@ yulab_reporter_export ES --help
 | `--negative-control-annotation PATH` | A readable text file with at least one negative-control `Element` ID on each non-empty line. |
 | `--output-fasta PATH` | Destination FASTA path. Its parent directory may be created. |
 | `--anno-track COLUMN OUTPUT_NPY_PATH` | A requested numeric activity column and its `.npy` destination; repeat at least once. |
+| `--threads INT` | Positive-integer CPU budget for independent reference-file preparation (default `1`). |
 
 The `activity-by-element` input has the Step 9 columns `Element`, `DNACount`,
 `RNACount`, `ActivityScore`, `log2FC`, `ActivityZ`, `ActivityCall`,
@@ -75,9 +76,19 @@ to FASTA record `j` in the ordering above. These are scalar **stat**
 annotations, not per-position tracks, and can be loaded with
 `ExogeneousSequences.load_region_anno_from_npy(name, path, anno_type="stat")`.
 
-Successful output writes are atomic. Treat the command as complete only when it
-returns exit code 0 and the FASTA plus every requested `.npy` file exists and
-has the expected row count and shape.
+References are parsed independently by at most `threads - 1` workers through a
+bounded queue. The parent checks global header disjointness, performs the
+complete activity join and filtering, and publishes in CLI reference order.
+The final reference records and activity join scale with input cardinality; the
+worker queue remains bounded. Successful stderr contains one
+`REPORTER_RESOURCE_EVIDENCE` JSON line with requested/effective worker evidence,
+worker PIDs, queue bounds and serial global-join/publication phases.
+
+All FASTA and `.npy` outputs are staged before publication. If any destination
+replacement fails, the command rolls back earlier replacements and restores
+existing final files, then cleans staged artifacts. Treat the command as
+complete only when it returns exit code 0 and the FASTA plus every requested
+`.npy` file exists and has the expected row count and shape.
 
 ## Export once per present assay branch
 
