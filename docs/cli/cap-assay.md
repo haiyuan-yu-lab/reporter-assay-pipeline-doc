@@ -337,3 +337,12 @@ cap-assay-pipeline step2-clip-construct-flank --help
 cap-assay-pipeline step3-alignment --help
 ```
 
+### Step 1 CPU budget
+
+`step1-prep-fastq --threads N` retains default 16 and accepts positive integers.
+Python validation and ambiguous-UMI exclusion use bounded chunks and at most
+N−1 worker processes plus the parent; N=1 uses direct execution. Fastp runs
+separately with the existing `-w N` and may create fixed reader/writer threads beyond
+that worker flag. Summaries add `resources` with requested/effective budgets,
+phase chunk counts and observed worker PIDs; existing scientific fields retain
+their meaning. No new dependency or CPU flag is required.

@@ -1,5 +1,15 @@
 # Cap-selection Steps 1–3
 
+Step 1 `--threads` is a positive CPU budget (default 16). Its gzip traversal
+and ordered publication run in the parent, with at most `threads - 1` Python
+worker processes; `--threads 1` runs directly. Validation and UMI exclusion
+use bounded paired chunks, so record buffering does not grow with library size.
+Fastp runs in a separate phase with the selected worker budget and may use fixed
+reader/writer threads in addition. The summary's additive `resources` object
+records configured workers, observed worker PIDs, chunk bounds and fastp threads.
+Scientific counts and paired record order remain equivalent across budgets.
+
+
 This page documents the upcoming external-reference handoffs for the
 cap-selection legs that feed [Step 4](workflow.md#step-4-deliverable). The
 released **0.2.0b2** still has the former reference-builder command. Full flag lists live in
