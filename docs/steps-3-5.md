@@ -54,10 +54,10 @@ entirely.
 
 ## Complete grouped command
 
-The grouped command runs Step 3 CW, Step 3 CCW, Step 4, then Step 5. The
+The grouped command runs Step 3 CW and Step 3 CCW, followed by Step 4 and Step 5. The
 `--cw-records` and `--ccw-records` paths are Step 2 inputs; the orchestrator
 then wires the two newly produced orientation-resolved outputs into Step 4.
-Its optional positive-integer `--threads` budget defaults to `1` and is reused sequentially by mapped Steps 3–5. It does not run CW and CCW concurrently.
+Its optional positive-integer `--threads` budget defaults to `1`. At budget `1`, the Step 3 orientations run sequentially. Above `1`, they run in isolated processes concurrently with ceiling/floor portions of the budget; both must finish before Step 4 starts. Step 4 and Step 5 then run sequentially, each with the full selected budget. CW-only operation runs its single Step 3 invocation with the full budget before Steps 4 and 5.
 
 ```bash
 yulab_reporter_pipe process_pretrans \
@@ -241,6 +241,10 @@ The summary fields are `records_paths`, `id_columns`, `input_record_counts`,
 `deduplicated_record_count`, `output_group_count`, `status`, and
 `failure_reason`. `ambiguous_umi_count` counts unique UMIs requiring tuple
 resolution, not the number of discarded rows.
+
+Grouped `process_pretrans` and `process_pretrans_cw_only` pass their full
+`--threads` value to Step 4 after Step 3 completes. In dual-orientation mode,
+both Step 3 processes must finish before Step 4 starts.
 
 Completion requires every input schema to match exactly, a non-empty merged
 output, and `status` `success`. Missing inputs, schema mismatch, corrupt input,

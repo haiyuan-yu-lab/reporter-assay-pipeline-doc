@@ -57,11 +57,16 @@ it does not run both stages concurrently or multiply their CPU allocations.
 Step 1 passes the value to fastp, while Step 2 uses bounded ordered extraction
 workers. Both summaries include additive resource evidence.
 
-### `process_pretrans` (step3 CW → step3 CCW → step4 → step5)
+### `process_pretrans` (step3 CW + CCW → step4 → step5)
 
 **Required:** `--id-columns`, `--cw-prefix`, `--ccw-prefix`, `--cw-records`, `--ccw-records`, `--forward-reference`, `--reverse-reference`
 
-**Optional:** `--project-dir`, `--output-dir`, `--max-edit-distance` (default `1`), `--threads` (positive-integer CPU budget, default `1`; reused sequentially by mapped Steps 3–5), `--min-pretran-umi-count` (default `1`), `--cluster-mode` (`connected` \| `unique`, default `connected`), `--cluster-max-edit-distance` (default `1`), `--idmap-min-dominant-count` (default `10`), `--idmap-min-dominant-ratio` (default `0.8`), `--delete-intermediate` / `--no-delete-intermediate`
+**Optional:** `--project-dir`, `--output-dir`, `--max-edit-distance` (default `1`), `--threads` (positive-integer parent CPU budget, default `1`; dual Step 3 orientations split ceiling/floor concurrently above `1`, then Steps 4–5 each reuse the full budget sequentially), `--min-pretran-umi-count` (default `1`), `--cluster-mode` (`connected` \| `unique`, default `connected`), `--cluster-max-edit-distance` (default `1`), `--idmap-min-dominant-count` (default `10`), `--idmap-min-dominant-ratio` (default `0.8`), `--delete-intermediate` / `--no-delete-intermediate`
+
+CW and CCW Step 3 invocations run in isolated processes concurrently when the
+budget is greater than `1` (for example, budget `4` gives each orientation
+`2`). The orchestrator waits for both; if either fails, Step 4 and Step 5 do
+not run. Budget `1` runs the orientations sequentially. CW-only `process_pretrans_cw_only` runs its single Step 3 invocation at the full budget.
 
 Step 5 uses this same budget for bounded candidate comparisons. The parent
 reconciles accepted edges across all comparison partitions before it computes
@@ -84,7 +89,7 @@ output via `--records`.
 
 **Rejected:** `--ccw-prefix`, `--ccw-records`, `--reverse-reference`
 
-**Optional:** `--threads` (positive-integer CPU budget, default `1`; reused sequentially by mapped Steps 3–5), plus the same Step 5 / project / intermediate flags as `process_pretrans`
+**Optional:** `--threads` (positive-integer CPU budget, default `1`; used by the single Step 3 invocation, then reused sequentially by Steps 4–5), plus the same Step 5 / project / intermediate flags as `process_pretrans`
 
 Step 5 uses the shared budget for bounded candidate comparisons and global
 identifier-map reconciliation, as in `process_pretrans`.
@@ -313,7 +318,7 @@ orchestrated flags; step modules also expose their own parsers.
 | `--max-edit-distance` | no | `1` |
 | `--threads` | no | `1` |
 
-`--threads` bounds orientation matching using a parent plus at most `threads - 1` worker processes. The parent preserves output order and reduces counts; grouped Step 3 orientations run sequentially under the same selected budget.
+`--threads` bounds orientation matching using a parent plus at most `threads - 1` worker processes. The parent preserves output order and reduces counts. Grouped dual-orientation Step 3 invocations use isolated processes and split the parent budget ceiling/floor when it exceeds `1`; both must finish before Step 4. Budget `1` and CW-only operation are serial. Steps 4 and 5 then run sequentially with the full parent budget.
 
 ### `step4`
 
