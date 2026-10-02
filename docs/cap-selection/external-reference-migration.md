@@ -1,9 +1,13 @@
-# Move CAP reference assembly outside the pipeline
+# Migrate CAP reference assembly and optional clipping
 
-The CAP reference builder is removed in the upcoming interface. The released
-`0.2.0b2` package still contains `step2-build-reference`; this guide describes
-the replacement for the next interface. CAP's optional clipping command remains
-named `step1b-clip-construct-flank` during this migration.
+The current CAP interface prepares references outside the numbered workflow
+and names optional clipping Step 2. Replace the former
+`step2-build-reference` builder with the external assembly command below. Rename
+`step1b-clip-construct-flank` to `step2-clip-construct-flank`; its arguments and
+clipped FASTQ names stay the same, while `<prefix>_step1b_summary.json` becomes
+`<prefix>_step2_summary.json`. Step 3 and Step 4 retain their command names and
+numbering. When clipping does not apply, pass compatible Step 1 FASTQs directly
+to Step 3 without creating a clipping summary.
 
 Replace the old builder invocation with
 `ExogenousSequenceTools assemble add_adapter`. If the former
@@ -55,3 +59,17 @@ before STAR runs.
 This external command runs during reference preparation. CAP's Step 3 alignment
 can run in an environment without XP genomic tools. Continue to use compatible
 prepared FASTQs directly with Step 3 when clipping does not apply.
+
+The old clipping invocation remains valid after changing only its command
+name:
+
+```bash
+cap-assay-pipeline step2-clip-construct-flank \
+  --library-prefix LIB01 \
+  --input-r1 prepared/LIB01_R1.trim.fq.gz \
+  --input-r2 prepared/LIB01_R2.trim.fq.gz \
+  --clip-layout construct_flank.json \
+  --output-dir clipped/
+```
+
+The former `step1b-clip-construct-flank` spelling has no compatibility alias.

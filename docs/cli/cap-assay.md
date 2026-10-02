@@ -47,7 +47,7 @@ Four subcommands are registered, in workflow order:
 | Command | Summary |
 | --- | --- |
 | `step1-prep-fastq` | Prepare reads with fastp (trim, R1 UMI in names, filter; UMI-aware dedup in Step 4) |
-| `step1b-clip-construct-flank` | Optionally clip matched construct flanks from prepared paired FASTQs (between Steps 1 and 3) |
+| `step2-clip-construct-flank` | Optional Step 2: clip matched construct flanks from prepared paired FASTQs |
 | `step3-alignment` | Align one library to one reference; publish BAM + BAI + summary |
 | `step4-post-alignment-processing` | Strand-selected RNA endpoint bigWigs from one library BAM (four tracks for `both`, two for `plus`/`minus`) |
 
@@ -71,7 +71,7 @@ accepts a compatible ordinary FASTA and has no XP runtime dependency.
 
 ---
 
-## `step1b-clip-construct-flank` (optional)
+## `step2-clip-construct-flank` (optional)
 
 Use this step when prepared R1 reads begin with a verified construct flank
 (fixed sequence, variable PID, fixed sequence) that should be removed before
@@ -80,7 +80,7 @@ directly on Step 1 `{prefix}_R1.trim.fq.gz` / `{prefix}_R2.trim.fq.gz`
 outputs.
 
 ```bash
-cap-assay-pipeline step1b-clip-construct-flank \
+cap-assay-pipeline step2-clip-construct-flank \
   --library-prefix LIB01 \
   --input-r1 prepared/LIB01_R1.trim.fq.gz \
   --input-r2 prepared/LIB01_R2.trim.fq.gz \
@@ -94,7 +94,7 @@ Published artifacts (typical names):
 ```text
 LIB01_R1.clip.fq.gz
 LIB01_R2.clip.fq.gz
-LIB01_step1b_summary.json
+LIB01_step2_summary.json
 ```
 
 Pass the clipped FASTQs to Step 3 `--input-r1` / `--input-r2`. Each
@@ -102,7 +102,7 @@ Pass the clipped FASTQs to Step 3 `--input-r1` / `--input-r2`. Each
 omit R2 targets for R1-only clipping, or R1 targets for R2-only clipping (layout
 matching still uses R1). The step summary reconciles per-mate clipped and
 unchanged pair counts and reports retained clipped-read lengths. See
-`cap-assay-pipeline step1b-clip-construct-flank --help` for the version-one
+`cap-assay-pipeline step2-clip-construct-flank --help` for the version-one
 clip-layout schema and handoff notes. The paired FASTQs are validated and
 clipped in one bounded-memory pass; outputs publish only after both streams
 finish successfully. Gzip compression defaults to level 1 for faster
@@ -323,9 +323,6 @@ needs no builder annotations, manifest, summary, XP provenance, or XP
 installation at alignment time. Step 3 rejects identical complete sequences
 across distinct IDs before invoking STAR.
 
-The optional clipping command remains named `step1b-clip-construct-flank` in
-this migration. Removing the reference builder does not renumber clipping.
-
 ---
 
 ## Steps 1–3 (summary)
@@ -336,6 +333,7 @@ strand-rejected unmapped retention, and `effective_mapping_counts`.
 Invoke help per step:
 ```bash
 cap-assay-pipeline step1-prep-fastq --help
-cap-assay-pipeline step1b-clip-construct-flank --help
+cap-assay-pipeline step2-clip-construct-flank --help
 cap-assay-pipeline step3-alignment --help
 ```
+

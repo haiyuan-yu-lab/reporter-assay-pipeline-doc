@@ -33,12 +33,12 @@ Typical published artifacts under `--output-dir` use the library prefix in
 their names; consult Step 1 help and `{prefix}_step1_summary.json` for the
 exact paths, fastp filtering metrics, and the Step 4 deduplication handoff.
 
-## Optional Step 1b: Construct-flank clipping
+## Optional Step 2: Construct-flank clipping
 
 When a library’s prepared R1 reads begin with a known construct flank, run:
 
 ```bash
-cap-assay-pipeline step1b-clip-construct-flank \
+cap-assay-pipeline step2-clip-construct-flank \
   --library-prefix LIB01 \
   --input-r1 prepared/LIB01_R1.trim.fq.gz \
   --input-r2 prepared/LIB01_R2.trim.fq.gz \
@@ -53,7 +53,7 @@ both CW and CCW layouts while R2 3′ clipping applies only to CW). R2-only
 configurations still match construct layout on R1 to recover the PID. When
 clipping does not apply, **bypass** this step and point Step 3 at the Step
 1 trim FASTQs directly. Step 3 does not require clip provenance for compatible
-paired FASTQs. Step 1b validates and clips the paired streams in one pass,
+paired FASTQs. Step 2 validates and clips the paired streams in one pass,
 then publishes its outputs after both inputs finish successfully. Output gzip
 compression defaults to level 1 for faster processing; choose a level from 0
 (fastest and largest) through 9 (smallest and slowest) with
@@ -83,8 +83,8 @@ Step 3 accepts compatible external FASTA without XP provenance or builder
 annotations, manifests, or summaries. It rejects uppercase-identical complete
 sequences across distinct IDs before invoking STAR.
 
-The current clipping command remains named Step 1b in this migration. This
-change removes the former Step 2 builder and does not renumber clipping.
+The former `step1b-clip-construct-flank` name and Step 1b summary name have no
+compatibility aliases; migrate both to their Step 2 names.
 
 ## Step 3: Alignment
 
