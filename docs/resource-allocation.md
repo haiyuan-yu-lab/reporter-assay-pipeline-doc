@@ -9,7 +9,7 @@ serial path wherever Python workers are supported.
 | Surface | Budget and parallel work | Serial phases and state that can grow |
 | --- | --- | --- |
 | CAP Step 1 — FASTQ preparation | Default `16`. Bounded Python pair validation and UMI exclusion use at most `threads - 1` workers plus the parent; fastp receives the selected value as `-w` in its separate phase. CI limits concurrent libraries with `PREP_LIBRARY_WORKERS`. | Gzip traversal, paired ordered publication and summary reduction are parent-owned. fastp can create fixed reader/writer activity outside `-w`; its per-process memory is separate from bounded Python buffers. |
-| CAP Step 2 — optional clipping | Default `1`. Bounded pair-local clipping workers use at most `threads - 1` worker processes plus the parent. CI divides `THREADS` among libraries and caps simultaneous clipping with `CLIP_LIBRARY_WORKERS` (default `2`). | Input traversal, ordered paired output, histogram reduction and publication are serial. Direct harness concurrency defaults to two libraries; Slurm is bounded by the same clipping ceiling and available CPUs. |
+| CAP Step 2 — optional clipping | Default `1`. Bounded pair-local clipping workers use at most `threads - 1` worker processes plus the parent. CI divides `THREADS` among libraries and caps simultaneous clipping with `CLIP_LIBRARY_WORKERS` (Slurm default `4`; direct harness default `2`). | Input traversal, ordered paired output, histogram reduction and publication are serial. Direct harness concurrency defaults to two libraries; Slurm is bounded by the same clipping ceiling and available CPUs. |
 | CAP Step 3 — alignment | Default `16`. STAR index and alignment phases each receive `--threads` and run separately. Complete QNAME-group BAM work uses at most `threads - 1` workers plus the parent. Independent CI libraries split the shared allocation. | FASTQ admission, global FASTA-uniqueness validation, coordinate sorting, reduction and publication are serial. samtools uses its default single thread; STAR's separate `zcat` reader is fixed activity outside `--runThreadN`. Reference and alignment evidence scale with their input cardinalities. |
 | CAP Step 4 — endpoint tracks | Default `16`. Complete QNAME-group eligibility work is bounded and parallel; samtools `-@` receives at most `threads - 1` additional threads. Independent BEDTools calls share the remaining invocation budget. CI divides its allocation among concurrent libraries. | UMI-tools deduplication is one global operation per library. Endpoint normalization, track construction, global reconciliation and publication remain serial. |
 | Reporter Step 1 — FASTQ preparation | Existing default `16`; fastp receives the selected worker count. `prep_lib` reuses the same budget sequentially for Step 1 then Step 2. CI schedules independent preparation jobs within its stage ceiling. | Input/output checks and handoff ordering remain barriers. fastp may have fixed auxiliary activity; keep its memory cost in the library concurrency decision. |
@@ -26,11 +26,13 @@ serial path wherever Python workers are supported.
 
 ## Tracked CI allocations
 
-CAP Slurm CI defaults to 16 CPUs and 32 GiB. Step 1 preparation defaults to one
-concurrent library; optional Step 2 clipping defaults to two, with
-`PREP_LIBRARY_WORKERS` and `CLIP_LIBRARY_WORKERS` controlling those ceilings.
-Steps 3 and 4 schedule up to four independent libraries, splitting the current
-budget across them. Direct CAP harness defaults remain conservative.
+CAP Slurm CI defaults to 32 CPUs and 128 GiB. That job sets
+`PREP_LIBRARY_WORKERS` and `CLIP_LIBRARY_WORKERS` to 4, so preparation, optional
+clipping, alignment, and post-alignment each run up to four libraries with eight
+CPUs per invocation. Direct CAP harness defaults remain conservative: one
+preparation library and two clipping libraries. Operators who override the job
+to a smaller memory allocation must lower those ceilings; four concurrent
+`fastp` instances are not safe at 32 GiB.
 
 Reporter Slurm CI takes `THREADS` from `SLURM_CPUS_PER_TASK` and retains its
 existing 32 GiB memory allocation. `REPORTER_PREP_CONCURRENCY`,
