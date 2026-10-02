@@ -138,7 +138,7 @@ count merging).
 
 | Flag | Default | Meaning |
 | --- | --- | --- |
-| `--threads` | `16` | Positive integer; worker threads for samtools |
+| `--threads` | `16` | Positive integer CPU budget for pair eligibility workers, samtools and endpoint tools |
 | `--max-pair-mismatches` | `4` | Non-negative integer; **inclusive** ceiling on `NM(R1) + NM(R2)` |
 | `--samtools` | `samtools` | samtools executable path or name |
 | `--bedtools` | `bedtools` | BEDTools executable path or name |
@@ -150,6 +150,17 @@ There is no reference path, BAI input, project root, overwrite flag, batch mode,
 no-deduplication mode, or generic passthrough to native tool CLIs. Native
 samtools, BEDTools, and UMI-tools streams are captured internally, not exposed
 as the user interface.
+
+Step 4 reads samtools output through a disk-backed temporary stream and batches
+complete query-name groups for eligibility checks, using at most `--threads - 1`
+worker processes while the parent coordinates and reduces their results.
+`samtools -@` receives at most `--threads - 1` additional threads,
+because samtools also has its main thread. Independent selected-strand BEDTools
+endpoint calls may run concurrently, with at most `--threads - 1` tools active.
+The global eligible-molecule UMI-tools deduplication, endpoint normalization,
+track validation, summary reduction and publication remain serial. The summary's
+additive `resources` object records requested threads, effective workers and
+serial phases; scientific counts and tracks retain their existing meanings.
 
 ### BAM-only compatibility boundary
 
