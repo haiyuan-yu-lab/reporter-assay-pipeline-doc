@@ -53,6 +53,7 @@ cap-assay-pipeline step2-clip-construct-flank \
   --input-r1 prepared/LIB01_R1.trim.fq.gz \
   --input-r2 prepared/LIB01_R2.trim.fq.gz \
   --clip-layout construct_flank.json \
+  --threads 4 \
   --gzip-compression-level 1 \
   --output-dir clipped/
 ```
@@ -67,7 +68,9 @@ paired FASTQs. Step 2 validates and clips the paired streams in one pass,
 then publishes its outputs after both inputs finish successfully. Output gzip
 compression defaults to level 1 for faster processing; choose a level from 0
 (fastest and largest) through 9 (smallest and slowest) with
-`--gzip-compression-level`.
+`--gzip-compression-level`. `--threads` is a positive CPU budget, default 1;
+the parent performs gzip traversal, ordered output, summary reduction and
+publication while up to `threads - 1` bounded worker processes clip chunks.
 
 ## External reference assembly (unnumbered prerequisite)
 

@@ -85,6 +85,7 @@ cap-assay-pipeline step2-clip-construct-flank \
   --input-r1 prepared/LIB01_R1.trim.fq.gz \
   --input-r2 prepared/LIB01_R2.trim.fq.gz \
   --clip-layout construct_flank.json \
+  --threads 4 \
   --gzip-compression-level 1 \
   --output-dir clipped/
 ```
@@ -101,7 +102,12 @@ Pass the clipped FASTQs to Step 3 `--input-r1` / `--input-r2`. Each
 `clip_targets` entry names its mate, end, match mode, and applicable layout IDs;
 omit R2 targets for R1-only clipping, or R1 targets for R2-only clipping (layout
 matching still uses R1). The step summary reconciles per-mate clipped and
-unchanged pair counts and reports retained clipped-read lengths. See
+unchanged pair counts and reports retained clipped-read lengths. `--threads`
+sets a positive-integer CPU budget and defaults to 1. Pair clipping uses at
+most `threads - 1` worker processes while the parent reads, merges in input
+order, reduces summaries, compresses and publishes; chunk and result buffering
+are bounded. The summary records requested threads, effective CPU slots and
+worker evidence. See
 `cap-assay-pipeline step2-clip-construct-flank --help` for the version-one
 clip-layout schema and handoff notes. The paired FASTQs are validated and
 clipped in one bounded-memory pass; outputs publish only after both streams
