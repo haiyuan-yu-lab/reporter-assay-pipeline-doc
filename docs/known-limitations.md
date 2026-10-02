@@ -3,6 +3,21 @@
 These are limitations of the released build, not instructions to work around
 them by guessing at undocumented behavior.
 
+## Cap-selection RNA strand correction pending release
+
+The released 0.2.0b2 build derives RNA strand from R2. This is a confirmed
+strand interpretation defect: R1 forward should mean plus and R1 reverse
+should mean minus, with cap coordinates supplied by R2’s sequenced 5′ end.
+The development correction changes selected-strand placement retention and
+Step 4 cap/proxy strand assignment under all policies, including `both`.
+Step 3 `both` placement selection remains unchanged; proxy coordinates are
+unchanged. No legacy-mode flag is planned.
+
+The correction is not released yet. At its release boundary, the cap workflow,
+CLI guide, formats, glossary and machine-readable guide must adopt the corrected
+rule together. A fresh four-library CAP validation run is required before that
+release cut. Existing release guides continue to describe their labeled builds.
+
 ## `fastp` is not version-pinned
 
 Step 1 and `prep_lib` invoke whichever compatible `fastp` executable is selected
