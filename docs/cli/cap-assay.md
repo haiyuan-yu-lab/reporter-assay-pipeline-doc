@@ -352,3 +352,18 @@ separately with the existing `-w N` and may create fixed reader/writer threads b
 that worker flag. Summaries add `resources` with requested/effective budgets,
 phase chunk counts and observed worker PIDs; existing scientific fields retain
 their meaning. No new dependency or CPU flag is required.
+
+### Step 3 CPU budget
+
+`step3-alignment --threads N` retains default 16 and accepts positive
+integers. STAR index and alignment commands each receive `N` separately.
+Paired FASTQs stream with one pair buffered, and complete FASTA uniqueness
+admission remains global and serial. BAM validation and placement linkage run
+in bounded chunks of complete QNAME groups, using at most `N - 1` worker
+processes plus the parent; `N=1` uses direct execution. Global grouping,
+coordinate sorting, and publication remain serial. Step 3 samtools commands
+use their default single thread, and STAR's `zcat` reader runs as a separate
+fixed activity. Summaries add requested and effective `resources` evidence;
+these fields do not change scientific summary meanings. Exact reference
+uniqueness and BAM QNAME grouping retain state proportional to input size,
+while pending worker chunks are bounded.
