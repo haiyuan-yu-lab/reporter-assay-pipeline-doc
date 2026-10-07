@@ -18,8 +18,8 @@ flowchart TD
     RAW[Raw FASTQ pairs] --> S1[Step 1: Raw read preparation]
     S1 --> S2[Step 2: Delimited records]
 
-    S2 -->|PreTran CW[/CCW]| S3[Step 3: Orientation]
-    REF[Reference FASTA(s)] --> S3
+    S2 -->|PreTran CW/CCW| S3[Step 3: Orientation]
+    REF["Reference FASTA(s)"] --> S3
     S3 --> S4[Step 4: Merge counts]
     S4 --> S5[Step 5: ID maps]
 
