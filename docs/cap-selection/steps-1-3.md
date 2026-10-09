@@ -10,10 +10,10 @@ records configured workers, observed worker PIDs, chunk bounds and fastp threads
 Scientific counts and paired record order remain equivalent across budgets.
 
 
-This page documents the upcoming external-reference handoffs for the
-cap-selection legs that feed [Step 4](workflow.md#step-4-deliverable). The
-released **0.2.0b2** still has the former reference-builder command. Full flag lists live in
-`cap-assay-pipeline <step> --help` and in the [Cap-selection CLI](../cli/cap-assay.md).
+This page documents the released **0.2.0b3** external-reference handoffs for the
+cap-selection legs that feed [Step 4](workflow.md#step-4-deliverable). Full flag
+lists live in `cap-assay-pipeline <step> --help` and the
+[Cap-selection CLI](../cli/cap-assay.md).
 
 ## Step 1: Prepare FASTQ
 
@@ -147,12 +147,12 @@ pairs is a Step 3 failure; Step 4 also fails when no read pairs pass its filter.
 ### Step 3 RNA strand selection
 
 Step 3 accepts `--rna-strand {both,plus,minus}` (default `both`). The value
-names the reference-relative biological RNA strand determined by the R2 BAM
-strand (R1 is the antisense mate); it never describes CW/CCW construct
+names the reference-relative biological RNA strand determined by the R1 BAM
+strand (forward means plus; reverse means minus); it never describes CW/CCW construct
 orientation. The default publishes STAR's coordinate-sorted BAM unchanged.
 
 With `plus` or `minus`, Step 3 keeps all and only tied-best placements whose
-R2 lies on the selected strand, keeping linked R1/R2 mates together. One
+R1 lies on the selected strand, keeping linked R1/R2 mates together. One
 surviving placement becomes unique (`NH:1`); several survivors stay
 multimapped; no lower-scoring placement is ever substituted. A pair whose
 best placements are all on the excluded strand is retained as one complete

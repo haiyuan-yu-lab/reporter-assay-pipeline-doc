@@ -1,6 +1,6 @@
 # Canonical glossary
 
-These definitions apply to the released **0.2.0b2** documentation and its
+These definitions apply to the released **0.2.0b3** documentation and its
 artifact and command names.
 
 Use these definitions when reading pipeline commands, artifacts, summaries,
@@ -144,7 +144,7 @@ The negative-control-normalized z-score derived from the retained controls.
 
 ### ActivityCall
 
-The deterministic output category for an element. In **0.2.0b2** it is
+The deterministic output category for an element. In **0.2.0b3** it is
 `Active`, `Repressive`, `NoCall`, or `Control`, assigned from the
 control-relative effect and adjusted p-value. Historical **0.1.0b4** used
 `Active` or `Inactive` from `ActivityZ` and `--activity-threshold-z`. It is
@@ -170,8 +170,8 @@ endpoint (nascent RNA 5′). Published in `{prefix}.5pl.bw` and `{prefix}.5mn.bw
 
 ### Polymerase-position proxy
 
-Observations derived from the **R1** sequenced 5′ endpoint after inverting BAM
-strand into biological RNA strand. Interprets a pause-biased nascent RNA 3′
+Observations derived from the **R1** sequenced 5′ endpoint, assigned directly
+to the R1 BAM strand. Proxy coordinates retain their existing convention. Interprets a pause-biased nascent RNA 3′
 endpoint; it is **not** cap signal and not unbiased Pol II occupancy. Published
 in `{prefix}.3pl.bw` and `{prefix}.3mn.bw`.
 
@@ -192,7 +192,7 @@ sole BAM read-group ID to match `--library-prefix`.
 
 The plus or minus biological RNA strand measured relative to a
 construct-derived reference, independent of the tested element's CW or CCW
-orientation. Determined by the R2 BAM strand; R1 is the antisense mate.
+orientation. Determined by the R1 BAM strand: forward means plus; reverse means minus.
 Selected with `--rna-strand {both,plus,minus}` (default `both`) at
 cap-selection Steps 3 and 4; callers repeat the same value at both steps
 because the BAM carries no policy marker.

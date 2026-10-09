@@ -1,9 +1,8 @@
 # Cap-selection workflow
 
-This page documents the upcoming external-reference `cap-assay-pipeline`
-interface and its handoffs. Released **0.2.0b2** still includes the former
-builder command; see the [migration guide](external-reference-migration.md) for
-the replacement and version boundary.
+This page documents the released **0.2.0b3** `cap-assay-pipeline` interface
+and its handoffs. Reference assembly is an external prerequisite and Step 2
+is optional clipping; see the [migration guide](external-reference-migration.md).
 
 ## Two pipelines in one distribution
 
@@ -111,7 +110,7 @@ semantics, coordinates, and summary fields are specified in
 
 Steps 3 and 4 each accept `--rna-strand {both,plus,minus}` (default `both`).
 The value names the reference-relative biological RNA strand determined by
-the R2 BAM strand; it never describes CW/CCW construct orientation. **Pass
+the R1 BAM strand; it never describes CW/CCW construct orientation. **Pass
 the same value to both steps.** The BAM carries no policy marker, so Step 4
 cannot verify what Step 3 received: a restrictive mismatch (a BAM containing
 otherwise eligible opposite-strand pairs passed to a selected strand) fails
@@ -128,7 +127,7 @@ Choose the policy from the pooling matrix before alignment:
 | One orientation, one known strand | That strand for two tracks, or `both` for four tracks |
 | Both construct orientations **and** both RNA strands | Unsupported: no policy can resolve this combination |
 
-A `plus`/`minus` Step 3 selection keeps only tied-best placements whose R2
+A `plus`/`minus` Step 3 selection keeps only tied-best placements whose R1
 lies on the selected strand (promoting a survivor to unique when one
 remains) and retains fully rejected pairs as unmapped with a counted warning.
 A `plus`/`minus` Step 4 asserts the same strand on otherwise eligible pairs

@@ -29,7 +29,7 @@ REQUIRED_DOC_PATHS = (
     "/known-limitations/",
     "/glossary/",
 )
-CODE_REPO = "https://github.com/haiyuan-yu-lab/reporter-assay-pipeline"
+CODE_REPO = "https://github.com/DignoMor/reporter-assay-pipeline"
 LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
 
 

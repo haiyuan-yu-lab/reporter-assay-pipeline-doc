@@ -2,7 +2,7 @@
 
 Pipeline steps and grouped workflows.
 
-The released documentation is the behavioral contract for **0.2.0b2**.
+The released documentation is the behavioral contract for **0.2.0b3**.
 Individual-step help comes from each step-owned parser. Step 6 matching is exact
 `ObservedID` lookup; `--min-match-length` is not part of the command surface.
 
@@ -134,7 +134,7 @@ DNA and RNA lists must contain the same number of replicate tables, with at
 least two pairs. Run once per branch (eBC and pBC when both are present).
 Output format: [`activity-by-element`](../formats.md#activity-by-element).
 The thirteen-column table uses fitted `Active` / `Repressive` / `NoCall` /
-`Control` calls. See [Step 9](../steps-9.md#released-contract-020b2).
+`Control` calls. See [Step 9](../steps-9.md#released-contract-020b3).
 
 ### `concat_step2_records`
 
@@ -393,9 +393,9 @@ identifier/graph memory state.
 | `--filtered-elements-output-path` | no | none (`.tsv` / `.tsv.gz` sidecar only when requested) |
 | `--threads` | no | `1` |
 
-Step 9 output columns (**0.2.0b2**): `Element`, `DNACount`, `RNACount`, `ActivityScore`,
+Step 9 output columns (**0.2.0b3**): `Element`, `DNACount`, `RNACount`, `ActivityScore`,
 `log2FC`, `ActivityZ`, `ActivityCall`, `FittedRNADNALog2FC`,
 `ControlRelativeLog2FC`, `ControlRelativeSE`, `PValue`, `AdjustedPValue`,
 `IsNegativeControl` ([`activity-by-element`](../formats.md#activity-by-element)).
-See [Step 9](../steps-9.md#released-contract-020b2). `--activity-threshold-z`
+See [Step 9](../steps-9.md#released-contract-020b3). `--activity-threshold-z`
 is retired.

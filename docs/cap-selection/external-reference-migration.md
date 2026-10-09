@@ -1,6 +1,6 @@
 # Migrate CAP reference assembly and optional clipping
 
-The current CAP interface prepares references outside the numbered workflow
+Starting with **0.2.0b3**, the CAP interface prepares references outside the numbered workflow
 and names optional clipping Step 2. Replace the former
 `step2-build-reference` builder with the external assembly command below. Rename
 `step1b-clip-construct-flank` to `step2-clip-construct-flank`; its arguments and

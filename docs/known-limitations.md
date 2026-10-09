@@ -1,22 +1,19 @@
-# Known limitations in 0.2.0b2
+# Known limitations in 0.2.0b3
 
 These are limitations of the released build, not instructions to work around
 them by guessing at undocumented behavior.
 
-## Cap-selection RNA strand correction pending release
+## Cap-selection strand correction and proxy coordinates
 
-The released 0.2.0b2 build derives RNA strand from R2. This is a confirmed
-strand interpretation defect: R1 forward should mean plus and R1 reverse
-should mean minus, with cap coordinates supplied by R2’s sequenced 5′ end.
-The development correction changes selected-strand placement retention and
-Step 4 cap/proxy strand assignment under all policies, including `both`.
-Step 3 `both` placement selection remains unchanged; proxy coordinates are
-unchanged. No legacy-mode flag is planned.
+Release **0.2.0b3** corrects the R2-derived strand interpretation in **0.2.0b2**.
+R1 forward means plus and R1 reverse means minus. R2 supplies the sequenced 5′
+cap coordinate on that linked R1 strand. Selected-strand placement retention
+and Step 4 cap/proxy assignment change; Step 3 `both` placement selection stays
+the same. Reprocess earlier outputs when comparing corrected strand tracks.
 
-The correction is not released yet. At its release boundary, the cap workflow,
-CLI guide, formats, glossary and machine-readable guide must adopt the corrected
-rule together. A fresh four-library CAP validation run is required before that
-release cut. Existing release guides continue to describe their labeled builds.
+Proxy coordinates retain their existing convention. Coordinate repair remains
+deferred; the R1-derived signal is a pause-biased proxy, not a validated exact
+RNA 3′ coordinate or unbiased polymerase occupancy measurement.
 
 ## `fastp` is not version-pinned
 
@@ -24,12 +21,17 @@ Step 1 and `prep_lib` invoke whichever compatible `fastp` executable is selected
 or available on `PATH`. Record the external tool version with each run; this
 release does not promise equivalent cleaning behavior across `fastp` versions.
 
-## Release validation is unit-test-focused
+## Release validation boundaries
 
-The code repository has no continuous-integration workflow. Release
-validation used the unit suite plus R-backed Step 9, QC, and ES contract
-tests (`Rscript` 4.0.5, edgeR 3.32.1, limma 3.46.0, statmod 1.5.2). Large
-local sandbox outputs are not a versioned release fixture.
+The release candidate passed the implementation contract suite and both assay
+harness suites. Fresh four-library CAP acceptance and independent endpoint
+verification cover the corrected CAP behavior. Reporter resource-execution
+changes have an explicit full-run waiver; the PreTran refactor requires no new
+assay run. No fresh Reporter end-to-end PASS is claimed for **0.2.0b3**.
+Outstanding Reporter integration and performance acceptance remains open.
+
+The code repository has no hosted CI workflow. Step 9, QC and export contract
+checks use the available R backend; see release notes for exact validation.
 
 ## Step 9 R backend and two-pair blocking
 

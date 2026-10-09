@@ -8,8 +8,8 @@ executables and does not change `yulab_reporter_pipe` behavior.
 Process cap-selection assay sequencing data into strand-specific RNA endpoint bigWig tracks.
 ```
 
-This page documents the upcoming external-reference interface. Released
-**0.2.0b2** still includes the former reference-builder command;
+This page documents the released **0.2.0b3** external-reference interface.
+The former reference builder is removed and clipping is optional Step 2;
 `cap-assay-pipeline --help` and `cap-assay-pipeline <step> --help` describe the
 installed local build.
 
@@ -213,13 +213,13 @@ for rejection accounting):
 
 Each eligible pair contributes one R2 **cap signal** observation (sequenced 5′
 of R2) and one R1 **polymerase-position proxy** observation (sequenced 5′ of
-R1, antisense to nascent RNA, inverted to biological RNA strand). **R2 3′
+R1, assigned directly to the R1 BAM strand). **R2 3′
 endpoints are not consumed.**
 
 **RNA strand assertion:** `--rna-strand` declares the expected
-reference-relative biological RNA strand, determined by R2's BAM strand. It
+reference-relative biological RNA strand, determined by R1's BAM strand. It
 is an assertion, not a filter: with `plus` or `minus`, any otherwise
-eligible pair whose R2 lies on the opposite strand fails the invocation
+eligible pair whose R1 lies on the opposite strand fails the invocation
 before UMI-tools deduplication with its contradictory-pair count, and no
 tracks are published. Pairs rejected by ordinary filters never count as
 contradictory. Pass the same `--rna-strand` value to Steps 3 and 4; a
