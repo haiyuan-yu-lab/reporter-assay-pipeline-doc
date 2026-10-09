@@ -1,13 +1,13 @@
 # Step 9: call activity
 
-> **Version applicability.** This page documents **0.2.0b2**. The
-> [released contract](#released-contract-020b2) is the control-relative
+> **Version applicability.** This page documents **0.2.0b3**. The
+> [released contract](#released-contract-020b3) is the control-relative
 > limma–voom table (thirteen columns). Historical
 > [0.1.0b4](#historical-contract-010b4) used a seven-column z-score table.
 > Do not mix tables across contracts: QC and export readers accept only
 > the thirteen-column table and reject historical seven-column tables.
 
-## Released contract (0.2.0b2)
+## Released contract (0.2.0b3)
 
 Step 9 combines the element-count tables from matching PostTran DNA and RNA
 replicates into one `activity-by-element` table. Run it once for each branch
@@ -51,7 +51,8 @@ yulab_reporter_pipe call_activity \
     work/posttran_element_mapping/eBC_RNA_rep2_step8_element_counts.tsv.gz \
     work/posttran_element_mapping/eBC_RNA_rep3_step8_element_counts.tsv.gz \
   --negative-control-annotation "<ref_dir>/negative_controls.txt" \
-  --output-path "<out_dir>/EID-ActivityByElement.tsv.gz"
+  --output-path "<out_dir>/EID-ActivityByElement.tsv.gz" \
+  --threads 4
 ```
 
 For pBC, use the pBC Step 8 tables and name the output
@@ -68,7 +69,8 @@ yulab_reporter_pipe call_activity \
     work/posttran_element_mapping/pBC_RNA_rep2_step8_element_counts.tsv.gz \
     work/posttran_element_mapping/pBC_RNA_rep3_step8_element_counts.tsv.gz \
   --negative-control-annotation "<ref_dir>/negative_controls.txt" \
-  --output-path "<out_dir>/PID-ActivityByElement.tsv.gz"
+  --output-path "<out_dir>/PID-ActivityByElement.tsv.gz" \
+  --threads 4
 ```
 
 The complete CLI is documented in the [Pipeline CLI reference](cli/pipe.md).
@@ -78,6 +80,24 @@ ratios. Fitted-call flags default to `--min-absolute-log2-effect 1.0`,
 and `--min-usable-controls 20`. The summary path defaults to
 `<output directory>/<output stem>_step9_summary.json`, or can be set with
 `--summary-path`.
+
+`--threads` is a positive-integer CPU budget with standalone default `1`.
+Step 9 reads each independent DNA/RNA library table in input order using at
+most `threads - 1` worker processes and bounded pending tasks. A library-load
+failure fails the invocation; it does not skip or zero-fill malformed rows.
+After loading, the invocation retains one observed-element universe and one
+joint model matrix: eligibility, control-guided normalization, the paired
+limma–voom fit, the retained-control baseline, and candidate-only
+Benjamini–Hochberg adjustment remain global per invocation. Count maps and the
+matrix scale with observed-element cardinality, separately from the bounded
+task queue.
+
+For R calls, Step 9 sets common `OMP_NUM_THREADS`, `OPENBLAS_NUM_THREADS`,
+`MKL_NUM_THREADS`, `BLIS_NUM_THREADS`, and `VECLIB_MAXIMUM_THREADS` controls
+to the selected budget. This is best-effort because an installed R/BLAS
+backend may ignore unsupported variables; the resource summary records these
+settings and their limitation. Worker or R/backend failures write a failed
+summary and leave any previously published activity table intact.
 
 ### Legacy descriptive versus fitted fields
 
@@ -167,6 +187,7 @@ package versions are recorded in the JSON summary.
 | `--min-dna-replicates` | `2` | Minimum detecting DNA libraries |
 | `--min-usable-controls` | `20` | Minimum usable controls per TMM comparison |
 | `--filtered-elements-output-path` | none | Optional `.tsv` / `.tsv.gz` audit sidecar |
+| `--threads` | `1` | CPU budget for bounded library loading and supported backend controls |
 
 When the legacy control `ActivityScore` standard deviation is zero, the fitted
 model still runs: `ActivityZ` is left empty and the summary carries a warning

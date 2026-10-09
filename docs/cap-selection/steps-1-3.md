@@ -1,8 +1,19 @@
 # Cap-selection Steps 1–3
 
-This page documents released **0.2.0b2** handoffs for the cap-selection legs
-that feed [Step 4](workflow.md#step-4-deliverable). Full flag lists live in
-`cap-assay-pipeline <step> --help` and in the [Cap-selection CLI](../cli/cap-assay.md).
+Step 1 `--threads` is a positive CPU budget (default 16). Its gzip traversal
+and ordered publication run in the parent, with at most `threads - 1` Python
+worker processes; `--threads 1` runs directly. Validation and UMI exclusion
+use bounded paired chunks, so record buffering does not grow with library size.
+Fastp runs in a separate phase with the selected worker budget and may use fixed
+reader/writer threads in addition. The summary's additive `resources` object
+records configured workers, observed worker PIDs, chunk bounds and fastp threads.
+Scientific counts and paired record order remain equivalent across budgets.
+
+
+This page documents the released **0.2.0b3** external-reference handoffs for the
+cap-selection legs that feed [Step 4](workflow.md#step-4-deliverable). Full flag
+lists live in `cap-assay-pipeline <step> --help` and the
+[Cap-selection CLI](../cli/cap-assay.md).
 
 ## Step 1: Prepare FASTQ
 
@@ -32,21 +43,61 @@ Typical published artifacts under `--output-dir` use the library prefix in
 their names; consult Step 1 help and `{prefix}_step1_summary.json` for the
 exact paths, fastp filtering metrics, and the Step 4 deduplication handoff.
 
-## Step 2: Construct-derived reference
+## Optional Step 2: Construct-flank clipping
+
+When a library’s prepared R1 reads begin with a known construct flank, run:
 
 ```bash
-cap-assay-pipeline step2-build-reference \
-  --library-prefix CONSTRUCT01 \
-  --construct-layout construct_layout.json \
-  --output-dir reference/
+cap-assay-pipeline step2-clip-construct-flank \
+  --library-prefix LIB01 \
+  --input-r1 prepared/LIB01_R1.trim.fq.gz \
+  --input-r2 prepared/LIB01_R2.trim.fq.gz \
+  --clip-layout construct_flank.json \
+  --threads 4 \
+  --gzip-compression-level 1 \
+  --output-dir clipped/
 ```
 
-Step 2 does not consume Step 1 output. The construct layout is a cap-selection
-domain entity (not the reporter-assay layout schema). Each Element must yield a
-unique normalized complete constructed sequence (left fixed, tested element, and
-right fixed concatenated); duplicate complete sequences across distinct Elements
-fail before any successful bundle is published. The standard FASTA emitted here
-is the only required reference handoff for Step 3.
+Use `{prefix}_R1.clip.fq.gz` and `{prefix}_R2.clip.fq.gz` as Step 3 inputs.
+The JSON layout selects independent clip targets (for example R1 clipping for
+both CW and CCW layouts while R2 3′ clipping applies only to CW). R2-only
+configurations still match construct layout on R1 to recover the PID. When
+clipping does not apply, **bypass** this step and point Step 3 at the Step
+1 trim FASTQs directly. Step 3 does not require clip provenance for compatible
+paired FASTQs. Step 2 validates and clips the paired streams in one pass,
+then publishes its outputs after both inputs finish successfully. Output gzip
+compression defaults to level 1 for faster processing; choose a level from 0
+(fastest and largest) through 9 (smallest and slowest) with
+`--gzip-compression-level`. `--threads` is a positive CPU budget, default 1;
+the parent performs gzip traversal, ordered output, summary reduction and
+publication while up to `threads - 1` bounded worker processes clip chunks.
+
+## External reference assembly (unnumbered prerequisite)
+
+See the [migration guide](external-reference-migration.md) for converting the
+former construct-layout fixed regions into adapter FASTAs.
+
+```bash
+ExogenousSequenceTools assemble add_adapter \
+  --fasta tested_elements.fasta \
+  --left_adapter_fasta left_adapter.fasta \
+  --right_adapter_fasta right_adapter.fasta \
+  --output_fasta reference/CONSTRUCT01_reference.fasta
+```
+
+This is a reference-preparation prerequisite outside the numbered CAP command
+sequence. Each adapter FASTA contains exactly one record. The tool assembles
+`left + tested element + right`, preserves each tested-element FASTA identifier,
+and writes the complete reference sequences as ordinary FASTA. The right adapter
+is optional when the construct has no fixed right region. A former CAP layout's
+`left_fixed.sequence` and `right_fixed.sequence` values become the corresponding
+one-record adapter FASTAs; the `tested_element` region maps to the input FASTA.
+Step 3 accepts compatible external FASTA without XP provenance or builder
+annotations, manifests, or summaries. It rejects uppercase-identical complete
+sequences across distinct IDs before invoking STAR.
+
+The former `step1b-clip-construct-flank` name and Step 1b summary name have no
+compatibility aliases; migrate both to their Step 2 names.
 
 ## Step 3: Alignment
 
@@ -60,6 +111,28 @@ cap-assay-pipeline step3-alignment \
 ```
 
 STAR aligns the library; samtools produces a coordinate-sorted BAM and index.
+`--threads` is a positive CPU budget (default 16) passed to STAR's index and
+alignment phases. Those phases run separately from Python processing. Step 3
+streams the paired FASTQs with at most one pair buffered. Its uppercase-literal
+reference uniqueness check remains global and serial. BAM validation and
+placement checks use complete query-name groups in bounded chunks, with at
+most `threads - 1` worker processes plus the parent; `--threads 1` runs
+directly. The parent performs global count reduction, coordinate sorting, and
+publication. Step 3 samtools commands use one default thread each; STAR's
+`zcat` reader is a separate fixed activity. Summary `resources` records the
+requested budget, phase workers, chunk limits, completed work, and worker PIDs.
+Exact FASTA uniqueness retains a set proportional to reference size, and QNAME
+grouping and BAM evidence scale with alignment count; worker queues remain
+bounded. No new dependency is required.
+
+Step 3 also checks the complete FASTA before probing or invoking STAR. It
+rejects two distinct first-token reference identifiers with identical
+sequences after uppercasing literal sequence strings, for both generated and
+supplied STAR indexes, and reports the colliding identifiers. Compatible
+standalone FASTA needs no annotations, manifest, assembly summary, or XP
+provenance. Reverse complements remain distinct unless their literal complete
+strings match, and IUPAC symbols are compared literally without expansion.
+The check compares complete records, not tested-element subsequences.
 Successful publication includes:
 
 ```text
@@ -74,12 +147,12 @@ pairs is a Step 3 failure; Step 4 also fails when no read pairs pass its filter.
 ### Step 3 RNA strand selection
 
 Step 3 accepts `--rna-strand {both,plus,minus}` (default `both`). The value
-names the reference-relative biological RNA strand determined by the R2 BAM
-strand (R1 is the antisense mate); it never describes CW/CCW construct
+names the reference-relative biological RNA strand determined by the R1 BAM
+strand (forward means plus; reverse means minus); it never describes CW/CCW construct
 orientation. The default publishes STAR's coordinate-sorted BAM unchanged.
 
 With `plus` or `minus`, Step 3 keeps all and only tied-best placements whose
-R2 lies on the selected strand, keeping linked R1/R2 mates together. One
+R1 lies on the selected strand, keeping linked R1/R2 mates together. One
 surviving placement becomes unique (`NH:1`); several survivors stay
 multimapped; no lower-scoring placement is ever substituted. A pair whose
 best placements are all on the excluded strand is retained as one complete

@@ -1,5 +1,9 @@
 # Reporter Assay Pipeline
-> Command-line toolkit for reporter-assay activity calling and cap-selection RNA endpoint bigWigs (0.2.0b2).
+> Command-line toolkit for reporter-assay activity calling and cap-selection RNA endpoint bigWigs (0.2.0b3).
+
+CAP 0.2.0b3: R1 forward means RNA plus; R1 reverse means RNA minus. R2 supplies
+the cap coordinate on the linked R1 strand. Reference assembly is external;
+Step 2 clipping is optional. Proxy coordinates retain their existing convention.
 
 Software (access required): [DignoMor/reporter-assay-pipeline](https://github.com/DignoMor/reporter-assay-pipeline).
 

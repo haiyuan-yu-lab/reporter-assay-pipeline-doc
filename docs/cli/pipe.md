@@ -2,7 +2,7 @@
 
 Pipeline steps and grouped workflows.
 
-The released documentation is the behavioral contract for **0.2.0b2**.
+The released documentation is the behavioral contract for **0.2.0b3**.
 Individual-step help comes from each step-owned parser. Step 6 matching is exact
 `ObservedID` lookup; `--min-match-length` is not part of the command surface.
 
@@ -52,12 +52,26 @@ declared ID using ExactID filenames
 **Retained outputs (typical):** `{prefix}_step2_records.tsv.gz` under `work/delimited/`, plus Step 1/2 summary JSON files.
 
 Step 2 inputs are wired from Step 1 cleaned reads.
+The selected `--threads` budget is reused sequentially by Step 1 and Step 2;
+it does not run both stages concurrently or multiply their CPU allocations.
+Step 1 passes the value to fastp, while Step 2 uses bounded ordered extraction
+workers. Both summaries include additive resource evidence.
 
-### `process_pretrans` (step3 CW → step3 CCW → step4 → step5)
+### `process_pretrans` (step3 CW + CCW → step4 → step5)
 
 **Required:** `--id-columns`, `--cw-prefix`, `--ccw-prefix`, `--cw-records`, `--ccw-records`, `--forward-reference`, `--reverse-reference`
 
-**Optional:** `--project-dir`, `--output-dir`, `--max-edit-distance` (default `1`), `--min-pretran-umi-count` (default `1`), `--cluster-mode` (`connected` \| `unique`, default `connected`), `--cluster-max-edit-distance` (default `1`), `--idmap-min-dominant-count` (default `10`), `--idmap-min-dominant-ratio` (default `0.8`), `--delete-intermediate` / `--no-delete-intermediate`
+**Optional:** `--project-dir`, `--output-dir`, `--max-edit-distance` (default `1`), `--threads` (positive-integer parent CPU budget, default `1`; dual Step 3 orientations split ceiling/floor concurrently above `1`, then Steps 4–5 each reuse the full budget sequentially), `--min-pretran-umi-count` (default `1`), `--cluster-mode` (`connected` \| `unique`, default `connected`), `--cluster-max-edit-distance` (default `1`), `--idmap-min-dominant-count` (default `10`), `--idmap-min-dominant-ratio` (default `0.8`), `--delete-intermediate` / `--no-delete-intermediate`
+
+CW and CCW Step 3 invocations run in isolated processes concurrently when the
+budget is greater than `1` (for example, budget `4` gives each orientation
+`2`). The orchestrator waits for both; if either fails, Step 4 and Step 5 do
+not run. Budget `1` runs the orientations sequentially. CW-only `process_pretrans_cw_only` runs its single Step 3 invocation at the full budget.
+
+Step 5 uses this same budget for bounded candidate comparisons. The parent
+reconciles accepted edges across all comparison partitions before it computes
+global clusters and mapping decisions; see the additive Step 5 `resources`
+summary for actual worker and queue evidence.
 
 **Retained outputs (typical, dual-ID):**
 
@@ -75,7 +89,10 @@ output via `--records`.
 
 **Rejected:** `--ccw-prefix`, `--ccw-records`, `--reverse-reference`
 
-**Optional:** same Step 5 / project / intermediate flags as `process_pretrans`
+**Optional:** `--threads` (positive-integer CPU budget, default `1`; used by the single Step 3 invocation, then reused sequentially by Steps 4–5), plus the same Step 5 / project / intermediate flags as `process_pretrans`
+
+Step 5 uses the shared budget for bounded candidate comparisons and global
+identifier-map reconciliation, as in `process_pretrans`.
 
 **Retained outputs (typical, EID-only):**
 
@@ -87,7 +104,10 @@ output via `--records`.
 
 **Required:** `--library-prefix`, `--id-field`, `--cluster-reference`, `--input-id-col`, `--input-count-col`
 
-**Optional:** `--project-dir`, `--output-dir`, `--delete-intermediate` / `--no-delete-intermediate`
+**Optional:** `--project-dir`, `--output-dir`, `--threads` (positive-integer CPU budget, default `1`; reused sequentially by Steps 6–8), `--delete-intermediate` / `--no-delete-intermediate`
+
+The grouped budget is passed unchanged to each sequential step. It does not
+multiply across Steps 6–8.
 
 **Input resolution:** Step 6 `--input-records` is resolved automatically as
 `<project-dir>/work/delimited/<library-prefix>_step2_records.tsv.gz`. Run
@@ -104,13 +124,17 @@ as the element reference.
 
 **Required:** `--dna-records` (repeatable; one or more paths per use), `--rna-records` (same count as DNA), `--negative-control-annotation`, `--output-path`
 
-**Optional:** `--project-dir`, `--summary-path` (derived from `--output-path` when omitted), `--pseudocount` (default `1.0`; legacy descriptive ratios only), `--min-absolute-log2-effect` (default `1.0`), `--max-adjusted-p` (default `0.05`), `--min-total-dna-count` (default `50`), `--min-dna-replicates` (default `2`), `--min-usable-controls` (default `20`), `--filtered-elements-output-path` (a `.tsv` / `.tsv.gz` audit sidecar written only when requested), `--delete-intermediate` / `--no-delete-intermediate` (no-op; no orchestrator intermediates)
+**Optional:** `--project-dir`, `--summary-path` (derived from `--output-path` when omitted), `--threads` (positive-integer CPU budget, default `1`), `--pseudocount` (default `1.0`; legacy descriptive ratios only), `--min-absolute-log2-effect` (default `1.0`), `--max-adjusted-p` (default `0.05`), `--min-total-dna-count` (default `50`), `--min-dna-replicates` (default `2`), `--min-usable-controls` (default `20`), `--filtered-elements-output-path` (a `.tsv` / `.tsv.gz` audit sidecar written only when requested), `--delete-intermediate` / `--no-delete-intermediate` (no-op; no orchestrator intermediates)
+
+`--threads` is passed to Step 9 unchanged. It bounds independent library-table
+loading; one global normalization and paired activity model remain per
+invocation, with common R/BLAS thread controls configured where supported.
 
 DNA and RNA lists must contain the same number of replicate tables, with at
 least two pairs. Run once per branch (eBC and pBC when both are present).
 Output format: [`activity-by-element`](../formats.md#activity-by-element).
 The thirteen-column table uses fitted `Active` / `Repressive` / `NoCall` /
-`Control` calls. See [Step 9](../steps-9.md#released-contract-020b2).
+`Control` calls. See [Step 9](../steps-9.md#released-contract-020b3).
 
 ### `concat_step2_records`
 
@@ -292,6 +316,9 @@ orchestrated flags; step modules also expose their own parsers.
 | `--reference` | yes | Orientation-appropriate FASTA |
 | `--id-columns` | yes | e.g. `EID,PID` or `EID` |
 | `--max-edit-distance` | no | `1` |
+| `--threads` | no | `1` |
+
+`--threads` bounds orientation matching using a parent plus at most `threads - 1` worker processes. The parent preserves output order and reduces counts. Grouped dual-orientation Step 3 invocations use isolated processes and split the parent budget ceiling/floor when it exceeds `1`; both must finish before Step 4. Budget `1` and CW-only operation are serial. Steps 4 and 5 then run sequentially with the full parent budget.
 
 ### `step4`
 
@@ -299,6 +326,7 @@ orchestrated flags; step modules also expose their own parsers.
 | --- | --- | --- |
 | `--records` | yes (repeatable, ≥1) | — |
 | `--id-columns` | yes | Must match Step 3 / Step 5 |
+| `--threads` | no | `1` (bounded count-aggregation CPU budget) |
 
 ### `step5`
 
@@ -311,6 +339,12 @@ orchestrated flags; step modules also expose their own parsers.
 | `--cluster-max-edit-distance` | no | `1` |
 | `--idmap-min-dominant-count` | no | `10` |
 | `--idmap-min-dominant-ratio` | no | `0.8` |
+| `--threads` | no | `1` |
+
+Step 5 compares bounded candidate partitions in workers and globally joins
+accepted edges before connected-component and mapping decisions. Its additive
+`resources` summary records the effective comparison budget and natural
+identifier/graph memory state.
 
 ### `step6`
 
@@ -320,6 +354,7 @@ orchestrated flags; step modules also expose their own parsers.
 | `--id-field` | yes | — |
 | `--input-records` | yes | — |
 | `--cluster-reference` | yes | — |
+| `--threads` | no | `1` |
 
 ### `step7`
 
@@ -327,6 +362,7 @@ orchestrated flags; step modules also expose their own parsers.
 | --- | --- | --- |
 | `--library-prefix` | yes | — |
 | `--input-records` | yes | — |
+| `--threads` | no | `1` |
 
 ### `step8`
 
@@ -337,6 +373,7 @@ orchestrated flags; step modules also expose their own parsers.
 | `--element-reference` | yes | — |
 | `--input-id-col` | yes | — |
 | `--input-count-col` | yes | — |
+| `--threads` | no | `1` |
 
 ### `step9`
 
@@ -354,10 +391,11 @@ orchestrated flags; step modules also expose their own parsers.
 | `--min-dna-replicates` | no | `2` |
 | `--min-usable-controls` | no | `20` |
 | `--filtered-elements-output-path` | no | none (`.tsv` / `.tsv.gz` sidecar only when requested) |
+| `--threads` | no | `1` |
 
-Step 9 output columns (**0.2.0b2**): `Element`, `DNACount`, `RNACount`, `ActivityScore`,
+Step 9 output columns (**0.2.0b3**): `Element`, `DNACount`, `RNACount`, `ActivityScore`,
 `log2FC`, `ActivityZ`, `ActivityCall`, `FittedRNADNALog2FC`,
 `ControlRelativeLog2FC`, `ControlRelativeSE`, `PValue`, `AdjustedPValue`,
 `IsNegativeControl` ([`activity-by-element`](../formats.md#activity-by-element)).
-See [Step 9](../steps-9.md#released-contract-020b2). `--activity-threshold-z`
+See [Step 9](../steps-9.md#released-contract-020b3). `--activity-threshold-z`
 is retired.

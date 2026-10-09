@@ -1,7 +1,7 @@
 # Steps 1–2: prepare one library
 
 This page is the canonical procedure for running and checking the first two
-pipeline stages for one library in release **0.2.0b2**. Use it when you need
+pipeline stages for one library in release **0.2.0b3**. Use it when you need
 to run or resume individual stages. For input checks and schema construction,
 see [Prepare inputs](input-preparation.md) and [Layout schemas](layout-schemas.md).
 For the equivalent grouped command, see [`prep_lib`](cli/pipe.md#prep_lib-step1-step2).
@@ -38,7 +38,7 @@ It must contain `layout1`, `layout2`, and ordered `column_names`; any named
 the library's read layout and branch. A valid schema is not interchangeable
 with another branch merely because the files have the same suffixes.
 
-Install the documented `0.2.0b2` package and put `fastp` on `PATH`. The
+Install the documented `0.2.0b3` package and put `fastp` on `PATH`. The
 documentation does not pin the external `fastp` version; record the binary
 used by your environment when reproducibility matters.
 
@@ -58,7 +58,7 @@ yulab_reporter_pipe step1 \
   --cleaner fastp
 ```
 
-In **0.2.0b2**, `yulab_reporter_pipe step1 --help` prints the complete
+In **0.2.0b3**, `yulab_reporter_pipe step1 --help` prints the complete
 step-owned command contract. This versioned procedure and the installed help
 describe the same command surface.
 
@@ -70,6 +70,11 @@ invocation. A failed library does not invalidate other library directories,
 but the workflow is incomplete until this library is repaired and rerun.
 
 ### Step 1 artifacts
+
+`--threads` is passed to fastp's existing `-w` option (default 16). The Step 1
+summary adds `resources` evidence for the requested budget, fastp threads and
+serial parent-side input/output pair counting; this does not change fastp's
+trimming policy or existing scientific counts.
 
 All paths below are relative to `<project_dir>/work/trimmed` unless an explicit
 `--output-dir` was supplied.
@@ -101,6 +106,12 @@ Proceed to Step 2 only when the summary says `status: "success"`, both output
 paths are present, and `output_read_pairs` is non-zero and synchronized.
 
 ## Run Step 2
+
+`--threads` (default 16) bounds Step 2 extraction as one parent CPU slot plus
+at most `threads - 1` worker processes. The parent streams synchronized pairs,
+dispatches bounded chunks, merges rows in input order and publishes only after
+all workers and input validation succeed. The additive `resources` summary
+records the worker budget, queue bound, completed chunks and worker PIDs.
 
 Use the exact Step 1 output paths as Step 2 inputs. This explicit handoff is
 equivalent to the wiring performed by `prep_lib`.

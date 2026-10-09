@@ -14,9 +14,10 @@ RNA endpoint bigWig tracks via `cap-assay-pipeline`).
 | Commands | [CLI overview](cli/index.md) |
 | Tables | [Artifact formats](formats.md) |
 | Current limitations | [Known limitations](known-limitations.md) |
+| Resource allocation | [CPU and resource allocation](resource-allocation.md) |
 
 !!! note "Beta"
-    This site documents release **0.2.0b2**. Interfaces may still change before
+    This site documents release **0.2.0b3**. Interfaces may still change before
     a stable release. The public documentation is the released behavioral
     contract; installed `COMMAND --help` describes the command surface of the
     local build. If they disagree, report a defect rather than silently

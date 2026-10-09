@@ -25,6 +25,7 @@ nav:
       - Assay model: assay-model.md
       - Canonical glossary: glossary.md
       - Cap-selection workflow: cap-selection/workflow.md
+      - External CAP reference migration: cap-selection/external-reference-migration.md
   - Run:
       - Prepare inputs: input-preparation.md
       - Layout schemas: layout-schemas.md
@@ -45,6 +46,7 @@ nav:
       - Export CLI: cli/export.md
       - Cap-selection CLI: cli/cap-assay.md
       - Artifact formats: formats.md
+      - Resource allocation: resource-allocation.md
 
 markdown_extensions:
   - admonition

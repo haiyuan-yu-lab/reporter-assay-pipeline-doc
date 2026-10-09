@@ -1,7 +1,7 @@
 # Steps 3–5: build the PreTran identifier map
 
 This page is the canonical procedure for running and checking Steps 3–5 for
-release **0.2.0b2**. Use it when you need explicit handoffs, resumable
+release **0.2.0b3**. Use it when you need explicit handoffs, resumable
 execution, or diagnosis of PreTran mapping. The [Pipeline CLI](cli/pipe.md)
 is the compact flag reference; [Artifact formats](formats.md) is the
 canonical column reference.
@@ -54,9 +54,10 @@ entirely.
 
 ## Complete grouped command
 
-The grouped command runs Step 3 CW, Step 3 CCW, Step 4, then Step 5. The
+The grouped command runs Step 3 CW and Step 3 CCW, followed by Step 4 and Step 5. The
 `--cw-records` and `--ccw-records` paths are Step 2 inputs; the orchestrator
 then wires the two newly produced orientation-resolved outputs into Step 4.
+Its optional positive-integer `--threads` budget defaults to `1`. At budget `1`, the Step 3 orientations run sequentially. Above `1`, they run in isolated processes concurrently with ceiling/floor portions of the budget; both must finish before Step 4 starts. Step 4 and Step 5 then run sequentially, each with the full selected budget. CW-only operation runs its single Step 3 invocation with the full budget before Steps 4 and 5.
 
 ```bash
 yulab_reporter_pipe process_pretrans \
@@ -75,6 +76,7 @@ yulab_reporter_pipe process_pretrans \
   --cluster-max-edit-distance 1 \
   --idmap-min-dominant-count 10 \
   --idmap-min-dominant-ratio 0.8 \
+  --threads 4 \
   --no-delete-intermediate
 ```
 
@@ -98,6 +100,7 @@ yulab_reporter_pipe process_pretrans_cw_only \
   --cluster-max-edit-distance 1 \
   --idmap-min-dominant-count 10 \
   --idmap-min-dominant-ratio 0.8 \
+  --threads 4 \
   --no-delete-intermediate
 ```
 
@@ -123,7 +126,8 @@ yulab_reporter_pipe step3 \
   --id-columns EID,PID \
   --project-dir "<project_dir>" \
   --output-dir "<project_dir>/work/pretran_orientation" \
-  --max-edit-distance 1
+  --max-edit-distance 1 \
+  --threads 4
 
 yulab_reporter_pipe step3 \
   --library-prefix PreTran_CCW \
@@ -132,7 +136,8 @@ yulab_reporter_pipe step3 \
   --id-columns EID,PID \
   --project-dir "<project_dir>" \
   --output-dir "<project_dir>/work/pretran_orientation" \
-  --max-edit-distance 1
+  --max-edit-distance 1 \
+  --threads 4
 ```
 
 For each valid row, matching is attempted in this order: exact anchor, unique
@@ -159,11 +164,15 @@ Step 3 writes, under `work/pretran_orientation/`:
 | `<prefix>_step3_orientation_resolved.tsv.gz` | `orientation-resolved-pretran` rows consumed by Step 4 |
 | `<prefix>_step3_summary.json` | Counts, matching configuration, status, and failure reason |
 
+`--threads` is a positive-integer CPU budget (standalone default `1`). The parent streams rows in chunks of at most 256, and at most `threads - 1` worker processes match rows with worker-local reference state; the parent writes results in original row order and reduces skip counts. Pending chunks and results are bounded. The additive `resources` summary reports requested/effective slots, worker PIDs, chunk and pending limits, completed chunks, and the parent-side serial reason. Outputs publish only after every chunk succeeds and at least one row is retained.
+
+Each bounded task carries reference sequence tuples needed to initialize a worker-local matcher. Processes reuse their matchers; queued task transport stays bounded by the pending-chunk limit and scales with reference size.
+
 The summary includes `library_prefix`, `id_columns`, `input_records_path`,
 `reference_path`, `max_edit_distance`, `output_records_path`,
 `input_record_count`, `output_record_count`,
 `skipped_missing_field_count`, `skipped_unmatched_anchor_count`,
-`skipped_ambiguous_match_count`, `status`, and `failure_reason`.
+`skipped_ambiguous_match_count`, `status`, `failure_reason`, and additive `resources`.
 
 Completion requires `status` `success`, a non-empty output, the expected
 header, and `output_record_count > 0`. A missing or malformed input/reference,
@@ -194,7 +203,8 @@ yulab_reporter_pipe step4 \
   --records "<project_dir>/work/pretran_orientation/PreTran_CCW_step3_orientation_resolved.tsv.gz" \
   --id-columns EID,PID \
   --project-dir "<project_dir>" \
-  --output-dir "<project_dir>/work/pretran_merge_counts"
+  --output-dir "<project_dir>/work/pretran_merge_counts" \
+  --threads 4
 ```
 
 Rows missing any required ID, `Element`, or `UMI` are skipped and counted.
@@ -219,6 +229,20 @@ The summary fields are `records_paths`, `id_columns`, `input_record_counts`,
 `failure_reason`. `ambiguous_umi_count` counts unique UMIs requiring tuple
 resolution, not the number of discarded rows.
 
+`--threads` is a positive CPU budget with standalone default `1`. The parent
+reads bounded row chunks in CLI order; up to `threads - 1` worker processes
+produce partial molecule contributions and the parent reconciles them in order.
+Deduplication by `(<declared IDs...>, UMI)` and ambiguous-UMI assignment remain
+global across every chunk and input file, preserving the first valid duplicate
+assignment and existing tie-break. Pending chunks/results are bounded, but the
+exact global unique-molecule and ambiguity state scales with the full input.
+The summary adds `resources` with the requested budget, effective workers,
+queue bounds, observed worker PIDs, and aggregate-state cardinality evidence.
+
+Grouped `process_pretrans` and `process_pretrans_cw_only` pass their full
+`--threads` value to Step 4 after Step 3 completes. In dual-orientation mode,
+both Step 3 processes must finish before Step 4 starts.
+
 Completion requires every input schema to match exactly, a non-empty merged
 output, and `status` `success`. Missing inputs, schema mismatch, corrupt input,
 unwritable output, or zero retained records is fatal. Malformed rows and
@@ -236,7 +260,8 @@ yulab_reporter_pipe step5 \
   --cluster-mode connected \
   --cluster-max-edit-distance 1 \
   --idmap-min-dominant-count 10 \
-  --idmap-min-dominant-ratio 0.8
+  --idmap-min-dominant-ratio 0.8 \
+  --threads 4
 ```
 
 Rows below `--min-pretran-umi-count` are filtered before clustering. Each
@@ -246,6 +271,17 @@ most `--cluster-max-edit-distance`, using connected components. The canonical
 member is the ID with highest aggregate `PreTranUMICount`, with a
 lexicographically smallest-ID tie-break. `cluster-max-edit-distance 0` is
 equivalent to `unique`.
+
+`--threads` is a positive CPU budget with standalone default `1`. Step 5
+generates plausible candidate ID pairs lazily, compares them in bounded
+partitions of at most 64 pairs, and returns accepted edges to the parent. The
+parent joins edges across all partitions before forming connected components,
+so support totals, canonical tie-breaking, disambiguation, and cross-domain
+consistency stay global. The comparison queue and pending edge results are
+bounded; identifier signatures, the accepted-edge graph, and final mapping
+state scale with identifier-domain cardinality. The additive `resources`
+summary records worker and queue evidence, candidate and accepted-edge totals
+by ID domain, serial global phases, and the natural-cardinality memory note.
 
 For each canonical ID (and the full canonical tuple in a multi-ID profile),
 Step 5 keeps only dominant mappings meeting both

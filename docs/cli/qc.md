@@ -1,6 +1,6 @@
 # `yulab_reporter_qc`
 
-This page documents the **0.2.0b2** QC command and its released plot
+This page documents the **0.2.0b3** QC command and its released plot
 semantics, plus the additional `pretrans_nc_representation` diagnostic.
 QC remains diagnostic and does not add acceptance thresholds.
 
@@ -180,6 +180,7 @@ concordance (upper-triangle Pearson text, lower-triangle scatters).
 | `--dna-records` | yes | One or more paths per flag use |
 | `--rna-records` | yes | Same count as DNA |
 | `--output-path` | yes | — |
+| `--threads` | no | Positive integer, default `1`; prepares independent input tables |
 | `--pseudocount` | no | `1.0` |
 | `--negative-control-annotation` | no | Optional highlighting |
 | `--branch-label` | no | For example `eBC` or `pBC` |
@@ -205,6 +206,16 @@ the corresponding scatter, with equal axes where feasible. If a
 distinct series in lower-triangle panels. The plot is a concordance diagnostic;
 the command does not define a correlation threshold or gate.
 
+`--threads` parallelizes independent DNA and RNA table loading with at most
+`threads - 1` worker processes and a bounded pending queue. Global element
+intersection, activity/correlation reductions, Matplotlib state, rendering and
+publication remain in the parent. The complete loaded count maps scale with the
+input tables. On success, stderr includes one `REPORTER_RESOURCE_EVIDENCE` JSON
+line with requested/effective worker evidence, observed worker PIDs and queue
+bounds. Other QC plots remain serial when one input requires a global
+aggregation before rendering; they do not expose an ineffective `--threads`
+option.
+
 In a lower-triangle scatter panel, the legend identifies `Elements` and
 `Negative controls` whenever both series are rendered. If only one series has
 points, only that rendered series needs to appear in the legend.
@@ -219,6 +230,7 @@ yulab_reporter_qc make_between_rep_activity_plot \
                work/posttran_element_mapping/eBC_RNA_rep3_step8_element_counts.tsv.gz \
   --negative-control-annotation "<ref_dir>/negative_controls.txt" \
   --branch-label eBC \
+  --threads 4 \
   --output-path "<out_dir>/qc/ebc_between_replicates.png"
 ```
 
@@ -245,13 +257,24 @@ table with one row per reference pair. If zero both-orientation pairs exist:
 
 | Flag | Required | Default |
 | --- | --- | --- |
-| `--activity-output` | yes | Step 9 table (format ID `activity-by-element`; thirteen columns in **0.2.0b2** — historical seven-column tables are rejected) |
+| `--activity-output` | yes | Step 9 table (format ID `activity-by-element`; thirteen columns in **0.2.0b3** — historical seven-column tables are rejected) |
 | `--forward-reference` | yes | FASTA |
 | `--reverse-reference` | yes | FASTA |
 | `--output-path` | yes | Plot path (always required; unused only on table-only success when no Both pairs exist) |
+| `--threads` | no | Positive integer, default `1`; validates bounded in-universe activity-row chunks |
 | `--table-output-path` | no | Optional collapsed table (`.tsv` or `.tsv.gz`) |
 | `--metric` | no | `ControlRelativeLog2FC` (`ControlRelativeLog2FC` \| `activity_score` \| `activityZ`) |
 | `--negative-control-annotation` | no | Red-edge highlight when either orientation name is listed |
+
+After loading the complete forward/reverse reference union, the parent streams
+the activity table and ignores outside-universe rows before strict validation.
+It admits unique in-universe elements globally, then sends bounded row chunks
+to at most `threads - 1` workers for field and numeric validation. This keeps
+malformed outside-universe rows ignored. Retained activity and positional-pair
+state scale with global input cardinality; pending task/result buffers remain
+bounded. Pair joins, reductions, Matplotlib work and publication remain in the
+parent. Successful runs emit one `REPORTER_RESOURCE_EVIDENCE` JSON event on
+stderr with observed worker PIDs and queue bounds.
 
 ### Correlation annotations
 
@@ -271,6 +294,7 @@ yulab_reporter_qc plot_orientation_scatter \
   --reverse-reference "<ref_dir>/reverse_elements.fa" \
   --negative-control-annotation "<ref_dir>/negative_controls.txt" \
   --metric activity_score \
+  --threads 4 \
   --output-path "<out_dir>/qc/ebc_orientation_scatter.png" \
   --table-output-path "<out_dir>/qc/ebc_orientation_collapsed.tsv.gz"
 ```

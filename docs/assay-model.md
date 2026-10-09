@@ -1,6 +1,6 @@
 # Assay model
 
-This page documents the released **0.2.0b2** assay model and vocabulary.
+This page documents the released **0.2.0b3** assay model and vocabulary.
 
 This page explains the general dual reporter-assay model used by the
 Reporter Assay Pipeline. It is the conceptual starting point for the
@@ -14,7 +14,7 @@ reporter molecules before and after transfection. For each retained element,
 the pipeline compares RNA abundance with DNA abundance and emits an
 element-level activity score and call. The pipeline contract defines the
 calculation; an `Active` / `Repressive` / `NoCall` / `Control` call
-(**0.2.0b2**) is not a claim about a biological mechanism beyond that
+(**0.2.0b3**) is not a claim about a biological mechanism beyond that
 calculation.
 
 The public [QUASARR-seq publication](https://www.nature.com/articles/s41467-026-68780-y)
@@ -117,15 +117,15 @@ reporter-assay activity tables or consume reporter layout schemas.
 
 ### Cap-selection RNA endpoints
 
-Paired-end sequencing places **R2** on the capped RNA 5′ side and **R1** on the
-antisense side. Step 4 emits two distinct measurement types on plus and minus
+Paired-end sequencing supplies the cap coordinate from **R2** and determines
+biological RNA strand from **R1**: forward means plus; reverse means minus. Step 4 emits two distinct measurement types on plus and minus
 **biological RNA strands** (relative to the construct-derived alignment
 reference):
 
 | Measurement | Read source | Biological meaning |
 | --- | --- | --- |
 | **Cap signal** | R2 sequenced 5′ | RNA initiation / capped 5′ endpoint observation |
-| **Polymerase-position proxy** | R1 sequenced 5′ (strand inverted) | Pause-biased proxy for nascent RNA 3′; not a second cap-signal readout |
+| **Polymerase-position proxy** | R1 sequenced 5′ (R1 strand) | Pause-biased proxy for nascent RNA 3′; not a second cap-signal readout |
 
 Cap signal and the polymerase-position proxy are published as strand-selected
 bigWig files: four (`.5pl.bw`, `.5mn.bw`, `.3pl.bw`, `.3mn.bw`) for the default
@@ -136,7 +136,7 @@ use R2 3′ endpoints.
 
 **Reference-relative RNA strand** (plus or minus) is measured relative to the
 construct-derived alignment reference and is independent of the tested
-element's CW or CCW orientation; R2 determines the strand. Libraries pool at
+element's CW or CCW orientation; R1 determines the strand. Libraries pool at
 most one axis: one orientation with both strands uses `both`, pooled CW/CCW
 with one known strand uses that strand at both steps, and pooling both axes
 is unsupported (see [RNA strand policy](cap-selection/workflow.md#rna-strand-policy)).
