@@ -37,6 +37,7 @@ REQUIRED_DOC_PATHS = (
     "/cap-selection/steps-1-3/",
     "/cap-selection/complete-run/",
     "/cap-selection/step4/",
+    "/cap-selection/troubleshooting/",
     "/cli/pipe/",
     "/cli/qc/",
     "/cli/export/",
@@ -44,6 +45,9 @@ REQUIRED_DOC_PATHS = (
     "/reporter/formats/",
     "/reporter/resource-guidance/",
     "/reporter/known-limitations/",
+    "/cap-selection/formats/",
+    "/cap-selection/resource-guidance/",
+    "/cap-selection/known-limitations/",
 )
 CODE_REPO = "https://github.com/DignoMor/reporter-assay-pipeline"
 LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
