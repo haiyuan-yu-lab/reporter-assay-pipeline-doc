@@ -2,7 +2,7 @@
 
 This page documents the released **0.2.0b3** `cap-assay-pipeline` interface
 and its handoffs. Reference assembly is an external prerequisite and Step 2
-is optional clipping; see the [migration guide](external-reference-migration.md).
+is optional clipping; see [Prepare inputs and reference](prepare-inputs.md).
 
 ## Two pipelines in one distribution
 
@@ -104,7 +104,7 @@ Plus and minus are defined relative to the **construct-derived reference**
 used for alignment, not genomic or plasmid physical orientation. Track
 semantics, coordinates, and summary fields are specified in
 [Artifact formats](../formats.md#cap-selection-step-4-bigwig-tracks) and
-[Assay model — cap-selection endpoints](../assay-model.md#cap-selection-rna-endpoints).
+[Cap assay concepts](../cap-assay-concepts.md#two-endpoint-measurements).
 
 ## RNA strand policy
 

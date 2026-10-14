@@ -8,7 +8,9 @@ Public user-facing documentation for the
 
 **Agent index:** https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/llms.txt
 
-This repository is the source of truth for:
+This repository publishes six top-level sections: Home, Quickstart, Learn, Run
+Reporter Assay Pipeline, Run Cap Assay Pipeline, and References. It is the
+source of truth for:
 
 - Quickstart and install guidance
 - Workflow overview and library layout

@@ -74,8 +74,8 @@ publication while up to `threads - 1` bounded worker processes clip chunks.
 
 ## External reference assembly (unnumbered prerequisite)
 
-See the [migration guide](external-reference-migration.md) for converting the
-former construct-layout fixed regions into adapter FASTAs.
+See [Prepare inputs and reference](prepare-inputs.md) for how fixed construct
+regions become adapter FASTAs.
 
 ```bash
 ExogenousSequenceTools assemble add_adapter \
