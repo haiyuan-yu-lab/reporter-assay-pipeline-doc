@@ -18,12 +18,12 @@ yulab_reporter_qc <subcommand> --help
 
 | Subcommand | Typical input | Purpose |
 | --- | --- | --- |
-| `make_umi_per_elem_plot` | Step 5 [`crosswalk-map`](../formats.md#crosswalk-map) | Pre-transfection UMI depth per element |
+| `make_umi_per_elem_plot` | Step 5 [`crosswalk-map`](../reporter/formats.md#crosswalk-map) | Pre-transfection UMI depth per element |
 | `make_ID_per_elem_plot` | `crosswalk-map` | Distinct barcode IDs per element |
 | `make_umi_per_id_plot` | `crosswalk-map` | UMI support by crosswalk row or ID grouping |
-| `make_between_rep_activity_plot` | Step 8 [`element-counts`](../formats.md#element-counts) | Between-replicate activity concordance |
-| `plot_orientation_scatter` | Step 9 [`activity-by-element`](../formats.md#activity-by-element) + references | Forward-vs-reverse activity scatter |
-| `pretrans_nc_representation` | Step 5 [`crosswalk-map`](../formats.md#crosswalk-map) + [`negative-control-list`](../formats.md#negative-control-list) | PreTran negative-control representation CDF and inventory table |
+| `make_between_rep_activity_plot` | Step 8 [`element-counts`](../reporter/formats.md#element-counts) | Between-replicate activity concordance |
+| `plot_orientation_scatter` | Step 9 [`activity-by-element`](../reporter/formats.md#activity-by-element) + references | Forward-vs-reverse activity scatter |
+| `pretrans_nc_representation` | Step 5 [`crosswalk-map`](../reporter/formats.md#crosswalk-map) + [`negative-control-list`](../reporter/formats.md#negative-control-list) | PreTran negative-control representation CDF and inventory table |
 
 ## Shared figure options
 
@@ -41,7 +41,7 @@ Unless noted, subcommands accept:
 
 ## Pre-transfection plots
 
-All three use one `--records` file conforming to [`crosswalk-map`](../formats.md#crosswalk-map)
+All three use one `--records` file conforming to [`crosswalk-map`](../reporter/formats.md#crosswalk-map)
 (typically `work/id_map_generation/pretran_step5_id_crosswalk.tsv.gz`).
 
 The suffix-fixed `crosswalk-map` header identifies its ID columns: every column
@@ -170,7 +170,7 @@ yulab_reporter_qc pretrans_nc_representation \
 
 ## `make_between_rep_activity_plot`
 
-Requires at least two DNA and two RNA [`element-counts`](../formats.md#element-counts)
+Requires at least two DNA and two RNA [`element-counts`](../reporter/formats.md#element-counts)
 tables for one branch. DNA and RNA path lists must have the same length.
 Recomputes per-replicate `log2((RNA+pseudocount)/(DNA+pseudocount))` and plots
 concordance (upper-triangle Pearson text, lower-triangle scatters).
@@ -239,7 +239,7 @@ yulab_reporter_qc make_between_rep_activity_plot \
 ## `plot_orientation_scatter`
 
 Forward-vs-reverse activity scatter from a single Step 9
-[`activity-by-element`](../formats.md#activity-by-element) table plus paired
+[`activity-by-element`](../reporter/formats.md#activity-by-element) table plus paired
 reference FASTAs. Pairing is **positional** by reference record order (see
 [Workflow](../workflow.md#forwardreverse-reference-pairing). The references
 define the orientation QC universe: activity rows whose `Element` is outside
@@ -249,7 +249,7 @@ collapsed-table values.
 
 Only pairs with activity on **both** orientations (after the selected metric
 filter) are plotted. One-sided pairs are omitted from the scatter. Optional `--table-output-path` writes an
-[`orientation-collapsed-activity`](../formats.md#orientation-collapsed-activity)
+[`orientation-collapsed-activity`](../reporter/formats.md#orientation-collapsed-activity)
 table with one row per reference pair. If zero both-orientation pairs exist:
 
 - With `--table-output-path`: table-only success (no plot written)
@@ -329,7 +329,7 @@ yulab_reporter_qc plot_orientation_scatter \
 
 `--table-output-path` writes exactly one row for each positional FASTA pair,
 in ascending `PairIndex`. The 30 columns are documented in the
-[`orientation-collapsed-activity` format](../formats.md#orientation-collapsed-activity).
+[`orientation-collapsed-activity` format](../reporter/formats.md#orientation-collapsed-activity).
 `PairCoverage` is `Both`, `FwdOnly`, `RevOnly`, or `Neither` (after the selected
 metric filter); `Plotted` is true only for `Both`. Per-orientation fields are
 copied when present and blank when absent. Trailing columns

@@ -1,4 +1,4 @@
-# Artifact formats
+# Reporter format contracts
 
 These format IDs and encodings are the **0.2.0b3** public handoff contract.
 Tabular
@@ -51,7 +51,7 @@ standard dual-ID reporter-assay profile uses `EID,PID`.
 
 ---
 
-## Format definitions
+## Input formats
 
 ### `delimited-records`
 
@@ -59,7 +59,9 @@ Columns and order match the per-sample layout schema JSON used at Step 2.
 Common PreTran layouts emit `UMI`, `EID`, `PID`, `ElementAnchorSeq`;
 post-transfection layouts vary by branch. Compatible gzip-compressed tables
 with identical headers may be pooled by
-[`concat_step2_records`](cli/pipe.md#concat_step2_records).
+[`concat_step2_records`](../cli/pipe.md#concat_step2_records).
+
+## Output and intermediate formats
 
 ### `orientation-resolved-pretran`
 
@@ -123,7 +125,7 @@ The seven descriptive columns keep their original formulas as a prefix;
 rows carry empty `PValue` / `AdjustedPValue`; `IsNegativeControl` is lowercase
 `true` / `false`. QC and export readers accept only this thirteen-column table
 and reject the historical seven-column **0.1.0b4** table with a format
-diagnostic. See [Step 9](steps-9.md#released-contract-020b3) for the field
+diagnostic. See [Step 9](../steps-9.md#released-contract-020b3) for the field
 semantics.
 
 ### `orientation-collapsed-activity`
@@ -200,82 +202,151 @@ for Step 9 / `call_activity` and for export `ES`. Also required for
 
 ---
 
-## Cap-selection Step 4 outputs
+---
 
-These encodings apply to `cap-assay-pipeline step4-post-alignment-processing`
-only. They are not reporter-assay Step 4 tables.
+### Layout schemas
 
-### Cap-selection Step 4 bigWig tracks
+This page documents the **0.2.0b3** layout-schema grammar and matching
+behavior. Examples use symbolic anchors and are not executable assay inputs.
 
-Strand-selected bigWig files per successful library, where `S` is `--library-prefix`:
+A layout schema is per-library JSON configuration consumed by Step 2. It tells
+the parser how to walk R1 and R2, which variable fields to capture, which
+constant anchors to verify, the output-column order, and which captured fields
+to reverse-complement. The resulting header is the `column_names` list in
+exactly that order.
 
-| Filename | Track key | Endpoint | Biological RNA strand | Published when |
-| --- | --- | --- | --- | --- |
-| `S.5pl.bw` | `cap_plus` | R2 sequenced 5′ (cap signal) | Plus | `both`, `plus` |
-| `S.5mn.bw` | `cap_minus` | R2 sequenced 5′ (cap signal) | Minus | `both`, `minus` |
-| `S.3pl.bw` | `proxy_plus` | R1 sequenced 5′ → RNA 3′ proxy | Plus | `both`, `plus` |
-| `S.3mn.bw` | `proxy_minus` | R1 sequenced 5′ → RNA 3′ proxy | Minus | `both`, `minus` |
+### Grammar
 
-**Strand assignment:** R1 forward means biological RNA plus; R1 reverse means
-minus. R2 supplies the sequenced 5′ cap coordinate on its linked R1 strand.
-Proxy coordinates retain their existing convention.
+Each of `layout1` and `layout2` is an ordered list of tokens:
 
-**Coordinate system:** Sequence names and lengths match the admitted BAM `@SQ`
-dictionary exactly (same order as the BAM header). Intervals are **one-base**
-`[start, end)` blocks on those sequences.
+| Token | Meaning | Output |
+| --- | --- | --- |
+| Positive integer `L` | Capture the next `L` bases from this read | One value, in the next `column_names` slot |
+| String `A` | Match constant anchor `A` at the current cursor | No value |
+| `-1` | Capture the remainder of the read | One value, in the next `column_names` slot |
 
-**Values:** Raw observation counts at each occupied position. Plus-strand
-tracks (`*.5pl.bw`, `*.3pl.bw`) store **positive** integers. Minus-strand
-tracks (`*.5mn.bw`, `*.3mn.bw`) store **negative** integers whose absolute
-values are observation counts. **Zero-valued intervals are omitted** from the
-files; absence of an interval means zero observations at that position.
+Capture tokens across `layout1`, then `layout2`, are assigned to
+`column_names` in encounter order. The number of capture tokens must therefore
+equal the number of output columns. Constant anchors are not output columns.
+Use JSON numbers for lengths and JSON strings for anchors and field names.
+`column_names` and `reverse_complements` are ordered JSON string arrays (the
+released parser also accepts the documented legacy space-delimited form).
 
-Strand tracks selected by `both` with no observations still publish a valid
-bigWig containing the full BAM sequence dictionary when at least one pair
-is eligible. Tracks omitted by a `plus`/`minus` policy are absent from the
-output directory rather than header-only.
+Required top-level keys are:
 
-### Cap-selection Step 4 summary JSON
+```json
+{
+  "layout1": [],
+  "layout2": [],
+  "column_names": []
+}
+```
 
-File: `S.step4_summary.json` (`schema_version` `1.0`, `step`:
-`step4-post-alignment-processing`).
+`reverse_complements` is optional and defaults to an empty list. Every name in
+it must occur in `column_names`; otherwise configuration validation fails.
 
-Stable fields on success (native JSON types; unavailable values at failure time
-are `null`, not fabricated zeroes):
+### Matching and transformation order
 
-| Field | Meaning |
-| --- | --- |
-| `library_prefix` | Same as CLI |
-| `package_version` | Installed distribution version |
-| `status` | `success` or `failed` |
-| `warnings` | Array (may be empty) |
-| `failure_reason` | `null` on success; concise message on failure |
-| `rna_strand` | Selected policy: `both`, `plus`, or `minus` |
-| `contradictory_pairs` | Otherwise eligible opposite-strand pair count when pair auditing completed, else `null` |
-| `input_bam`, `output_dir` | Resolved paths |
-| `tracks` | Object with all four keys (`cap_plus`, `cap_minus`, `proxy_plus`, `proxy_minus`); policy-omitted tracks are `null` |
-| `summary` | Path to this JSON file |
-| `samtools`, `samtools_version` | Resolved executable and probed version |
-| `bedtools`, `bedtools_version` | Resolved executable and probed version |
-| `pybigwig_version` | pyBigWig version when known |
-| `effective_arguments` | `threads`, `max_pair_mismatches`, `rna_strand` |
-| `bam_sequences` | `{name, length}` list from BAM `@SQ` |
-| `read_group_id` | Read group ID (equals library prefix when admitted) |
-| `pair_total_groups` | Distinct query names collated |
-| `eligible_pairs` | Pairs passing all filters |
-| `rejected_pairs` | Count of rejected pairs |
-| `rejection_counts` | Map with keys `excluded_flags`, `mapping_completeness`, `uniqueness`, `cigar`, `mismatch_ceiling`, `geometry` |
-| `mismatch_histogram` | String keys of combined `NM(R1)+NM(R2)` → pair count |
-| `track_observations` | Per-track observation totals (`cap_plus`, `cap_minus`, `proxy_plus`, `proxy_minus`); selected cap and proxy groups each equal `eligible_pairs`; omitted tracks are `0` |
-| `track_occupied_positions` | Distinct genomic positions with signal per track (`0` for omitted tracks) |
-| `maximum_absolute_pileup` | Max pileup magnitude per track (`0` for omitted tracks) |
-| `artifact_hashes` | SHA-256 per published bigWig track key (`null` for omitted tracks) |
+For each synchronized R1/R2 pair, Step 2:
 
-Pure usage errors do not create a summary. An existing summary file is never
-overwritten.
+1. Walks `layout1` on R1 and `layout2` on R2 from left to right.
+2. Captures each integer or remainder token and checks each constant anchor.
+3. Applies `max_edit_distance` to anchor matching (default `1`). Non-final
+   anchors must match their full span within that tolerance.
+4. Allows a final anchor to end beyond a right-trimmed read when the observed
+   overlap is at least `min_last_anchor_match` (default `10`) and its mismatch
+   count is within the tolerance. This partial-match rule applies only to the
+   terminal anchor.
+5. Assigns captured values to `column_names` in encounter order.
+6. Reverse-complements only the named captured fields, after extraction. The
+   source read is not reverse-complemented before cursor traversal, and
+   constant anchors are not output fields.
 
-Endpoint metrics count covered bases individually, including adjacent
-equal-count positions that BEDTools merges during aggregation. A two-base
-interval with count three contributes six observations, two occupied
-positions, and maximum absolute pileup three. Published tracks preserve the
-count at each base, with positive plus-strand and negative minus-strand values.
+An extraction mismatch skips that pair and increments the mismatch summary;
+it does not by itself make the invocation fail. A malformed schema, corrupt
+FASTQ, pair desynchronization, or zero retained records is fatal.
+
+### Canonical symbolic examples
+
+The following examples use invented symbolic anchors (`ANCHOR_*`) and capture
+lengths. They show grammar and field relationships only; they are not assay
+constructs or executable input files.
+
+### PreTran dual-ID schema
+
+This schema emits `UMI`, `EID`, `PID`, and `ElementAnchorSeq` in that order.
+
+```json
+{
+  "layout1": [12, "ANCHOR_PRE_A", 20, "ANCHOR_PRE_B"],
+  "layout2": ["ANCHOR_PRE_C", 20, "ANCHOR_PRE_D", -1],
+  "column_names": ["UMI", "EID", "PID", "ElementAnchorSeq"],
+  "reverse_complements": ["PID", "ElementAnchorSeq"]
+}
+```
+
+`layout1` contributes `UMI` then `EID`; `layout2` contributes `PID` then
+`ElementAnchorSeq`. After extraction, only `PID` and `ElementAnchorSeq` are
+reverse-complemented. The resulting Step 2 file is the `delimited-records`
+input expected by Step 3. The dual-ID PreTran steps must consistently declare
+`--id-columns EID,PID`.
+
+### eBC schema
+
+The eBC branch uses the EID domain and emits two captures:
+
+```json
+{
+  "layout1": [12, "ANCHOR_EBC_A", 20, "ANCHOR_EBC_B"],
+  "layout2": ["ANCHOR_EBC_C", -1],
+  "column_names": ["UMI", "EID"],
+  "reverse_complements": ["UMI", "EID"]
+}
+```
+
+The next command is the eBC `process_posttrans` path after Step 1 and Step 2
+have succeeded. Use the same schema shape for each eBC DNA/RNA replicate only
+when the libraries truly share this read layout.
+
+### pBC schema
+
+The pBC branch uses the PID domain and emits paired PID/UMI fields:
+
+```json
+{
+  "layout1": [12, "ANCHOR_PBC_A", 20, "ANCHOR_PBC_B"],
+  "layout2": ["ANCHOR_PBC_C", 20, "ANCHOR_PBC_D", 12],
+  "column_names": ["UMI1", "PID1", "PID2", "UMI2"],
+  "reverse_complements": ["PID1", "UMI1"]
+}
+```
+
+The encounter order is `UMI1`, `PID1` from R1 followed by `PID2`, `UMI2`
+from R2. Reverse-complementing is applied only to `PID1` and `UMI1` after all
+four values are captured. The next command is the pBC PostTran path; a pBC
+schema does not turn the library into an eBC input.
+
+### Validation rules and failure actions
+
+| Check | Valid condition | If it fails |
+| --- | --- | --- |
+| Required keys | `layout1`, `layout2`, `column_names` exist and are lists | Stop before Step 2; repair JSON |
+| Capture count | Capture tokens equal `column_names` length | Stop; output header cannot be formed |
+| Reverse-complement names | Every name is an output column | Stop; remove or correct the unknown name |
+| Anchor tolerance | `max_edit_distance` is non-negative; terminal overlap meets `min_last_anchor_match` | Stop or adjust the invocation deliberately |
+| Input schema match | FASTQ pair and library type match the schema | Stop; do not reinterpret reads with another schema |
+| Extraction result | At least one record is retained | Step 2 fails; inspect anchors, read direction, and trimming |
+
+The valid next command after schema validation is Step 2 or its grouped
+wrapper, for example `prep_lib` with `--layout-schema`. After it succeeds,
+verify `*_step2_records.tsv.gz`, its header, and `*_step2_summary.json` before
+using the records in Step 3 or Step 6.
+
+See [Steps 1–2: prepare one library](../steps-1-2.md) for the complete individual
+Step 1 → Step 2 handoff and symptom-first recovery matrix.
+
+### Privacy boundary
+
+Keep real construct sequences, primer/anchor strings, sample names, and
+institutional paths in local files only. Public documentation examples should
+use symbolic anchors and generic library prefixes such as those on this page.

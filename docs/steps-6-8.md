@@ -3,7 +3,7 @@
 This page is the canonical procedure for turning one PostTran Step 2 delimited
 records file into one element-count table for release **0.2.0b3**. Repeat the
 three-step handoff independently for every DNA and RNA replicate. The [Pipeline
-CLI](cli/pipe.md) is the compact flag reference; [Artifact formats](formats.md)
+CLI](cli/pipe.md) is the compact flag reference; [Reporter format contracts](reporter/formats.md)
 defines the shared column contracts.
 
 eBC and pBC are separate assay branches. Use the eBC/EID cluster reference for

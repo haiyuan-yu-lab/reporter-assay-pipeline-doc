@@ -9,9 +9,9 @@ Process cap-selection assay sequencing data into strand-specific RNA endpoint bi
 ```
 
 This page documents the released **0.2.0b3** external-reference interface.
-The former reference builder is removed and clipping is optional Step 2;
-`cap-assay-pipeline --help` and `cap-assay-pipeline <step> --help` describe the
-installed local build.
+Reference assembly is an external prerequisite, and construct-flank clipping
+is optional Step 2. `cap-assay-pipeline --help` and
+`cap-assay-pipeline <step> --help` describe the installed local build.
 
 See [Cap-selection workflow](../cap-selection/workflow.md) for fork–join topology
 and distinction from the reporter-assay pipeline.
@@ -264,8 +264,8 @@ tracks with no observations still publish real header-only bigWigs. The
 summary always retains all four track keys; omitted tracks carry `null`
 paths/hashes and zero metrics.
 
-Encoding details: [cap-selection Step 4 bigWig tracks](../formats.md#cap-selection-step-4-bigwig-tracks)
-and [step 4 summary](../formats.md#cap-selection-step-4-summary-json).
+Encoding details: [cap-selection Step 4 bigWig tracks](../cap-selection/formats.md#step-4-endpoint-bigwigs)
+and [Step 4 summary](../cap-selection/formats.md#step-4-summary-json-and-qc-fields).
 
 ### Concurrent runs and collisions
 
@@ -314,8 +314,8 @@ the example invocation.
 
 ## Prepare a reference outside CAP
 
-CAP no longer has a reference-builder command. Prepare a standalone FASTA with
-`ExogenousSequenceTools assemble add_adapter` before alignment:
+Prepare a standalone FASTA with `ExogenousSequenceTools assemble add_adapter`
+before alignment:
 
 ```bash
 ExogenousSequenceTools assemble add_adapter \
@@ -331,14 +331,12 @@ The complete sequence for each output record is the left adapter, tested
 element, and right adapter concatenated in that order. Omit
 `--right_adapter_fasta` when no fixed right region applies.
 
-For the former CAP construct-layout JSON, copy the sequence from the
-`left_fixed` region into a one-record `left_adapter.fasta` and the sequence from
-the `right_fixed` region into a one-record `right_adapter.fasta`; the
-`tested_element` region corresponds to `tested_elements.fasta`. Use the
-resulting FASTA with `step3-alignment --reference`. Compatible standalone FASTA
-needs no builder annotations, manifest, summary, XP provenance, or XP
-installation at alignment time. Step 3 rejects identical complete sequences
-across distinct IDs before invoking STAR.
+Each adapter FASTA contains one record; omit the right adapter when the
+construct has no fixed right region. Use the resulting FASTA with
+`step3-alignment --reference`. Compatible standalone FASTA needs no assembly
+annotations, manifest, summary, XP provenance, or XP installation at alignment
+time. Step 3 rejects identical complete sequences across distinct IDs before
+invoking STAR.
 
 ---
 

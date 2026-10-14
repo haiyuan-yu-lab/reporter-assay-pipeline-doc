@@ -8,16 +8,20 @@ Public user-facing documentation for the
 
 **Agent index:** https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/llms.txt
 
-This repository is the source of truth for:
+This repository publishes six top-level sections: Home, Quickstart, Learn, Run
+Reporter Assay Pipeline, Run Cap Assay Pipeline, and References. It is the
+source of truth for:
 
 - Quickstart and install guidance
 - Workflow overview and library layout
 - CLI reference (`yulab_reporter_pipe`, `yulab_reporter_qc`, `yulab_reporter_export`, `cap-assay-pipeline`)
-- Intermediate/final artifact format descriptions
-- FAQ
+- Assay-specific artifact format descriptions
+- Assay-specific troubleshooting and recovery guidance
 
 Native site search is available for exact terms, commands, flags, artifacts,
 and symptoms.
+
+Reporter references live under `docs/reporter/` and `docs/cli/`; cap references live under `docs/cap-selection/` and `docs/cli/`.
 
 ## Local preview
 

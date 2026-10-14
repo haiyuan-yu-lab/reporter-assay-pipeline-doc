@@ -85,7 +85,7 @@ see [Steps 1–2: prepare one library](steps-1-2.md).
 
 Every library passed to Step 2 needs a JSON layout schema. The schema must
 contain `layout1`, `layout2`, and ordered `column_names`; see [Layout schema
-reference](layout-schemas.md). `reverse_complements`, when present, may name
+reference](reporter/formats.md#layout-schemas). `reverse_complements`, when present, may name
 only fields in `column_names`.
 
 Do not reuse a schema across library types unless its read layout and output
@@ -144,5 +144,5 @@ cannot compute a negative-control baseline in that case.
 - All examples and paths remain generic; replace placeholders only in your
   local command line.
 
-See [Workflow](workflow.md) for stage handoffs and [Artifact formats](formats.md)
+See [Workflow](workflow.md) for stage handoffs and [Reporter format contracts](reporter/formats.md)
 for exact downstream table headers.

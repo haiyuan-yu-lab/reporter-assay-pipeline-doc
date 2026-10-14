@@ -1,44 +1,40 @@
 # Reporter Assay Pipeline
 
-Command-line toolkit for **reporter-assay** processing (element-level activity,
-QC plots, ExogeneousSequences export) and **cap-selection** processing (strand-selected
-RNA endpoint bigWig tracks via `cap-assay-pipeline`).
+This site documents release **0.2.0b3** of the Reporter Assay Pipeline. Choose
+the assay that matches your data: the reporter assay measures element-level
+activity from RNA and DNA counts; the cap assay produces strand-selected
+nascent RNA endpoint tracks.
 
-| Resource | Link |
-| --- | --- |
-| Code (access required) | [DignoMor/reporter-assay-pipeline](https://github.com/DignoMor/reporter-assay-pipeline) |
-| Agent index | [`llms.txt`](llms.txt) |
-| Start by task | [Task index](tasks.md) |
-| Install | [Quickstart](quickstart.md) |
-| Stages | [Workflow](workflow.md) |
-| Commands | [CLI overview](cli/index.md) |
-| Tables | [Artifact formats](formats.md) |
-| Current limitations | [Known limitations](known-limitations.md) |
-| Resource allocation | [CPU and resource allocation](resource-allocation.md) |
+## Choose an assay
 
-!!! note "Beta"
-    This site documents release **0.2.0b3**. Interfaces may still change before
-    a stable release. The public documentation is the released behavioral
-    contract; installed `COMMAND --help` describes the command surface of the
-    local build. If they disagree, report a defect rather than silently
-    assuming one source is correct.
+- **Reporter assay:** start with the [reporter workflow](workflow.md) to prepare
+  paired-end libraries and run the nine-step activity analysis. See
+  [reporter assay concepts](reporter-assay-concepts.md) for PreTran, PostTran,
+  branches, and identifiers.
+- **Cap assay:** start with the [cap workflow](cap-selection/workflow.md) to
+  prepare and align reads and generate endpoint tracks. See
+  [cap assay concepts](cap-assay-concepts.md) for reference-relative RNA strand
+  and the two endpoint measurements.
 
-## Choose a path
+## Find guidance by task
 
-- **Reporter assay** — nine-step QUASARR-seq path to activity-by-element tables.
-  Start with [Workflow](workflow.md) and [Pipeline CLI](cli/pipe.md).
-- **Cap-selection assay** — four-step fork–join path to signed endpoint bigWigs.
-  Start with [Cap-selection workflow](cap-selection/workflow.md) and
-  [Cap-selection CLI](cli/cap-assay.md).
+- First installation: [Quickstart](quickstart.md).
+- Understand how the assays relate: [Assay overview](assay-model.md).
+- Understand reporter normalization: [Reporter assay normalization](reporter-assay-normalization.md).
+- Prepare and run a reporter assay: [Reporter Run guides](workflow.md), including
+  [input preparation](input-preparation.md), the
+  [complete run example](complete-command-paths.md), and
+  [troubleshooting](reporter/troubleshooting.md).
+- Prepare and run a cap assay: [Cap Run guides](cap-selection/workflow.md),
+  including [inputs and reference](cap-selection/prepare-inputs.md) and
+  [Steps 1–3](cap-selection/steps-1-3.md) and
+  [troubleshooting](cap-selection/troubleshooting.md).
+- Look up commands in the [reporter pipeline CLI](cli/pipe.md),
+  [reporter QC CLI](cli/qc.md), [reporter export CLI](cli/export.md), and
+  [cap pipeline CLI](cli/cap-assay.md); use the References section for assay-specific
+  format contracts, resource guidance, and known limitations.
 
-- **Learn** — [Assay model](assay-model.md) explains what is measured and how
-  branches, identifiers, libraries, and orientations relate (including
-  cap-selection endpoints); the [canonical glossary](glossary.md) defines the
-  vocabulary. [Workflow](workflow.md) covers reporter-assay stages;
-  [artifact formats](formats.md) names files exchanged between stages.
-- **Run** — [Quickstart](quickstart.md) covers prerequisites and inputs; the
-  [CLI overview](cli/index.md) lists all executables.
-- **Diagnose** — use the [FAQ](faq.md), stage summaries in the [workflow](workflow.md),
-  and [known limitations](known-limitations.md).
-- **Reference** — consult the [CLI pages](cli/index.md) and [artifact formats](formats.md)
-  for exact flags, columns, and encodings.
+The [canonical glossary](glossary.md) defines terms shared across pages.
+This site preserves the released behavior contract; installed `COMMAND --help`
+describes the command surface of the local build. Report a disagreement as a
+defect rather than assuming either source changes the other.

@@ -2,7 +2,7 @@
 
 This page documents the released **0.2.0b3** `cap-assay-pipeline` interface
 and its handoffs. Reference assembly is an external prerequisite and Step 2
-is optional clipping; see the [migration guide](external-reference-migration.md).
+is optional clipping; see [Prepare inputs and reference](prepare-inputs.md).
 
 ## Two pipelines in one distribution
 
@@ -103,8 +103,8 @@ A successful Step 4 invocation publishes strand-selected tracks under
 Plus and minus are defined relative to the **construct-derived reference**
 used for alignment, not genomic or plasmid physical orientation. Track
 semantics, coordinates, and summary fields are specified in
-[Artifact formats](../formats.md#cap-selection-step-4-bigwig-tracks) and
-[Assay model — cap-selection endpoints](../assay-model.md#cap-selection-rna-endpoints).
+[Cap format contracts](formats.md#step-4-endpoint-bigwigs) and
+[Cap assay concepts](../cap-assay-concepts.md#two-endpoint-measurements).
 
 ## RNA strand policy
 
@@ -137,4 +137,4 @@ and publishes only its two endpoint tracks.
 
 - [Steps 1–3 handoffs](steps-1-3.md) — typical filenames, summaries, and resumption checks
 - [Cap-selection CLI](../cli/cap-assay.md) — every flag, Step 4 filtering, statuses, and a runnable example
-- [Known limitations](../known-limitations.md#cap-selection-step-4) — what Step 4 does not do
+- [Known limitations](known-limitations.md) — what the released cap workflow does not do
