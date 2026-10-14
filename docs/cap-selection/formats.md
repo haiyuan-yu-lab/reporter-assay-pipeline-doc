@@ -29,10 +29,48 @@ Reference assembly is an external, unnumbered prerequisite, not a CAP step or ru
 | Step 3 | `<prefix>_step3_alignment.bam`, its `.bai`, and `<prefix>_step3_summary.json`; Step 4 consumes the BAM. |
 | Step 4 | Policy-selected endpoint bigWigs and `<prefix>.step4_summary.json`. `both` emits `.5pl.bw`, `.5mn.bw`, `.3pl.bw`, `.3mn.bw`; `plus` or `minus` emits the two corresponding tracks. |
 
-Step 4 outputs `.5pl/.5mn` are R2 5′ cap signal, while `.3pl/.3mn` are R1-derived RNA 3′ polymerase-position proxy. Plus/minus are relative to the construct-derived reference. Minus-track values are negative; their absolute values are observation counts. Step 4 summary JSON records pair totals, rejection counts, mismatch histogram, track metrics, tool/version details, and selected policy. These JSON summaries are diagnostics and completion records, not inputs to the next step.
-
 ## Step 4 endpoint bigWigs
 
-Each retained eligible molecule contributes one R2 cap observation and one R1 proxy observation, both assigned using the R1 biological RNA strand (forward R1 is plus; reverse R1 is minus). Coordinates are sequenced 5′ endpoints. Track sequence dictionaries and coordinate extents come from the admitted BAM `@SQ` dictionary. The selected tracks share that dictionary; policy-omitted tracks are not created. BEDTools may combine adjacent equal-count positions into intervals internally, while the published bigWigs preserve the per-position counts.
+Each retained eligible molecule contributes one R2 cap observation and one R1 proxy observation. R1 forward is biological RNA plus; R1 reverse is minus. R2 supplies the sequenced 5′ cap coordinate on its linked R1 strand, and the R1 sequenced 5′ coordinate is the RNA 3′ polymerase-position proxy. The proxy is not a second cap-signal measurement.
 
-See [Step 4 operations](step4.md) for policy selection and the [CLI reference](../cli/cap-assay.md#step4-post-alignment-processing) for admission, filters, and summary details.
+| Filename | Summary track key | Endpoint | Biological RNA strand | Published when |
+| --- | --- | --- | --- | --- |
+| `S.5pl.bw` | `cap_plus` | R2 sequenced 5′ cap signal | Plus | `both`, `plus` |
+| `S.5mn.bw` | `cap_minus` | R2 sequenced 5′ cap signal | Minus | `both`, `minus` |
+| `S.3pl.bw` | `proxy_plus` | R1 sequenced 5′ RNA 3′ proxy | Plus | `both`, `plus` |
+| `S.3mn.bw` | `proxy_minus` | R1 sequenced 5′ RNA 3′ proxy | Minus | `both`, `minus` |
+
+Plus and minus are relative to the construct-derived reference, not genomic or plasmid physical orientation. BigWig sequence names and lengths match the admitted BAM `@SQ` dictionary in its original order. Values are raw counts at occupied one-base `[start,end)` intervals. Plus tracks store positive integers; minus tracks store negative integers whose absolute values are counts. Zero-valued intervals are omitted. Selected tracks under `both` publish the complete dictionary even when a track has no observations, provided the invocation has eligible pairs. Tracks omitted by `plus`/`minus` are absent.
+
+BEDTools can merge adjacent endpoint positions with equal counts during aggregation. Published bigWigs preserve the count at every base. A two-base interval with count three represents six observations, two occupied positions, and maximum absolute pileup three.
+
+## Step 4 summary JSON and QC fields
+
+The file is `S.step4_summary.json`, where `S` is `--library-prefix`; `schema_version` is `1.0` and `step` is `step4-post-alignment-processing`. Values use native JSON types. At failure time unavailable values are `null`, never fabricated zeroes. Pure usage errors do not write a summary; an existing summary is not overwritten.
+
+| Field | Type / meaning |
+| --- | --- |
+| `library_prefix`, `package_version`, `schema_version`, `step` | Strings identifying library, installed distribution, schema, and command. |
+| `status`, `warnings`, `failure_reason` | `status` is `success` or `failed`; warnings is an array; failure reason is `null` on success and a concise message on failure. |
+| `rna_strand`, `contradictory_pairs` | Selected policy (`both`, `plus`, `minus`); nullable count of otherwise eligible opposite-strand pairs when auditing completed. |
+| `input_bam`, `output_dir`, `summary` | Resolved input/output paths and this summary path. |
+| `effective_arguments` | Object including `threads`, `max_pair_mismatches`, `umi_dedup_method`, and `rna_strand`. |
+| `resources` | Additive object recording the requested CPU budget and effective worker/phase resource evidence; values are JSON-native. |
+| `samtools`, `samtools_version`; `bedtools`, `bedtools_version`; `umi_tools`, `umi_tools_version` | Resolved executable paths and probed version strings when known. |
+| `pybigwig_version` | String when known, otherwise `null`. |
+| `bam_sequences` | Ordered array of `{name, length}` entries from the BAM `@SQ` dictionary. |
+| `read_group_id` | Sole admitted read-group ID; equals the library prefix. |
+| `umi_dedup_method` | Selected UMI-tools method. |
+| `pair_total_groups`, `eligible_pairs`, `rejected_pairs` | Integer distinct QNAME groups and pair counts; `eligible_pairs` is the retained count after deduplication. |
+| `pre_dedup_eligible_pairs`, `umi_duplicate_pairs_removed` | Integer counts before and removed by UMI deduplication; `pre_dedup_eligible_pairs = eligible_pairs + umi_duplicate_pairs_removed`. |
+| `rejection_counts` | Integer map for `excluded_flags`, `mapping_completeness`, `uniqueness`, `cigar`, `mismatch_ceiling`, and `geometry`. |
+| `mismatch_histogram` | Map from string combined `NM(R1)+NM(R2)` values to integer pair counts. |
+| `tracks` | Object retaining all four canonical track keys. Published entries are resolved path strings; policy-omitted entries are `null`. |
+| `track_observations` | Integer observation totals per canonical track key. Selected cap and proxy totals each reconcile to `eligible_pairs`; omitted tracks are zero. |
+| `track_occupied_positions` | Integer distinct signaled positions per track; omitted tracks are zero. |
+| `maximum_absolute_pileup` | Integer maximum per-position count per track; omitted tracks are zero. |
+| `artifact_hashes` | SHA-256 strings per published bigWig track key; omitted tracks are `null`. |
+
+For `both`, `cap_plus + cap_minus` and `proxy_plus + proxy_minus` observations each equal `eligible_pairs`. For `plus` the `cap_plus` and `proxy_plus` counts each equal it; for `minus`, use the `minus` track keys. Zero eligible pairs before deduplication or zero retained pairs after deduplication is failure.
+
+See [Step 4 operations](step4.md) for running and checking the summary and the [cap CLI reference](../cli/cap-assay.md#step4-post-alignment-processing) for BAM admission and filtering rules.
