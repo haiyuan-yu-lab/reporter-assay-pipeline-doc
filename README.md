@@ -16,12 +16,12 @@ source of truth for:
 - Workflow overview and library layout
 - CLI reference (`yulab_reporter_pipe`, `yulab_reporter_qc`, `yulab_reporter_export`, `cap-assay-pipeline`)
 - Assay-specific artifact format descriptions
-- FAQ
+- Assay-specific troubleshooting and recovery guidance
 
 Native site search is available for exact terms, commands, flags, artifacts,
 and symptoms.
 
-Reporter references live under `docs/reporter/`; cap references remain under `docs/cap-selection/` or `docs/cli/`.
+Reporter references live under `docs/reporter/` and `docs/cli/`; cap references live under `docs/cap-selection/` and `docs/cli/`.
 
 ## Local preview
 

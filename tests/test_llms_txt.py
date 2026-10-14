@@ -7,7 +7,9 @@ import re
 import shutil
 import subprocess
 import unittest
+from html.parser import HTMLParser
 from pathlib import Path
+from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE_ROOT = ROOT / "site"
@@ -53,6 +55,30 @@ CODE_REPO = "https://github.com/DignoMor/reporter-assay-pipeline"
 LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
 
 
+class RenderedPage(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.ids: set[str] = set()
+        self.hrefs: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        attributes = dict(attrs)
+        for name in ("id", "name"):
+            if attributes.get(name):
+                self.ids.add(attributes[name])
+        if tag == "a" and attributes.get("href"):
+            self.hrefs.append(attributes["href"])
+
+
+def rendered_pages() -> dict[Path, RenderedPage]:
+    pages: dict[Path, RenderedPage] = {}
+    for path in SITE_ROOT.rglob("*.html"):
+        page = RenderedPage()
+        page.feed(path.read_text(encoding="utf-8"))
+        pages[path.resolve()] = page
+    return pages
+
+
 class LlmsTxtPublishingTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -82,13 +108,43 @@ class LlmsTxtPublishingTests(unittest.TestCase):
             self.assertIn(f"{SITE_PREFIX}{path}", hrefs)
 
     def test_documentation_links_resolve_in_the_built_site(self) -> None:
-        text = LLMS_TXT.read_text(encoding="utf-8")
-        for _label, href in LINK_RE.findall(text):
-            if not href.startswith(SITE_PREFIX):
-                continue
-            relative = href[len(SITE_PREFIX) :].lstrip("/")
-            target = SITE_ROOT / relative / "index.html" if relative else SITE_ROOT / "index.html"
-            self.assertTrue(target.is_file(), f"{href} should exist at {target}")
+        pages = rendered_pages()
+        checked = 0
+        site_path_prefix = "/reporter-assay-pipeline-doc/"
+        for source, page in pages.items():
+            for href in page.hrefs:
+                url = urlsplit(href)
+                if url.scheme or url.netloc:
+                    continue
+                relative = unquote(url.path)
+                if relative.startswith(site_path_prefix):
+                    target = SITE_ROOT / relative[len(site_path_prefix) :]
+                elif relative.startswith("/"):
+                    target = SITE_ROOT / relative.lstrip("/")
+                elif relative:
+                    target = source.parent / relative
+                else:
+                    target = source
+                target = target.resolve()
+                if target.is_dir():
+                    target /= "index.html"
+                self.assertTrue(
+                    target.is_file(),
+                    f"{source.relative_to(SITE_ROOT)}: missing {href}",
+                )
+                if url.fragment and target.resolve() in pages:
+                    self.assertIn(
+                        unquote(url.fragment),
+                        pages[target.resolve()].ids,
+                        f"{source.relative_to(SITE_ROOT)}: missing anchor {href}",
+                    )
+                checked += 1
+        self.assertGreater(checked, 0)
+
+    def test_superseded_shared_reference_pages_are_not_published(self) -> None:
+        for path in ("formats", "resource-allocation", "known-limitations"):
+            with self.subTest(path=path):
+                self.assertFalse((SITE_ROOT / path / "index.html").exists())
 
 
 if __name__ == "__main__":
