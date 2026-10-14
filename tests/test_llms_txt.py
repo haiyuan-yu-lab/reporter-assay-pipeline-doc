@@ -15,6 +15,8 @@ ROOT = Path(__file__).resolve().parents[1]
 SITE_ROOT = ROOT / "site"
 LLMS_TXT = SITE_ROOT / "llms.txt"
 SITE_PREFIX = "https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc"
+SITE_HOST = "haiyuan-yu-lab.github.io"
+SITE_PATH_PREFIX = "/reporter-assay-pipeline-doc/"
 
 # Independent of the index file: representative published destinations from
 # the approved assay-oriented navigation.
@@ -107,18 +109,41 @@ class LlmsTxtPublishingTests(unittest.TestCase):
         for path in REQUIRED_DOC_PATHS:
             self.assertIn(f"{SITE_PREFIX}{path}", hrefs)
 
+    def test_every_indexed_site_url_resolves_in_the_built_site(self) -> None:
+        text = LLMS_TXT.read_text(encoding="utf-8")
+        pages = rendered_pages()
+        checked = 0
+        for _label, href in LINK_RE.findall(text):
+            url = urlsplit(href)
+            if url.scheme not in {"http", "https"} or url.netloc != SITE_HOST:
+                continue
+            if not url.path.startswith(SITE_PATH_PREFIX):
+                continue
+            relative = unquote(url.path[len(SITE_PATH_PREFIX) :])
+            target = (SITE_ROOT / relative).resolve()
+            if target.is_dir():
+                target /= "index.html"
+            self.assertTrue(target.is_file(), f"llms.txt: missing {href}")
+            if url.fragment and target.resolve() in pages:
+                self.assertIn(
+                    unquote(url.fragment),
+                    pages[target.resolve()].ids,
+                    f"llms.txt: missing anchor {href}",
+                )
+            checked += 1
+        self.assertGreater(checked, 0, "expected indexed site URLs in llms.txt")
+
     def test_documentation_links_resolve_in_the_built_site(self) -> None:
         pages = rendered_pages()
         checked = 0
-        site_path_prefix = "/reporter-assay-pipeline-doc/"
         for source, page in pages.items():
             for href in page.hrefs:
                 url = urlsplit(href)
                 if url.scheme or url.netloc:
                     continue
                 relative = unquote(url.path)
-                if relative.startswith(site_path_prefix):
-                    target = SITE_ROOT / relative[len(site_path_prefix) :]
+                if relative.startswith(SITE_PATH_PREFIX):
+                    target = SITE_ROOT / relative[len(SITE_PATH_PREFIX) :]
                 elif relative.startswith("/"):
                     target = SITE_ROOT / relative.lstrip("/")
                 elif relative:
