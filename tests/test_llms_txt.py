@@ -31,6 +31,7 @@ REQUIRED_DOC_PATHS = (
     "/steps-3-5/",
     "/steps-6-8/",
     "/steps-9/",
+    "/reporter/troubleshooting/",
     "/cap-selection/workflow/",
     "/cap-selection/prepare-inputs/",
     "/cap-selection/steps-1-3/",
@@ -41,9 +42,9 @@ REQUIRED_DOC_PATHS = (
     "/cli/qc/",
     "/cli/export/",
     "/cli/cap-assay/",
-    "/formats/",
-    "/resource-allocation/",
-    "/known-limitations/",
+    "/reporter/formats/",
+    "/reporter/resource-guidance/",
+    "/reporter/known-limitations/",
     "/cap-selection/formats/",
     "/cap-selection/resource-guidance/",
     "/cap-selection/known-limitations/",
@@ -73,7 +74,7 @@ class LlmsTxtPublishingTests(unittest.TestCase):
 
     def test_index_links_code_repo_and_required_rendered_pages(self) -> None:
         text = LLMS_TXT.read_text(encoding="utf-8")
-        self.assertLess(len(text), 4000)
+        self.assertLess(len(text), 5000)
         self.assertRegex(text, r"^# .+", text)
         self.assertIn(CODE_REPO, text)
         hrefs = {href for _label, href in LINK_RE.findall(text)}

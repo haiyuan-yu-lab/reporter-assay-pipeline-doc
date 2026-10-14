@@ -3,7 +3,7 @@
 This page is the canonical procedure for running and checking Steps 3–5 for
 release **0.2.0b3**. Use it when you need explicit handoffs, resumable
 execution, or diagnosis of PreTran mapping. The [Pipeline CLI](cli/pipe.md)
-is the compact flag reference; [Artifact formats](formats.md) is the
+is the compact flag reference; [Reporter format contracts](reporter/formats.md) is the
 canonical column reference.
 
 ## What the handoff does

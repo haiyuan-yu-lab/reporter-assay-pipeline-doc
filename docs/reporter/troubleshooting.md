@@ -1,4 +1,4 @@
-# FAQ
+# Reporter troubleshooting
 
 ## Where is the source code?
 
@@ -37,14 +37,14 @@ must have the same number of records; record `i` in each file is the same
 physical element in opposite orientations. This applies to dual-orientation
 `process_pretrans` and `plot_orientation_scatter`. ExogeneousSequences export
 uses repeatable `--reference` in CLI order and does not require equal counts.
-See [Workflow](workflow.md).
+See [Workflow](../workflow.md).
 
 ## Can I run CW-only / EID-only PreTran?
 
 Yes. Use `process_pretrans_cw_only` with `--id-columns EID` (and a single
 `--forward-reference`). Step 5 emits only the EID cluster reference. Skip the
 pBC branch for post-transfection / activity / export. See
-[Pipeline CLI](cli/pipe.md).
+[Pipeline CLI](../cli/pipe.md).
 
 ## Why do I need two `call_activity` runs?
 
@@ -59,7 +59,7 @@ It resolves
 from `--library-prefix`. Run `prep_lib` for that prefix first (or place an
 equivalent file at that path). If the replicate was parsed twice with
 orientation-specific layouts, concatenate those gzip-compressed tables into
-that path with [`concat_step2_records`](cli/pipe.md#concat_step2_records)
+that path with [`concat_step2_records`](../cli/pipe.md#concat_step2_records)
 first.
 
 ## How do I concatenate orientation-specific Step 2 tables?
@@ -67,7 +67,7 @@ first.
 Use `yulab_reporter_pipe concat_step2_records` with at least two `--records`
 paths and `--output`. Headers must match exactly. Do not use `zcat`: it keeps
 every input header unless you strip later headers by hand. See
-[`concat_step2_records`](cli/pipe.md#concat_step2_records).
+[`concat_step2_records`](../cli/pipe.md#concat_step2_records).
 
 ## Do QC plots gate the pipeline?
 

@@ -65,7 +65,7 @@ The pipeline uses three library roles:
 DNA and RNA are separate replicate sets. A Step 9 invocation aligns DNA and
 RNA by replicate index and retains only elements present in every input
 replicate. Negative-control elements in that retained analysis space establish
-the normalization baseline. See [activity-by-element](formats.md#activity-by-element)
+the normalization baseline. See [activity-by-element](reporter/formats.md#activity-by-element)
 for the emitted table and the Step 9 CLI reference for exact options.
 
 ## Orientation and positional reference pairing

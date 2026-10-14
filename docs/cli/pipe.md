@@ -132,14 +132,14 @@ invocation, with common R/BLAS thread controls configured where supported.
 
 DNA and RNA lists must contain the same number of replicate tables, with at
 least two pairs. Run once per branch (eBC and pBC when both are present).
-Output format: [`activity-by-element`](../formats.md#activity-by-element).
+Output format: [`activity-by-element`](../reporter/formats.md#activity-by-element).
 The thirteen-column table uses fitted `Active` / `Repressive` / `NoCall` /
 `Control` calls. See [Step 9](../steps-9.md#released-contract-020b3).
 
 ### `concat_step2_records`
 
 Standalone helper, not a numbered step and not a grouped workflow. Concatenate
-two or more gzip-compressed [`delimited-records`](../formats.md#delimited-records)
+two or more gzip-compressed [`delimited-records`](../reporter/formats.md#delimited-records)
 tables that share an exact logical header. Use this when one biological
 replicate was parsed twice with orientation-specific layouts (typically pooled
 pBC libraries) before `process_posttrans`.
@@ -396,6 +396,6 @@ identifier/graph memory state.
 Step 9 output columns (**0.2.0b3**): `Element`, `DNACount`, `RNACount`, `ActivityScore`,
 `log2FC`, `ActivityZ`, `ActivityCall`, `FittedRNADNALog2FC`,
 `ControlRelativeLog2FC`, `ControlRelativeSE`, `PValue`, `AdjustedPValue`,
-`IsNegativeControl` ([`activity-by-element`](../formats.md#activity-by-element)).
+`IsNegativeControl` ([`activity-by-element`](../reporter/formats.md#activity-by-element)).
 See [Step 9](../steps-9.md#released-contract-020b3). `--activity-threshold-z`
 is retired.

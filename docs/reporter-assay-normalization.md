@@ -3,7 +3,7 @@
 This page describes the released Step 9 behavior in **0.2.0b3**. Step 9
 normalizes one reporter branch per invocation: run eBC and pBC separately when
 both are present. The [Step 9 guide](steps-9.md) documents commands and output
-columns; [format contracts](formats.md#activity-by-element) define the table.
+columns; [format contracts](reporter/formats.md#activity-by-element) define the table.
 
 ## RNA and DNA are compared within each replicate
 
