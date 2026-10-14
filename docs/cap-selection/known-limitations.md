@@ -11,6 +11,14 @@ These limits describe the released **0.2.0b3** cap-selection workflow.
 - The policy never invents alignments: it selects among STAR's tied-best placements and cannot rescue a pair whose best placement is on the excluded strand (retained as unmapped, not remapped).
 - Step 4 requires canonical fastp-produced 12-base A/C/G/T UMI suffixes and always performs paired UMI-aware deduplication. It has no bypass for missing UMI evidence or disabled deduplication.
 - Step 4's R1 endpoint is a polymerase-position proxy for nascent RNA 3′ position; it is not a second cap-signal measurement. The R2 5′ endpoint supplies cap signal.
+- Proxy coordinates retain their released convention; coordinate repair is deferred. The R1-derived signal is pause-biased and is not a validated exact RNA 3′ coordinate or an unbiased measure of polymerase occupancy.
+- Step 4 does not merge biological or technical replicates across libraries, normalize tracks between samples or to external references, infer transcript models, pause sites, or transcription start sites, or use R2 3′ sequencing endpoints.
+- Step 4 deduplicates eligible pairs by extracted UMI, but does not perform barcode error correction or use UMIs to rescue pairs rejected by earlier filters.
 - Zero eligible pairs before deduplication, or zero retained molecules after deduplication, is a failed Step 4 run.
+
+## Tool and validation boundaries
+
+- Step 1 and `prep_lib` use the compatible `fastp` executable selected or found on `PATH`; its version is not pinned. Record the external tool version with each run because cleaning behavior may differ across versions.
+- Release **0.2.0b3** included fresh four-library CAP acceptance and independent endpoint verification. This is existing release evidence, not a new assay run or PASS for this documentation update.
 
 For failure recovery and summary checks, see [Cap assay troubleshooting](troubleshooting.md). Detailed supported inputs and outputs are in [Cap assay format contracts](formats.md).

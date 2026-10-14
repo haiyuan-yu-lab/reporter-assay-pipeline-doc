@@ -108,4 +108,3 @@ The exact formulas, DNA-eligibility filters, TMM factors, and fitted-call
 rules are explained in [reporter assay normalization](reporter-assay-normalization.md)
 and specified in the [Step 9 guide](steps-9.md). This page supplies the model
 and vocabulary needed to read those contracts.
-
