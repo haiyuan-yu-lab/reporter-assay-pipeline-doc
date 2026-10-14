@@ -3,7 +3,7 @@
 This page is the canonical procedure for running and checking the first two
 pipeline stages for one library in release **0.2.0b3**. Use it when you need
 to run or resume individual stages. For input checks and schema construction,
-see [Prepare inputs](input-preparation.md) and [Layout schemas](layout-schemas.md).
+see [Prepare inputs](input-preparation.md) and [Layout schemas](reporter/formats.md#layout-schemas).
 For the equivalent grouped command, see [`prep_lib`](cli/pipe.md#prep_lib-step1-step2).
 
 ## What the handoff does
@@ -32,7 +32,7 @@ Both files must be readable, non-empty, gzip-valid FASTQ files with equal,
 pair-synchronized record counts. Do not use Step 1 to repair a corrupt or
 mispaired input.
 
-Before Step 2, validate the library-specific [layout schema](layout-schemas.md).
+Before Step 2, validate the library-specific [layout schema](reporter/formats.md#layout-schemas).
 It must contain `layout1`, `layout2`, and ordered `column_names`; any named
 `reverse_complements` field must be one of those columns. The schema must match
 the library's read layout and branch. A valid schema is not interchangeable

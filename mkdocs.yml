@@ -34,7 +34,7 @@ nav:
       - Build the PreTran identifier map (Steps 3–5): steps-3-5.md
       - Quantify PostTran replicates (Steps 6–8): steps-6-8.md
       - Call activity (Step 9): steps-9.md
-      - Troubleshooting: faq.md
+      - Troubleshooting: reporter/troubleshooting.md
   - Run Cap Assay Pipeline:
       - Workflow overview: cap-selection/workflow.md
       - Prepare inputs and reference: cap-selection/prepare-inputs.md
@@ -47,10 +47,9 @@ nav:
           - Pipeline CLI: cli/pipe.md
           - QC CLI: cli/qc.md
           - Export CLI: cli/export.md
-          - Format contracts: formats.md
-          - Layout schemas: layout-schemas.md
-          - Resource guidance: resource-allocation.md
-          - Known limitations: known-limitations.md
+          - Format contracts: reporter/formats.md
+          - Resource guidance: reporter/resource-guidance.md
+          - Known limitations: reporter/known-limitations.md
       - Cap assay:
           - Pipeline CLI: cli/cap-assay.md
           - Format contracts: formats.md

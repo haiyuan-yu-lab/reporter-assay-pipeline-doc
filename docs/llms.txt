@@ -17,6 +17,7 @@ Software (access required): [DignoMor/reporter-assay-pipeline](https://github.co
 ## Run
 - [Reporter workflow](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/workflow/): Nine-step reporter analysis
 - [Reporter inputs](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/input-preparation/): Readiness checklist
+- [Reporter troubleshooting](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/reporter/troubleshooting/): Reporter FAQ and recovery guidance
 - [Reporter complete run example](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/complete-command-paths/): Grouped and individual commands
 - [Prepare reporter libraries](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/steps-1-2/): Steps 1–2
 - [Build reporter identifier map](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/steps-3-5/): Steps 3–5
@@ -29,9 +30,15 @@ Software (access required): [DignoMor/reporter-assay-pipeline](https://github.co
 - [Generate cap endpoint tracks](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cap-selection/step4/): Step 4 output guide
 
 ## References
+### Reporter assay
 - [Reporter pipeline CLI](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cli/pipe/)
 - [Reporter QC CLI](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cli/qc/)
 - [Reporter export CLI](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cli/export/)
+### Reporter assay
+- [Reporter format contracts](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/reporter/formats/)
+- [Reporter resource guidance](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/reporter/resource-guidance/)
+- [Reporter known limitations](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/reporter/known-limitations/)
+### Cap assay
 - [Cap pipeline CLI](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cli/cap-assay/)
 - [Artifact formats](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/formats/)
 - [Resource guidance](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/resource-allocation/)
