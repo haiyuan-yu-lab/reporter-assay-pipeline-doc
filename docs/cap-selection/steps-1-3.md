@@ -89,15 +89,10 @@ This is a reference-preparation prerequisite outside the numbered CAP command
 sequence. Each adapter FASTA contains exactly one record. The tool assembles
 `left + tested element + right`, preserves each tested-element FASTA identifier,
 and writes the complete reference sequences as ordinary FASTA. The right adapter
-is optional when the construct has no fixed right region. A former CAP layout's
-`left_fixed.sequence` and `right_fixed.sequence` values become the corresponding
-one-record adapter FASTAs; the `tested_element` region maps to the input FASTA.
-Step 3 accepts compatible external FASTA without XP provenance or builder
-annotations, manifests, or summaries. It rejects uppercase-identical complete
-sequences across distinct IDs before invoking STAR.
-
-The former `step1b-clip-construct-flank` name and Step 1b summary name have no
-compatibility aliases; migrate both to their Step 2 names.
+is optional when the construct has no fixed right region. Step 3 accepts
+compatible external FASTA without XP provenance, annotations, manifests, or
+summaries. It rejects uppercase-identical complete sequences across distinct
+IDs before invoking STAR.
 
 ## Step 3: Alignment
 

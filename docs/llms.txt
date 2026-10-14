@@ -27,12 +27,16 @@ Software (access required): [DignoMor/reporter-assay-pipeline](https://github.co
 - [Cap Steps 1–3](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cap-selection/steps-1-3/): Read preparation and alignment
 - [Complete cap run example](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cap-selection/complete-run/): Steps 1–4 and reference preparation
 - [Generate cap endpoint tracks](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cap-selection/step4/): Step 4 output guide
+- [Cap troubleshooting](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cap-selection/troubleshooting/): Diagnose cap workflow failures
 
 ## References
 - [Reporter pipeline CLI](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cli/pipe/)
 - [Reporter QC CLI](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cli/qc/)
 - [Reporter export CLI](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cli/export/)
 - [Cap pipeline CLI](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cli/cap-assay/)
-- [Artifact formats](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/formats/)
-- [Resource guidance](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/resource-allocation/)
-- [Known limitations](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/known-limitations/)
+- [Reporter artifact formats](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/formats/)
+- [Reporter resource guidance](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/resource-allocation/)
+- [Reporter known limitations](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/known-limitations/)
+- [Cap format contracts](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cap-selection/formats/)
+- [Cap resource guidance](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cap-selection/resource-guidance/)
+- [Cap known limitations](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cap-selection/known-limitations/)
