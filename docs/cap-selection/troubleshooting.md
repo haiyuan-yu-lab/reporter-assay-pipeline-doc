@@ -8,4 +8,4 @@ the `--rna-strand` value matches the selection used in Step 3.
 
 The [cap CLI reference](../cli/cap-assay.md) defines each stage's failure
 conditions and output summary fields. Release-specific scope limits are listed
-under [Known limitations](../known-limitations.md#cap-selection-step-4).
+under [Known limitations](known-limitations.md).

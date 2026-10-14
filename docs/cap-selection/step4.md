@@ -18,7 +18,7 @@ With the default `both` policy, Step 4 publishes four bigWigs: `.5pl.bw` and
 polymerase-position proxy. The plus/minus suffixes refer to the
 construct-reference-relative biological RNA strand. See [Cap assay
 concepts](../cap-assay-concepts.md#two-endpoint-measurements) and the [format
-contract](../formats.md#cap-selection-step-4-bigwig-tracks) for interpretation.
+contract](formats.md#step-4-endpoint-bigwigs) for interpretation.
 
 The [cap CLI reference](../cli/cap-assay.md#step4-post-alignment-processing)
 defines BAM admission, filtering, dependencies, summary fields, and all

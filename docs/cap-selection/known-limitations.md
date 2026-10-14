@@ -1,0 +1,14 @@
+# Cap assay known limitations
+
+These limits describe the released **0.2.0b3** cap-selection workflow.
+
+- The installed interface provides individual steps; there is no grouped command that runs the entire workflow or manages intermediate cleanup.
+- Reference assembly is external and unnumbered. CAP consumes a standalone FASTA and does not create references from construct-layout JSON or require assembly manifests.
+- Step 2 clipping is optional and configuration-driven. It handles the defined R1 5′ complete-layout and R2 3′ reverse-complement-overlap targets; it is not a general adapter or indel-aware aligner.
+- Step 3 requires distinct complete reference sequences across element IDs. Identical complete sequences are rejected rather than resolved to one identifier.
+- `--rna-strand` is reference-relative, and Step 3 and Step 4 must use the same policy. Pooling both construct orientations with both RNA strands is unsupported because strand selection cannot disambiguate that combination.
+- Step 4 requires canonical fastp-produced 12-base A/C/G/T UMI suffixes and always performs paired UMI-aware deduplication. It has no bypass for missing UMI evidence or disabled deduplication.
+- Step 4's R1 endpoint is a polymerase-position proxy for nascent RNA 3′ position; it is not a second cap-signal measurement. The R2 5′ endpoint supplies cap signal.
+- Zero eligible pairs before deduplication, or zero retained molecules after deduplication, is a failed Step 4 run.
+
+For failure recovery and summary checks, see [Cap assay troubleshooting](troubleshooting.md). Detailed supported inputs and outputs are in [Cap assay format contracts](formats.md).

@@ -53,9 +53,9 @@ nav:
           - Known limitations: known-limitations.md
       - Cap assay:
           - Pipeline CLI: cli/cap-assay.md
-          - Format contracts: formats.md
-          - Resource guidance: resource-allocation.md
-          - Known limitations: known-limitations.md
+          - Format contracts: cap-selection/formats.md
+          - Resource guidance: cap-selection/resource-guidance.md
+          - Known limitations: cap-selection/known-limitations.md
 
 markdown_extensions:
   - admonition
