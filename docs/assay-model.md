@@ -1,145 +1,20 @@
-# Assay model
+# Assay overview
 
-This page documents the released **0.2.0b3** assay model and vocabulary.
+This package supports two assays that share construct context but answer
+different questions and produce different outputs.
 
-This page explains the general dual reporter-assay model used by the
-Reporter Assay Pipeline. It is the conceptual starting point for the
-[workflow](workflow.md) and [canonical glossary](glossary.md).
-
-## What the assay measures
-
-The assay measures regulatory activity of a **tested element**: a DNA
-sequence placed in a reporter construct. Sequencing measures the abundance of
-reporter molecules before and after transfection. For each retained element,
-the pipeline compares RNA abundance with DNA abundance and emits an
-element-level activity score and call. The pipeline contract defines the
-calculation; an `Active` / `Repressive` / `NoCall` / `Control` call
-(**0.2.0b3**) is not a claim about a biological mechanism beyond that
-calculation.
-
-The public [QUASARR-seq publication](https://www.nature.com/articles/s41467-026-68780-y)
-provides scientific context for this kind of quantitative reporter assay. Its
-public [GEO record](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE310760)
-is provenance context only. The examples and contracts on this site are
-generic and do not reproduce or require data from that study.
-
-## Two assay branches and two identifier domains
-
-A dual reporter assay has two measurement branches:
-
-| Assay branch | Measurement | Identifier domain | Final table |
+| Assay | What it measures | Main output | Start here |
 | --- | --- | --- | --- |
-| **eBC** (enhancer barcode branch) | Enhancer activity | **EID** (enhancer identifier) | `EID-ActivityByElement` |
-| **pBC** (promoter barcode branch) | Promoter activity | **PID** (promoter identifier) | `PID-ActivityByElement` |
+| Reporter assay (QUASARR-seq) | Regulatory activity from RNA and DNA abundance after transfection | Element-level activity tables | [Reporter assay concepts](reporter-assay-concepts.md) |
+| Cap assay (QUASARR-cap) | Nascent RNA endpoints after cap selection | Strand-selected endpoint bigWig tracks | [Cap assay concepts](cap-assay-concepts.md) |
 
-An eBC or pBC label identifies an **assay branch**. EID or PID identifies an
-**identifier domain** and the barcode values in that domain. These are related
-but distinct concepts: an eBC input is not an “EID branch” by terminology,
-and a PID is not a branch. The branch determines which post-transfection
-barcode layout and cluster reference are used; the identifier domain
-determines which identifier is resolved and counted.
+The reporter pipeline maps barcode observations to tested elements and
+compares post-transfection RNA and DNA counts. The cap pipeline uses paired
+reads to locate cap-selected RNA endpoints relative to a construct-derived
+reference. These workflows have separate commands, input contracts, and
+artifacts; a step number or file from one assay does not imply the same meaning
+in the other.
 
-The branches share the tested-element and orientation model, but each branch
-has its own identifier observations, maps, replicate counts, and final
-activity table. A CW-only/EID-only experiment uses the eBC branch and omits
-the pBC branch; see [Workflow](workflow.md#pretran-profiles) for the
-operational variation.
-
-## Libraries and evidence
-
-The pipeline uses three library roles:
-
-1. **PreTran libraries** are sequenced before transfection. Their identifier
-   and element observations establish which EID/PID values are associated with
-   which tested elements. Dual-orientation PreTran inputs are represented as
-   CW/forward and CCW/reverse libraries; they provide evidence for building
-   the identifier map, not DNA/RNA activity replicates.
-2. **PostTran DNA libraries** measure the DNA-side abundance of identifiers
-   after transfection for an eBC or pBC branch. They provide the denominator
-   for the corresponding activity ratio.
-3. **PostTran RNA libraries** measure the RNA-side abundance of identifiers
-   after transfection for an eBC or pBC branch. They provide the numerator for
-   the corresponding activity ratio.
-
-DNA and RNA are separate replicate sets. A Step 9 invocation aligns DNA and
-RNA by replicate index and retains only elements present in every input
-replicate. Negative-control elements in that retained analysis space establish
-the normalization baseline. See [activity-by-element](formats.md#activity-by-element)
-for the emitted table and the Step 9 CLI reference for exact options.
-
-## Orientation and positional reference pairing
-
-**CW** means clockwise, or forward, orientation of the tested element in the
-construct. **CCW** means counter-clockwise, or reverse, orientation. In a
-dual-orientation reference, the CW/forward and CCW/reverse FASTA records are
-paired by **position**: record 1 in one file is paired with record 1 in the
-other, record 2 with record 2, and so on.
-
-The two orientations of one physical tested element can have different
-`Element` identifiers. Therefore, Element names are not the pairing key and
-must not be matched lexically to find the opposite orientation. Reference
-record order is the positional key. Each reference file must have unique
-headers within that file and the paired files must contain the same number of
-records. The resulting opposite-orientation identifiers remain distinct
-records for mapping, activity, and output; the positional pair is used when a
-consumer needs to compare orientations, such as orientation-scatter QC.
-
-## From molecules to an activity call
-
-The conceptual lineage is:
-
-```text
-tested element
-  -> PreTran identifier-to-element associations
-  -> observed identifier / canonical identifier cluster references
-  -> PostTran DNA and RNA molecule counts
-  -> element-level replicate counts
-  -> control-relative fitted activity call (legacy descriptive scores remain)
-```
-
-A **UMI** (unique molecular identifier) is deduplicated to count distinct
-molecules rather than raw sequencing observations. PreTran UMI evidence is
-merged into identifier-to-element counts. PostTran UMI evidence is resolved
-through the appropriate branch's cluster reference, quantified per replicate,
-and mapped back to elements before activity calling.
-
-The exact formulas, DNA-eligibility filters, TMM factors, and fitted-call
-rules belong to the Step 9 contract and are documented with the activity
-command. This page supplies the model and vocabulary needed to read those
-contracts.
-
-## Cap-selection assay (separate workflow)
-
-Cap-selection assays (for example QUASARR-cap) measure **nascent RNA endpoints**
-from PCR-amplified cDNA after cap selection on plasmid constructs. The
-`cap-assay-pipeline` executable implements this path; it does not produce
-reporter-assay activity tables or consume reporter layout schemas.
-
-### Cap-selection RNA endpoints
-
-Paired-end sequencing supplies the cap coordinate from **R2** and determines
-biological RNA strand from **R1**: forward means plus; reverse means minus. Step 4 emits two distinct measurement types on plus and minus
-**biological RNA strands** (relative to the construct-derived alignment
-reference):
-
-| Measurement | Read source | Biological meaning |
-| --- | --- | --- |
-| **Cap signal** | R2 sequenced 5′ | RNA initiation / capped 5′ endpoint observation |
-| **Polymerase-position proxy** | R1 sequenced 5′ (R1 strand) | Pause-biased proxy for nascent RNA 3′; not a second cap-signal readout |
-
-Cap signal and the polymerase-position proxy are published as strand-selected
-bigWig files: four (`.5pl.bw`, `.5mn.bw`, `.3pl.bw`, `.3mn.bw`) for the default
-`--rna-strand both`, or the two endpoint tracks for the selected strand under
-`--rna-strand plus`/`minus`. Do not treat the R1-derived
-tracks as cap signal or as unbiased RNA polymerase II occupancy. Step 4 does not
-use R2 3′ endpoints.
-
-**Reference-relative RNA strand** (plus or minus) is measured relative to the
-construct-derived alignment reference and is independent of the tested
-element's CW or CCW orientation; R1 determines the strand. Libraries pool at
-most one axis: one orientation with both strands uses `both`, pooled CW/CCW
-with one known strand uses that strand at both steps, and pooling both axes
-is unsupported (see [RNA strand policy](cap-selection/workflow.md#rna-strand-policy)).
-
-Operational topology and commands: [Cap-selection workflow](cap-selection/workflow.md).
-Terminology: [Glossary — cap-selection](glossary.md#cap-selection).
+Choose the assay-specific [reporter workflow](workflow.md) or [cap workflow](cap-selection/workflow.md)
+to run an analysis. See [Quickstart](quickstart.md) to install and verify the
+released package first.

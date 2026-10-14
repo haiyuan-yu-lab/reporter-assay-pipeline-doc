@@ -14,20 +14,35 @@ SITE_ROOT = ROOT / "site"
 LLMS_TXT = SITE_ROOT / "llms.txt"
 SITE_PREFIX = "https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc"
 
-# Independent of the index file: published HTML paths required by issue #4.
+# Independent of the index file: representative published destinations from
+# the approved assay-oriented navigation.
 REQUIRED_DOC_PATHS = (
     "/",
     "/quickstart/",
-    "/tasks/",
+    "/assay-model/",
+    "/reporter-assay-concepts/",
+    "/reporter-assay-normalization/",
+    "/cap-assay-concepts/",
+    "/glossary/",
     "/workflow/",
-    "/cli/",
+    "/input-preparation/",
+    "/complete-command-paths/",
+    "/steps-1-2/",
+    "/steps-3-5/",
+    "/steps-6-8/",
+    "/steps-9/",
+    "/cap-selection/workflow/",
+    "/cap-selection/prepare-inputs/",
+    "/cap-selection/steps-1-3/",
+    "/cap-selection/complete-run/",
+    "/cap-selection/step4/",
     "/cli/pipe/",
     "/cli/qc/",
     "/cli/export/",
+    "/cli/cap-assay/",
     "/formats/",
-    "/faq/",
+    "/resource-allocation/",
     "/known-limitations/",
-    "/glossary/",
 )
 CODE_REPO = "https://github.com/DignoMor/reporter-assay-pipeline"
 LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
