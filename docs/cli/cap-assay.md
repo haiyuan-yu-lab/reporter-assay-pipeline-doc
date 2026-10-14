@@ -264,8 +264,8 @@ tracks with no observations still publish real header-only bigWigs. The
 summary always retains all four track keys; omitted tracks carry `null`
 paths/hashes and zero metrics.
 
-Encoding details: [cap-selection Step 4 bigWig tracks](../formats.md#cap-selection-step-4-bigwig-tracks)
-and [step 4 summary](../formats.md#cap-selection-step-4-summary-json).
+Encoding details: [cap-selection Step 4 bigWig tracks](../cap-selection/formats.md#step-4-endpoint-bigwigs)
+and [Step 4 summary](../cap-selection/formats.md#step-4-summary-json-and-qc-fields).
 
 ### Concurrent runs and collisions
 

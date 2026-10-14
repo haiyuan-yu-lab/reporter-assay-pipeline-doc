@@ -66,4 +66,4 @@ cap-assay-pipeline step4-post-alignment-processing \
 Confirm each step summary reports success before continuing. Step 4 writes
 cap-signal tracks and polymerase-position proxy tracks; see [Cap assay
 concepts](../cap-assay-concepts.md#two-endpoint-measurements) and [format
-contracts](../formats.md#cap-selection-step-4-bigwig-tracks) for their meaning.
+contracts](formats.md#step-4-endpoint-bigwigs) for their meaning.

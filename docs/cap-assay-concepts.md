@@ -22,7 +22,7 @@ explains supported pooling combinations and the operational strand policy.
 Step 4 publishes cap signal as `.5pl.bw` / `.5mn.bw` and the polymerase-position
 proxy as `.3pl.bw` / `.3mn.bw`. The proxy is not cap signal and is not an
 unbiased measure of RNA polymerase II occupancy. Coordinates and signs are
-defined by the released [format contract](formats.md#cap-selection-step-4-bigwig-tracks).
+defined by the released [format contract](cap-selection/formats.md#step-4-endpoint-bigwigs).
 
 For commands and input requirements, see [Prepare inputs and reference](cap-selection/prepare-inputs.md)
 and the [cap workflow](cap-selection/workflow.md).
