@@ -95,7 +95,7 @@ This pairing contract is used by `process_pretrans` (which supplies each
 orientation’s FASTA to Step 3) and by orientation-scatter QC
 (`plot_orientation_scatter`). ExogeneousSequences export uses repeatable
 `--reference` paths in CLI order instead; it does not require equal record
-counts. See [Artifact formats](formats.md) and [Export CLI](cli/export.md).
+counts. See [Reporter format contracts](reporter/formats.md) and [Export CLI](cli/export.md).
 
 ## Branch completion
 

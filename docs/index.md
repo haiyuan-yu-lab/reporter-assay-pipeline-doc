@@ -22,16 +22,17 @@ nascent RNA endpoint tracks.
 - Understand how the assays relate: [Assay overview](assay-model.md).
 - Understand reporter normalization: [Reporter assay normalization](reporter-assay-normalization.md).
 - Prepare and run a reporter assay: [Reporter Run guides](workflow.md), including
-  [input preparation](input-preparation.md) and the
-  [complete run example](complete-command-paths.md).
+  [input preparation](input-preparation.md), the
+  [complete run example](complete-command-paths.md), and
+  [troubleshooting](reporter/troubleshooting.md).
 - Prepare and run a cap assay: [Cap Run guides](cap-selection/workflow.md),
   including [inputs and reference](cap-selection/prepare-inputs.md) and
   [Steps 1–3](cap-selection/steps-1-3.md) and
   [troubleshooting](cap-selection/troubleshooting.md).
 - Look up commands in the [reporter pipeline CLI](cli/pipe.md),
   [reporter QC CLI](cli/qc.md), [reporter export CLI](cli/export.md), and
-  [cap pipeline CLI](cli/cap-assay.md); use the References section for format
-  contracts, resource guidance, and known limitations.
+  [cap pipeline CLI](cli/cap-assay.md); use the References section for assay-specific
+  format contracts, resource guidance, and known limitations.
 
 The [canonical glossary](glossary.md) defines terms shared across pages.
 This site preserves the released behavior contract; installed `COMMAND --help`

@@ -20,11 +20,11 @@ institution.
 For column, summary, tolerated-row, and fatal-condition contracts, follow the
 canonical [input](input-preparation.md), [Steps 1–2](steps-1-2.md),
 [Steps 3–5](steps-3-5.md), [Steps 6–8](steps-6-8.md), and
-[Step 9](steps-9.md) pages. The [artifact format reference](formats.md) is the
+[Step 9](steps-9.md) pages. The [artifact format reference](reporter/formats.md) is the
 canonical description of each handoff. The [workflow](workflow.md) defines
 stage ownership and retained outputs, the [QC reference](cli/qc.md) and
 [export reference](cli/export.md) define downstream consumers, and the
-[known limitations](known-limitations.md) page records release-specific
+[known limitations](reporter/known-limitations.md) page records release-specific
 failures and recovery links.
 
 ## Before either path
@@ -42,6 +42,7 @@ Markdown examples, not downloadable scripts. Set the variables to paths that
 exist in your environment:
 
 ```sh
+set -euo pipefail
 project_dir="<project_dir>"
 raw_dir="<raw_dir>"
 schema_dir="<schema_dir>"
@@ -53,9 +54,10 @@ mkdir -p "$project_dir" "$out_dir"
 
 ## Grouped path: normal operation
 
-The grouped path runs each library's Step 1→2 preparation, shared PreTran
-Steps 3→5, each post-transfection replicate's Steps 6→8, and one Step 9 call
-per branch. It is resumable at command boundaries: do not rerun successful
+Use the grouped commands for normal operation; switch to individual steps
+when you need to customize a stage or inspect a handoff. The grouped path runs
+each library's Step 1→2 preparation, shared PreTran Steps 3→5, each
+post-transfection replicate's Steps 6→8, and one Step 9 call per branch. It is resumable at command boundaries: do not rerun successful
 commands unless their retained handoff is absent or invalid.
 
 ### 1. Prepare all 14 libraries
@@ -66,6 +68,7 @@ those exact paths to produce `work/delimited/<prefix>_step2_records.tsv.gz`
 and a Step 2 summary.
 
 ```sh
+set -euo pipefail
 for prefix in PreTran_CW PreTran_CCW; do
   yulab_reporter_pipe prep_lib \
     --library-prefix "$prefix" \
@@ -106,6 +109,7 @@ orientation-resolved records and emits the crosswalk plus EID and PID cluster
 references.
 
 ```sh
+set -euo pipefail
 yulab_reporter_pipe process_pretrans \
   --id-columns EID,PID \
   --cw-prefix PreTran_CW \
@@ -136,6 +140,7 @@ Step 8. The retained handoff for every prefix is
 summary.
 
 ```sh
+set -euo pipefail
 for branch in eBC pBC; do
   case "$branch" in
     eBC) id_field=EID; input_id_col=EID; cluster="$project_dir/work/id_map_generation/pretran_step5_EID_cluster_reference.tsv.gz" ;;
@@ -169,6 +174,7 @@ uses the same negative-control list, and emits one branch-specific
 `activity-by-element` table and summary.
 
 ```sh
+set -euo pipefail
 for branch in eBC pBC; do
   case "$branch" in
     eBC) domain=EID ;;
@@ -210,6 +216,7 @@ Run the following loop once for the two PreTran libraries and once for all
 are the explicit Step 2 inputs; Step 2's records are the Step 3/6 inputs.
 
 ```sh
+set -euo pipefail
 for prefix in PreTran_CW PreTran_CCW; do
   yulab_reporter_pipe step1 --library-prefix "$prefix" \
     --input-r1 "$raw_dir/${prefix}_R1.fastq.gz" --input-r2 "$raw_dir/${prefix}_R2.fastq.gz" \
@@ -242,6 +249,7 @@ Run Step 3 once for each orientation, handing its output explicitly to Step 4;
 hand Step 4's merged counts explicitly to Step 5:
 
 ```sh
+set -euo pipefail
 yulab_reporter_pipe step3 --library-prefix PreTran_CW \
   --input-records "$project_dir/work/delimited/PreTran_CW_step2_records.tsv.gz" \
   --reference "$reference_dir/elements_forward.fa" --id-columns EID,PID --project-dir "$project_dir"
@@ -262,6 +270,7 @@ records and branch reference, Step 7 with the Step 6 matched file, and Step 8
 with the Step 7 quantification and the same cluster reference:
 
 ```sh
+set -euo pipefail
 for branch in eBC pBC; do
   case "$branch" in
     eBC) id_field=EID; input_id_col=EID; cluster="$project_dir/work/id_map_generation/pretran_step5_EID_cluster_reference.tsv.gz" ;;
@@ -290,6 +299,7 @@ and RNA paths. This is the final explicit producer-to-consumer handoff in the
 individual path:
 
 ```sh
+set -euo pipefail
 for branch in eBC pBC; do
   case "$branch" in
     eBC) domain=EID ;;
