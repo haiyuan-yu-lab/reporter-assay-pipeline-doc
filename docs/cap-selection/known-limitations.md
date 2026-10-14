@@ -18,7 +18,7 @@ These limits describe the released **0.2.0b3** cap-selection workflow.
 
 ## Tool and validation boundaries
 
-- Step 1 and `prep_lib` use the compatible `fastp` executable selected or found on `PATH`; its version is not pinned. Record the external tool version with each run because cleaning behavior may differ across versions.
+- Cap Step 1 uses the compatible `fastp` executable selected or found on `PATH`; its version is not pinned. Record the external tool version with each run because cleaning behavior may differ across versions.
 - Release **0.2.0b3** included fresh four-library CAP acceptance and independent endpoint verification. This is existing release evidence, not a new assay run or PASS for this documentation update.
 
 For failure recovery and summary checks, see [Cap assay troubleshooting](troubleshooting.md). Detailed supported inputs and outputs are in [Cap assay format contracts](formats.md).
