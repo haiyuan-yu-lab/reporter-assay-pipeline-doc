@@ -1,9 +1,13 @@
 # Reporter Assay Pipeline
 
-This site documents release **0.2.0b3** of the Reporter Assay Pipeline. Choose
+This site documents release **0.2.0b4** of the Reporter Assay Pipeline. Choose
 the assay that matches your data: the reporter assay measures element-level
 activity from RNA and DNA counts; the cap assay produces strand-selected
 nascent RNA endpoint tracks.
+
+Release **0.2.0b4** publishes the assay-oriented documentation redesign.
+Processing behavior is unchanged from **0.2.0b3**; the package version advances
+to keep the package and documentation release identifiers aligned.
 
 ## Choose an assay
 

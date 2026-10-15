@@ -1,6 +1,6 @@
 # Quickstart
 
-This page documents release **0.2.0b3**. Install the package and verify its
+This page documents release **0.2.0b4**. Install the package and verify its
 four command-line entry points, then continue to the Run guide for your assay.
 
 ## Requirements
@@ -16,10 +16,10 @@ four command-line entry points, then continue to the Run guide for your assay.
 With access to the private GitHub repository and SSH credentials configured:
 
 ```bash
-pip install git+ssh://git@github.com/DignoMor/reporter-assay-pipeline.git@0.2.0b3
+pip install git+ssh://git@github.com/DignoMor/reporter-assay-pipeline.git@0.2.0b4
 ```
 
-Or install from a local checkout of the `0.2.0b3` tag or matching commit:
+Or install from a local checkout of the `0.2.0b4` tag or matching commit:
 
 ```bash
 pip install .

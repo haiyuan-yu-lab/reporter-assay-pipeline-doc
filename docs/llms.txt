@@ -1,5 +1,5 @@
 # Reporter Assay Pipeline
-> Operator documentation for reporter activity analysis and cap-selected RNA endpoint tracks (0.2.0b3).
+> Operator documentation for reporter activity analysis and cap-selected RNA endpoint tracks (0.2.0b4).
 
 Software (access required): [DignoMor/reporter-assay-pipeline](https://github.com/DignoMor/reporter-assay-pipeline).
 

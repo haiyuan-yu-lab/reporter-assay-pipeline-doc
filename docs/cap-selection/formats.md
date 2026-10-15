@@ -1,6 +1,6 @@
 # Cap assay format contracts
 
-This page describes the public artifact handoffs for the released **0.2.0b3** cap workflow. Cap constructs use a FASTA reference and a separate clipping configuration; they do not use the reporter assay's parsing-layout schema. CAP does not publish or require a reference-builder manifest.
+This page describes the public artifact handoffs for the released **0.2.0b4** cap workflow. Cap constructs use a FASTA reference and a separate clipping configuration; they do not use the reporter assay's parsing-layout schema. CAP does not publish or require a reference-builder manifest.
 
 ## Layout and configuration schemas
 

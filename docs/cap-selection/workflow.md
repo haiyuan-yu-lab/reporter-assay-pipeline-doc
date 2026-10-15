@@ -1,6 +1,6 @@
 # Cap-selection workflow
 
-This page documents the released **0.2.0b3** `cap-assay-pipeline` interface
+This page documents the released **0.2.0b4** `cap-assay-pipeline` interface
 and its handoffs. Reference assembly is an external prerequisite and Step 2
 is optional clipping; see [Prepare inputs and reference](prepare-inputs.md).
 
