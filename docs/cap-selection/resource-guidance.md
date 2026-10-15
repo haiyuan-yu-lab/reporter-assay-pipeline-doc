@@ -1,6 +1,6 @@
 # Cap assay resource guidance
 
-This guidance covers resources an operator can choose when running the released **0.2.0b3** commands. It does not prescribe scheduler allocations; those belong to the site-specific job setup.
+This guidance covers resources an operator can choose when running the released **0.2.0b4** commands. It does not prescribe scheduler allocations; those belong to the site-specific job setup.
 
 ## CPU budgets
 

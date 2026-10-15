@@ -1,6 +1,6 @@
 # Reporter assay normalization
 
-This page describes the released Step 9 behavior in **0.2.0b3**. Step 9
+This page describes the released Step 9 behavior in **0.2.0b4**. Step 9
 normalizes one reporter branch per invocation: run eBC and pBC separately when
 both are present. The [Step 9 guide](steps-9.md) documents commands and output
 columns; [format contracts](reporter/formats.md#activity-by-element) define the table.

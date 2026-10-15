@@ -1,6 +1,6 @@
 # Reporter format contracts
 
-These format IDs and encodings are the **0.2.0b3** public handoff contract.
+These format IDs and encodings are the **0.2.0b4** public handoff contract.
 Tabular
 pipeline handoffs use shared **format IDs**. CLI flags that take user
 paths document which format each input or output must satisfy.
@@ -40,7 +40,7 @@ standard dual-ID reporter-assay profile uses `EID,PID`.
 | `posttran-matched-records` | eBC: `EID`, `UMI`; pBC: `UMI1`, `PID1`, `PID2`, `UMI2` | Step 6 |
 | `posttran-quantification` | eBC: `EID`, `MoleculeCount`; pBC: `PID1`, `PID2`, `MoleculeCount` | Step 7 |
 | `element-counts` | `Element`, `MoleculeCount` | Step 8 |
-| `activity-by-element` | `Element`, `DNACount`, `RNACount`, `ActivityScore`, `log2FC`, `ActivityZ`, `ActivityCall`, `FittedRNADNALog2FC`, `ControlRelativeLog2FC`, `ControlRelativeSE`, `PValue`, `AdjustedPValue`, `IsNegativeControl` (**0.2.0b3**; historical **0.1.0b4** was the seven-column prefix) | Step 9 |
+| `activity-by-element` | `Element`, `DNACount`, `RNACount`, `ActivityScore`, `log2FC`, `ActivityZ`, `ActivityCall`, `FittedRNADNALog2FC`, `ControlRelativeLog2FC`, `ControlRelativeSE`, `PValue`, `AdjustedPValue`, `IsNegativeControl` (**0.2.0b4**; historical **0.1.0b4** was the seven-column prefix) | Step 9 |
 | `orientation-collapsed-activity` | 30 fixed columns; one row per reference pair | QC `plot_orientation_scatter` |
 | `pretran-negative-control-representation` | `Element`, `Status`, `PreTranUMICount`, then `<id-columns>…` | QC `pretrans_nc_representation` |
 | `negative-control-list` | One element ID per non-empty line | Reference asset |
@@ -115,7 +115,7 @@ file. Consumed by `call_activity` and `make_between_rep_activity_plot`.
 
 ### `activity-by-element`
 
-**0.2.0b3** fixed columns in order:
+**0.2.0b4** fixed columns in order:
 
 `Element`, `DNACount`, `RNACount`, `ActivityScore`, `log2FC`, `ActivityZ`, `ActivityCall`, `FittedRNADNALog2FC`, `ControlRelativeLog2FC`, `ControlRelativeSE`, `PValue`, `AdjustedPValue`, `IsNegativeControl`
 
@@ -125,7 +125,7 @@ The seven descriptive columns keep their original formulas as a prefix;
 rows carry empty `PValue` / `AdjustedPValue`; `IsNegativeControl` is lowercase
 `true` / `false`. QC and export readers accept only this thirteen-column table
 and reject the historical seven-column **0.1.0b4** table with a format
-diagnostic. See [Step 9](../steps-9.md#released-contract-020b3) for the field
+diagnostic. See [Step 9](../steps-9.md#released-contract-020b4) for the field
 semantics.
 
 ### `orientation-collapsed-activity`
@@ -172,7 +172,7 @@ Key fields:
 - `Plotted`: `true` when `PairCoverage` is `Both`; otherwise `false`
 - Boolean columns use lowercase `true` / `false`
 - `ActivityCall` columns use `Active` / `Repressive` / `NoCall` / `Control`
-  (**0.2.0b3**). `CollapsedActivityCall` additionally uses `MixedControl`
+  (**0.2.0b4**). `CollapsedActivityCall` additionally uses `MixedControl`
   (control/candidate mix) or `Discordant` (opposing `Active`/`Repressive`);
   one-sided pairs retain the present call, directional calls win over
   `NoCall`, and two `NoCall` results remain `NoCall`. Historical **0.1.0b4**
@@ -206,7 +206,7 @@ for Step 9 / `call_activity` and for export `ES`. Also required for
 
 ### Layout schemas
 
-This page documents the **0.2.0b3** layout-schema grammar and matching
+This page documents the **0.2.0b4** layout-schema grammar and matching
 behavior. Examples use symbolic anchors and are not executable assay inputs.
 
 A layout schema is per-library JSON configuration consumed by Step 2. It tells

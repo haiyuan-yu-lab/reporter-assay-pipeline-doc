@@ -1,6 +1,6 @@
 # Prepare cap assay inputs and reference
 
-The released **0.2.0b3** cap workflow uses externally prepared references. It
+The released **0.2.0b4** cap workflow uses externally prepared references. It
 does not include a numbered reference-builder command. Step 2 is optional
 construct-flank clipping; when clipping does not apply, pass compatible Step 1
 FASTQs directly to Step 3.

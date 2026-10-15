@@ -8,7 +8,7 @@ executables and does not change `yulab_reporter_pipe` behavior.
 Process cap-selection assay sequencing data into strand-specific RNA endpoint bigWig tracks.
 ```
 
-This page documents the released **0.2.0b3** external-reference interface.
+This page documents the released **0.2.0b4** external-reference interface.
 Reference assembly is an external prerequisite, and construct-flank clipping
 is optional Step 2. `cap-assay-pipeline --help` and
 `cap-assay-pipeline <step> --help` describe the installed local build.

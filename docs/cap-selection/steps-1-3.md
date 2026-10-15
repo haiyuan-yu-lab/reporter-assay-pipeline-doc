@@ -10,7 +10,7 @@ records configured workers, observed worker PIDs, chunk bounds and fastp threads
 Scientific counts and paired record order remain equivalent across budgets.
 
 
-This page documents the released **0.2.0b3** external-reference handoffs for the
+This page documents the released **0.2.0b4** external-reference handoffs for the
 cap-selection legs that feed [Step 4](workflow.md#step-4-deliverable). Full flag
 lists live in `cap-assay-pipeline <step> --help` and the
 [Cap-selection CLI](../cli/cap-assay.md).
