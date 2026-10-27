@@ -1,6 +1,6 @@
 # Reporter resource guidance
 
-This page describes operator-facing CPU controls in release **0.2.0b4**.
+This page describes operator-facing CPU controls in release **0.2.0b5**.
 `--threads` sets the CPU budget for one invocation; a phase can use fewer
 workers when its work is serial or bounded by input structure. Defaults are
 preserved from the release.

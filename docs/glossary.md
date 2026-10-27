@@ -1,6 +1,6 @@
 # Canonical glossary
 
-These definitions apply to the released **0.2.0b4** documentation and its
+These definitions apply to the released **0.2.0b5** documentation and its
 artifact and command names.
 
 Use these definitions when reading pipeline commands, artifacts, summaries,
@@ -144,7 +144,7 @@ The negative-control-normalized z-score derived from the retained controls.
 
 ### ActivityCall
 
-The deterministic output category for an element. In **0.2.0b4** it is
+The deterministic output category for an element. In **0.2.0b5** it is
 `Active`, `Repressive`, `NoCall`, or `Control`, assigned from the
 control-relative effect and adjusted p-value. Historical **0.1.0b4** used
 `Active` or `Inactive` from `ActivityZ` and `--activity-threshold-z`. It is
@@ -175,32 +175,63 @@ to the R1 BAM strand. Proxy coordinates retain their existing convention. Interp
 endpoint; it is **not** cap signal and not unbiased Pol II occupancy. Published
 in `{prefix}.3pl.bw` and `{prefix}.3mn.bw`.
 
-### Construct-derived reference
+### CAP layout
 
-FASTA alignment reference built from a cap-selection construct layout (Step 2).
-Each Element record must have a distinct complete constructed sequence; Step 2
-rejects identical normalized constructs across Elements before publication.
-BigWig sequence dictionaries and strand labels are defined relative to this
-reference, not genomic coordinates.
+The version 1 JSON document passed to Step 2 `--layout`. It lists, for each
+mate, ordered `fixed` anchors, named `capture` segments, and `sequence`
+segments, and marks one contiguous retained interval. It is distinct from the
+reporter-assay layout schema.
+
+### Capture
+
+A named read segment extracted by Step 2, optionally reverse-complement
+normalized. Capture names are arbitrary; no name, including `PID`, has
+built-in meaning. All captures travel in the read names as a `CAP1`
+annotation and in Step 3 BAM tag `xc:Z`.
+
+### CAP1 annotation
+
+The `|CAP1=<payload>` marker Step 2 adds to each mate's first name token,
+immediately before the `:UMI_` suffix. The payload is unpadded URL-safe base64
+of canonical JSON mapping capture names to normalized values.
+
+### Barcode field
+
+A capture selected with Step 3 `--barcode-field NAME` (repeatable). Only
+selected fields are looked up in the barcode map; every selected field must
+resolve to the same Element. Unselected captures are metadata.
+
+### Barcode map
+
+The CAP-owned UTF-8 TSV passed to Step 3 `--barcode-map`, with `barcode` and
+`Element` columns. Lookup is exact. Several barcodes may identify one Element;
+one barcode cannot identify two.
+
+### Element-only reference
+
+The Step 3 FASTA of tested-element sequences, without identity barcodes or
+construct flanks, keyed by Element ID. BAM and track coordinates are positions
+within these records, not genomic or construct coordinates. Identical
+sequences may appear under different Element IDs. It replaces the
+construct-derived reference used by releases before 0.2.0b5.
+
+### Pair edits
+
+The combined number of substituted, inserted, and deleted bases across both
+mates of a pair (`NM(R1) + NM(R2)`), compared inclusively with
+`--max-pair-edits` (default 4) at Steps 3 and 4.
 
 ### Library prefix
 
-The filename-safe token shared across cap-selection steps. Step 4 requires the
-sole BAM read-group ID to match `--library-prefix`.
+The filename-safe token shared across cap-selection steps. Step 3 writes it as
+the BAM read-group ID, and Step 4 requires the sole BAM read-group ID to match
+`--library-prefix`.
 
 ### Reference-relative RNA strand
 
-The plus or minus biological RNA strand measured relative to a
-construct-derived reference, independent of the tested element's CW or CCW
-orientation. Determined by the R1 BAM strand: forward means plus; reverse means minus.
-Selected with `--rna-strand {both,plus,minus}` (default `both`) at
-cap-selection Steps 3 and 4; callers repeat the same value at both steps
-because the BAM carries no policy marker.
-
-### Strand-rejected pair
-
-A read pair whose globally best alignments contain no placement on the
-selected reference-relative RNA strand. Step 3 retains it as one complete
-unmapped primary pair (flags `77`/`141`, read group only) and counts it in
-`strand_rejected_pairs`; Step 4 admits that shape as ordinary unmapped
-evidence.
+The plus or minus biological RNA strand measured relative to an element-only
+reference record, independent of the tested element's CW or CCW orientation.
+Determined by the R1 BAM strand: forward means plus; reverse means minus.
+Step 3 requires `--rna-strand plus` or `minus` and searches only that strand.
+Step 4 accepts `--rna-strand {both,plus,minus}` (default `both`); callers
+repeat the Step 3 value because the BAM carries no policy marker.

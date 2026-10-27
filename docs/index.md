@@ -1,13 +1,16 @@
 # Reporter Assay Pipeline
 
-This site documents release **0.2.0b4** of the Reporter Assay Pipeline. Choose
+This site documents release **0.2.0b5** of the Reporter Assay Pipeline. Choose
 the assay that matches your data: the reporter assay measures element-level
 activity from RNA and DNA counts; the cap assay produces strand-selected
 nascent RNA endpoint tracks.
 
-Release **0.2.0b4** publishes the assay-oriented documentation redesign.
-Processing behavior is unchanged from **0.2.0b3**; the package version advances
-to keep the package and documentation release identifiers aligned.
+Release **0.2.0b5** replaces the cap assay's STAR-based alignment with
+mandatory named-field identification and barcode-directed native alignment to
+element-only references. This is a breaking change for cap assay runs: read
+[Migrating to 0.2.0b5](cap-selection/migrating-to-0.2.0b5.md) before
+upgrading. Reporter assay behavior is unchanged from **0.2.0b4**; only its
+release identifiers advance.
 
 ## Choose an assay
 
@@ -16,9 +19,10 @@ to keep the package and documentation release identifiers aligned.
   [reporter assay concepts](reporter-assay-concepts.md) for PreTran, PostTran,
   branches, and identifiers.
 - **Cap assay:** start with the [cap workflow](cap-selection/workflow.md) to
-  prepare and align reads and generate endpoint tracks. See
-  [cap assay concepts](cap-assay-concepts.md) for reference-relative RNA strand
-  and the two endpoint measurements.
+  prepare, identify, and align reads and generate endpoint tracks. See
+  [cap assay concepts](cap-assay-concepts.md) for barcode-directed identity,
+  element coordinates, reference-relative RNA strand, and the two endpoint
+  measurements.
 
 ## Find guidance by task
 
@@ -30,9 +34,10 @@ to keep the package and documentation release identifiers aligned.
   [complete run example](complete-command-paths.md), and
   [troubleshooting](reporter/troubleshooting.md).
 - Prepare and run a cap assay: [Cap Run guides](cap-selection/workflow.md),
-  including [inputs and reference](cap-selection/prepare-inputs.md) and
-  [Steps 1–3](cap-selection/steps-1-3.md) and
-  [troubleshooting](cap-selection/troubleshooting.md).
+  including [inputs and reference](cap-selection/prepare-inputs.md),
+  [Steps 1–3](cap-selection/steps-1-3.md),
+  [troubleshooting](cap-selection/troubleshooting.md), and the
+  [0.2.0b5 migration guide](cap-selection/migrating-to-0.2.0b5.md).
 - Look up commands in the [reporter pipeline CLI](cli/pipe.md),
   [reporter QC CLI](cli/qc.md), [reporter export CLI](cli/export.md), and
   [cap pipeline CLI](cli/cap-assay.md); use the References section for assay-specific
