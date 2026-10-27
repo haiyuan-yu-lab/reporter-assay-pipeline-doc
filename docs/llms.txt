@@ -1,5 +1,5 @@
 # Reporter Assay Pipeline
-> Operator documentation for reporter activity analysis and cap-selected RNA endpoint tracks (0.2.0b4).
+> Operator documentation for reporter activity analysis and cap-selected RNA endpoint tracks (0.2.0b5).
 
 Software (access required): [DignoMor/reporter-assay-pipeline](https://github.com/DignoMor/reporter-assay-pipeline).
 
@@ -11,7 +11,7 @@ Software (access required): [DignoMor/reporter-assay-pipeline](https://github.co
 - [Assay overview](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/assay-model/): How the assays differ
 - [Reporter assay concepts](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/reporter-assay-concepts/): PreTran, PostTran, branches, and identifiers
 - [Reporter assay normalization](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/reporter-assay-normalization/): Released Step 9 method and interpretation
-- [Cap assay concepts](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cap-assay-concepts/): RNA strand and endpoint measurements
+- [Cap assay concepts](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cap-assay-concepts/): Barcode identity, element coordinates, RNA strand, endpoints
 - [Glossary](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/glossary/): Shared assay terminology
 
 ## Run
@@ -24,9 +24,10 @@ Software (access required): [DignoMor/reporter-assay-pipeline](https://github.co
 - [Quantify reporter replicates](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/steps-6-8/): Steps 6–8
 - [Call reporter activity](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/steps-9/): Step 9
 - [Cap workflow](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cap-selection/workflow/): Cap assay topology and outputs
-- [Cap inputs and reference](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cap-selection/prepare-inputs/): Read and reference preparation
-- [Cap Steps 1–3](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cap-selection/steps-1-3/): Read preparation and alignment
-- [Complete cap run example](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cap-selection/complete-run/): Steps 1–4 and reference preparation
+- [Cap 0.2.0b5 migration](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cap-selection/migrating-to-0.2.0b5/): Breaking change from STAR to native alignment
+- [Cap inputs and reference](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cap-selection/prepare-inputs/): Layout JSON, barcode map, element FASTA
+- [Cap Steps 1–3](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cap-selection/steps-1-3/): Preparation, identification, and barcode-directed alignment
+- [Complete cap run example](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cap-selection/complete-run/): Steps 1–4 for one library
 - [Generate cap endpoint tracks](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cap-selection/step4/): Step 4 output guide
 - [Cap troubleshooting](https://haiyuan-yu-lab.github.io/reporter-assay-pipeline-doc/cap-selection/troubleshooting/): Diagnose cap workflow failures
 

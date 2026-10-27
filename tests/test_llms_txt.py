@@ -37,6 +37,7 @@ REQUIRED_DOC_PATHS = (
     "/steps-9/",
     "/reporter/troubleshooting/",
     "/cap-selection/workflow/",
+    "/cap-selection/migrating-to-0.2.0b5/",
     "/cap-selection/prepare-inputs/",
     "/cap-selection/steps-1-3/",
     "/cap-selection/complete-run/",

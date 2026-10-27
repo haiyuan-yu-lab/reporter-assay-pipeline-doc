@@ -37,9 +37,10 @@ nav:
       - Troubleshooting: reporter/troubleshooting.md
   - Run Cap Assay Pipeline:
       - Workflow overview: cap-selection/workflow.md
+      - Migrating to 0.2.0b5: cap-selection/migrating-to-0.2.0b5.md
       - Prepare inputs and reference: cap-selection/prepare-inputs.md
       - Complete run example: cap-selection/complete-run.md
-      - Prepare and align reads (Steps 1–3): cap-selection/steps-1-3.md
+      - Prepare, identify, and align reads (Steps 1–3): cap-selection/steps-1-3.md
       - Generate endpoint tracks (Step 4): cap-selection/step4.md
       - Troubleshooting: cap-selection/troubleshooting.md
   - References:

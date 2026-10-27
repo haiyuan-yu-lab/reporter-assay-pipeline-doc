@@ -1,18 +1,8 @@
 # Cap-selection Steps 1–3
 
-Step 1 `--threads` is a positive CPU budget (default 16). Its gzip traversal
-and ordered publication run in the parent, with at most `threads - 1` Python
-worker processes; `--threads 1` runs directly. Validation and UMI exclusion
-use bounded paired chunks, so record buffering does not grow with library size.
-Fastp runs in a separate phase with the selected worker budget and may use fixed
-reader/writer threads in addition. The summary's additive `resources` object
-records configured workers, observed worker PIDs, chunk bounds and fastp threads.
-Scientific counts and paired record order remain equivalent across budgets.
-
-
-This page documents the released **0.2.0b4** external-reference handoffs for the
-cap-selection legs that feed [Step 4](workflow.md#step-4-deliverable). Full flag
-lists live in `cap-assay-pipeline <step> --help` and the
+This page documents the released **0.2.0b5** handoffs for the cap-selection
+steps that feed [Step 4](workflow.md#step-4-deliverable). All three steps are
+required. Full flag lists live in `cap-assay-pipeline <step> --help` and the
 [Cap-selection CLI](../cli/cap-assay.md).
 
 ## Step 1: Prepare FASTQ
@@ -34,141 +24,129 @@ bases, and the step summary reports the excluded count separately as
 fastp retained before exclusion). A missing or malformed UMI annotation, or
 zero remaining pairs, fails the invocation instead of publishing. Step 1
 does not remove PCR duplicates by sequence or UMI; UMI-aware molecule
-deduplication runs in Step 4. Each step is independently runnable: prepared
-FASTQ from any compatible source is valid for Step 3 when it satisfies Step
-3’s FASTQ contract (including externally prepared reads without Step 1
-provenance).
+deduplication runs in Step 4.
 
-Typical published artifacts under `--output-dir` use the library prefix in
-their names; consult Step 1 help and `{prefix}_step1_summary.json` for the
-exact paths, fastp filtering metrics, and the Step 4 deduplication handoff.
+Step 1 `--threads` is a positive CPU budget (default 16). Its gzip traversal
+and ordered publication run in the parent, with at most `threads - 1` Python
+worker processes; `--threads 1` runs directly. Validation and UMI exclusion
+use bounded paired chunks, so record buffering does not grow with library size.
+Fastp runs in a separate phase with the selected worker budget and may use fixed
+reader/writer threads in addition. The summary's additive `resources` object
+records configured workers, observed worker PIDs, chunk bounds and fastp threads.
+Scientific counts and paired record order remain equivalent across budgets.
 
-## Optional Step 2: Construct-flank clipping
+Step 1 publishes `LIB01_R1.trim.fq.gz`, `LIB01_R2.trim.fq.gz`, and
+`LIB01_step1_summary.json`; consult the summary for exact paths and fastp
+filtering metrics. Step 1 behavior is unchanged from earlier releases.
 
-When a library’s prepared R1 reads begin with a known construct flank, run:
+## Step 2: Identify and clip
 
 ```bash
-cap-assay-pipeline step2-clip-construct-flank \
+cap-assay-pipeline step2-identify-and-clip \
   --library-prefix LIB01 \
   --input-r1 prepared/LIB01_R1.trim.fq.gz \
   --input-r2 prepared/LIB01_R2.trim.fq.gz \
-  --clip-layout construct_flank.json \
-  --threads 4 \
-  --gzip-compression-level 1 \
-  --output-dir clipped/
+  --layout cap-layout.json \
+  --output-dir identified/
 ```
 
-Use `{prefix}_R1.clip.fq.gz` and `{prefix}_R2.clip.fq.gz` as Step 3 inputs.
-The JSON layout selects independent clip targets (for example R1 clipping for
-both CW and CCW layouts while R2 3′ clipping applies only to CW). R2-only
-configurations still match construct layout on R1 to recover the PID. When
-clipping does not apply, **bypass** this step and point Step 3 at the Step
-1 trim FASTQs directly. Step 3 does not require clip provenance for compatible
-paired FASTQs. Step 2 validates and clips the paired streams in one pass,
-then publishes its outputs after both inputs finish successfully. Output gzip
-compression defaults to level 1 for faster processing; choose a level from 0
-(fastest and largest) through 9 (smallest and slowest) with
-`--gzip-compression-level`. `--threads` is a positive CPU budget, default 1;
-the parent performs gzip traversal, ordered output, summary reduction and
-publication while up to `threads - 1` bounded worker processes clip chunks.
+Step 2 is mandatory. It matches the [layout JSON](formats.md#step-2-layout-json-schema-version-1)
+at fixed positions in each prepared pair, extracts and normalizes the named
+captures, and keeps one contiguous interval of each mate. A pair is retained
+only when exactly one layout matches, every fixed anchor is within its
+substitution tolerance (`--max-anchor-mismatches`, default 1 per anchor),
+every capture fits its alphabet, repeated captures agree, and each retained
+mate has at least `--min-retained-length` bases (default 15).
 
-## External reference assembly (unnumbered prerequisite)
+Retained pairs are written to `LIB01_R1.ident.fq.gz` and
+`LIB01_R2.ident.fq.gz`. Both mates carry the captures in a `CAP1`
+annotation placed immediately before the unchanged `:UMI_` suffix; see
+[CAP1 annotation](formats.md#cap1-read-name-annotation). Rejected pairs are
+written unchanged to `LIB01_step2_rejected_R1.fq.gz` and
+`LIB01_step2_rejected_R2.fq.gz`, with one reason per pair in
+`LIB01_step2_rejections.tsv.gz`.
 
-See [Prepare inputs and reference](prepare-inputs.md) for how fixed construct
-regions become adapter FASTAs.
+Check `LIB01_step2_summary.json` (schema `2.0`) before continuing:
+`status: "success"`, `complete: true`, and `pair_count_reconciled: true`.
+`rejection_reasons` shows why pairs were rejected; a high
+`anchor_or_length_mismatch` count usually means the layout does not describe
+the reads. Zero retained pairs fails the step, but the rejection files and a
+failed summary are still written for diagnosis.
 
-```bash
-ExogenousSequenceTools assemble add_adapter \
-  --fasta tested_elements.fasta \
-  --left_adapter_fasta left_adapter.fasta \
-  --right_adapter_fasta right_adapter.fasta \
-  --output_fasta reference/CONSTRUCT01_reference.fasta
-```
+`--threads` is a positive CPU budget, default 1: the parent performs gzip
+traversal, ordered output and publication while up to `threads - 1` worker
+processes evaluate bounded chunks. Output gzip compression defaults to level 1;
+choose 0 (fastest, largest) through 9 (slowest, smallest) with
+`--gzip-compression-level`.
 
-This is a reference-preparation prerequisite outside the numbered CAP command
-sequence. Each adapter FASTA contains exactly one record. The tool assembles
-`left + tested element + right`, preserves each tested-element FASTA identifier,
-and writes the complete reference sequences as ordinary FASTA. The right adapter
-is optional when the construct has no fixed right region. Step 3 accepts
-compatible external FASTA without XP provenance, annotations, manifests, or
-summaries. It rejects uppercase-identical complete sequences across distinct
-IDs before invoking STAR.
-
-## Step 3: Alignment
+## Step 3: Barcode-directed alignment
 
 ```bash
 cap-assay-pipeline step3-alignment \
   --library-prefix LIB01 \
-  --input-r1 prepared/LIB01_R1.fastq.gz \
-  --input-r2 prepared/LIB01_R2.fastq.gz \
-  --reference reference/CONSTRUCT01.fasta \
+  --input-r1 identified/LIB01_R1.ident.fq.gz \
+  --input-r2 identified/LIB01_R2.ident.fq.gz \
+  --reference elements.fa \
+  --barcode-map barcodes.tsv \
+  --barcode-field identity_5 \
+  --barcode-field identity_3 \
+  --rna-strand plus \
   --output-dir aligned/
 ```
 
-STAR aligns the library; samtools produces a coordinate-sorted BAM and index.
-`--threads` is a positive CPU budget (default 16) passed to STAR's index and
-alignment phases. Those phases run separately from Python processing. Step 3
-streams the paired FASTQs with at most one pair buffered. Its uppercase-literal
-reference uniqueness check remains global and serial. BAM validation and
-placement checks use complete query-name groups in bounded chunks, with at
-most `threads - 1` worker processes plus the parent; `--threads 1` runs
-directly. The parent performs global count reduction, coordinate sorting, and
-publication. Step 3 samtools commands use one default thread each; STAR's
-`zcat` reader is a separate fixed activity. Summary `resources` records the
-requested budget, phase workers, chunk limits, completed work, and worker PIDs.
-Exact FASTA uniqueness retains a set proportional to reference size, and QNAME
-grouping and BAM evidence scale with alignment count; worker queues remain
-bounded. No new dependency is required.
+Step 3 first validates the complete [element-only FASTA](formats.md#step-3-element-only-reference-fasta)
+and [barcode map](formats.md#step-3-barcode-map-tsv). For each pair it reads
+the captures named by `--barcode-field` from the `CAP1` annotation, looks
+each value up exactly in the barcode map, and requires all selected fields to
+resolve to the same Element. Other captures are carried only as metadata.
+Pairs with an unknown barcode or disagreeing identities are rejected before
+alignment.
 
-Step 3 also checks the complete FASTA before probing or invoking STAR. It
-rejects two distinct first-token reference identifiers with identical
-sequences after uppercasing literal sequence strings, for both generated and
-supplied STAR indexes, and reports the colliding identifiers. Compatible
-standalone FASTA needs no annotations, manifest, assembly summary, or XP
-provenance. Reverse complements remain distinct unless their literal complete
-strings match, and IUPAC symbols are compared literally without expansion.
-The check compares complete records, not tested-element subsequences.
+Each remaining pair is aligned natively to its Element's sequence only.
+Step 3 searches the R1 orientation given by `--rna-strand` (`plus`: forward;
+`minus`: reverse) and the opposite R2 orientation. Full clipped reads must
+align end to end within the Element; substitutions, insertions, and deletions
+each cost one edit per base, and the pair total must not exceed
+`--max-pair-edits` (default 4). Mates are ranked jointly under Step 4's pair
+geometry. A pair with no in-ceiling placement, only invalid geometry, or two or
+more distinct best placements is rejected.
+
 Successful publication includes:
 
 ```text
 LIB01_step3_alignment.bam
 LIB01_step3_alignment.bam.bai
+LIB01_step3_rejected_R1.fq.gz
+LIB01_step3_rejected_R2.fq.gz
+LIB01_step3_rejections.tsv.gz
 LIB01_step3_summary.json
 ```
 
-Verify `status` is `success` in the summary before Step 4. Zero uniquely mapped
-pairs is a Step 3 failure; Step 4 also fails when no read pairs pass its filter.
+The BAM holds accepted pairs only, in element coordinates, with the captures
+in `xc:Z` and the resolved Element in `xe:Z`. Verify in the summary (schema
+`4.0`) that `status` is `success`, `counts.accepted_plus_rejected_reconciled`
+is `true`, and `diagnostics_status` is `complete`. `counts.reasons` breaks
+rejections down by reason. Zero accepted pairs is a Step 3 failure: no BAM is
+published, but the rejection files and failed summary remain.
 
-### Step 3 RNA strand selection
-
-Step 3 accepts `--rna-strand {both,plus,minus}` (default `both`). The value
-names the reference-relative biological RNA strand determined by the R1 BAM
-strand (forward means plus; reverse means minus); it never describes CW/CCW construct
-orientation. The default publishes STAR's coordinate-sorted BAM unchanged.
-
-With `plus` or `minus`, Step 3 keeps all and only tied-best placements whose
-R1 lies on the selected strand, keeping linked R1/R2 mates together. One
-surviving placement becomes unique (`NH:1`); several survivors stay
-multimapped; no lower-scoring placement is ever substituted. A pair whose
-best placements are all on the excluded strand is retained as one complete
-unmapped pair and counted in `strand_rejected_pairs` (a subset of effective
-unmapped pairs in `effective_mapping_counts`), with one warning reporting the
-total rejected count. Partly or fully unmapped STAR pairs are preserved
-unchanged and never count as strand-rejected.
+`--threads` is a positive CPU budget (default 16) for ordered pair batches and
+`samtools sort`. `--bam-sort-memory` (default `2G`, divided across sorting
+threads) and `--tmp-dir` control sorting; see [resource
+guidance](resource-guidance.md).
 
 ## Resume at Step 4
 
 Pass the same `--rna-strand` value used at Step 3 (see [RNA strand
-policy](workflow.md#rna-strand-policy)).
-
-When a compatible BAM already exists:
+policy](workflow.md#rna-strand-policy)). When a compatible BAM already exists:
 
 ```bash
 cap-assay-pipeline step4-post-alignment-processing \
   --library-prefix LIB01 \
   --input-bam aligned/LIB01_step3_alignment.bam \
+  --rna-strand plus \
   --output-dir tracks/
 ```
 
-See [Cap-selection CLI — Step 4](../cli/cap-assay.md#step4-post-alignment-processing)
-for BAM admission, pair filtering, tool requirements, and the complete example.
+See [Generate endpoint tracks](step4.md) and [Cap-selection CLI — Step
+4](../cli/cap-assay.md#step4-post-alignment-processing) for BAM admission,
+pair filtering, and tool requirements.

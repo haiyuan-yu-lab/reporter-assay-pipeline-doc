@@ -1,4 +1,4 @@
-# Reporter known limitations in 0.2.0b4
+# Reporter known limitations in 0.2.0b5
 
 These notes describe released reporter behavior and its validation boundary.
 
@@ -14,7 +14,7 @@ run; this release does not promise equivalent cleaning behavior across
 The release candidate passed the implementation contract suite and assay
 harness suites. Reporter resource-execution changes have an explicit full-run
 waiver; the PreTran refactor requires no new assay run. No fresh Reporter
-end-to-end PASS is claimed for **0.2.0b4**. Outstanding Reporter integration
+end-to-end PASS is claimed for **0.2.0b5**. Outstanding Reporter integration
 and performance acceptance remains open.
 
 The code repository has no hosted CI workflow. Step 9, QC, and export contract

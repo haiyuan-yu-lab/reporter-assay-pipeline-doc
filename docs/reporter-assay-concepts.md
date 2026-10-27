@@ -1,6 +1,6 @@
 # Reporter assay concepts
 
-This page documents the released **0.2.0b4** assay model and vocabulary.
+This page documents the released **0.2.0b5** assay model and vocabulary.
 
 This page explains the reporter assay measurement model and vocabulary. For the
 shared relationship between reporter and cap assays, see the [assay overview](assay-model.md).
@@ -15,7 +15,7 @@ reporter molecules before and after transfection. For each retained element,
 the pipeline compares RNA abundance with DNA abundance and emits an
 element-level activity score and call. The pipeline contract defines the
 calculation; an `Active` / `Repressive` / `NoCall` / `Control` call
-(**0.2.0b4**) is not a claim about a biological mechanism beyond that
+(**0.2.0b5**) is not a claim about a biological mechanism beyond that
 calculation.
 
 The public [QUASARR-seq publication](https://www.nature.com/articles/s41467-026-68780-y)
