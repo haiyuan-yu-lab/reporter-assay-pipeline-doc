@@ -56,7 +56,6 @@ that share a design.
 There is no grouped whole-pipeline command: run each step explicitly with
 compatible artifacts. See [Prepare inputs](prepare-inputs.md),
 [Steps 1–3](steps-1-3.md), and the [Cap-selection CLI](../cli/cap-assay.md).
-CAP has no XP runtime dependency.
 
 ## Step 3 → Step 4 handoff
 

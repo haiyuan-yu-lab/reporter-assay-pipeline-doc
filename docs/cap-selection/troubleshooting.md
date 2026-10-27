@@ -8,7 +8,7 @@ inputs.
 | Symptom | What to check |
 | --- | --- |
 | `invalid command: step2-clip-construct-flank` | The command was removed in 0.2.0b5. Use `step2-identify-and-clip` with a version 1 `--layout`; see [Migrating to 0.2.0b5](migrating-to-0.2.0b5.md). |
-| `unrecognized arguments: --star …`, `--star-index-dir`, `--max-multimaps`, `--random-seed`, or `--max-pair-mismatches` | STAR-era options are removed. Drop them; use `--max-pair-edits` for edit ceilings. |
+| `unrecognized arguments: --star …`, `--star-index-dir`, `--max-multimaps`, `--random-seed`, or `--max-pair-mismatches` | The STAR-era Step 3 controls and Step 4 `--max-pair-mismatches` are removed. Drop them; use `--max-pair-edits` for edit ceilings. |
 | Step 3 `invalid choice: 'both'` or missing `--rna-strand` | Step 3 requires `plus` or `minus`. Give the same value to Step 4. |
 | Step 1 fails | No pairs remained after preparation or UMI filtering, or the fastp UMI annotation is missing or malformed. |
 | Step 2 fails with an invalid layout | Fix the layout JSON: `schema_version` must be the integer `1`, every segment needs boolean `retain`, retained segments must be contiguous, and at most one `"rest"` segment per mate. |

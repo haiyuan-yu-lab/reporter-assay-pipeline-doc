@@ -30,7 +30,7 @@ These budgets bound worker activity and batches, not total process memory. Step 
 | Step 3 | samtools 1.10+ |
 | Step 4 | samtools 1.12+, BEDTools 2.30+, and UMI-tools; pyBigWig is installed as a Python dependency |
 
-STAR is not required, and no alignment index is built or stored. The command references document tool-path overrides. CAP has no XP runtime dependency.
+STAR is not required, and no alignment index is built or stored. The command references document tool-path overrides.
 
 ## Output planning
 

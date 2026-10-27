@@ -24,7 +24,7 @@ These limits describe the released **0.2.0b5** cap-selection workflow.
 ## Tool and validation boundaries
 
 - Cap Step 1 uses the compatible `fastp` executable selected or found on `PATH`; its version is not pinned. Record the external tool version with each run because cleaning behavior may differ across versions.
-- Native CAP acceptance for **0.2.0b5** is one fresh synthetic tracked run that executed real Steps 1–4 on the plus and minus strands at one and two threads, without STAR. No fresh real-library CAP assay PASS is claimed for 0.2.0b5, and no performance threshold is asserted.
+- Native CAP acceptance for **0.2.0b5** is one fresh synthetic end-to-end run that executed real Steps 1–4 on the plus and minus strands at one and two threads, without STAR. No fresh real-library CAP assay PASS is claimed for 0.2.0b5, and no performance threshold is asserted.
 - Release **0.2.0b3** included fresh four-library CAP acceptance and independent endpoint verification for the earlier STAR-based workflow. That evidence does not apply to, or certify, the native 0.2.0b5 workflow.
 
 For failure recovery and summary checks, see [Cap assay troubleshooting](troubleshooting.md). Detailed supported inputs and outputs are in [Cap assay format contracts](formats.md).

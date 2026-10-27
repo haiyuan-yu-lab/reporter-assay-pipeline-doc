@@ -277,7 +277,7 @@ element boundaries from sequence or restore information removed by clipping.
 
 ## Validation and scope
 
-Release 0.2.0b5 native CAP acceptance consists of one fresh synthetic tracked
+Release 0.2.0b5 native CAP acceptance consists of one fresh synthetic end-to-end
 run that executed real Steps 1–4 on the plus and minus strands at one and two
 threads, with STAR absent. Each invocation reconciled 9 raw pairs to 5
 accepted pairs, 4 rejected pairs, and 4 retained molecules, and independent
